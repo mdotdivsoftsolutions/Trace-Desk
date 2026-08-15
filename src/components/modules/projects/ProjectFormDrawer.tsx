@@ -198,86 +198,88 @@ function ProjectFormDrawerContent({ onClose, project, preselectedClientId }: Pro
               <X className="w-5 h-5" />
             </button>
           </div>
-          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
-            <ProjectBasicInfoFields
-              title={title}
-              onTitleChange={setTitle}
-              clientId={clientId}
-              onClientChange={setClientId}
-              clients={clientsData?.items || []}
-              status={status}
-              onStatusChange={(val) => setStatus(val as ProjectType['status'])}
-              targetDeadline={targetDeadline}
-              onDeadlineChange={setTargetDeadline}
-              description={description}
-              onDescriptionChange={setDescription}
-              isPinned={isPinned}
-              onIsPinnedChange={setIsPinned}
-            />
+          <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <ProjectBasicInfoFields
+                title={title}
+                onTitleChange={setTitle}
+                clientId={clientId}
+                onClientChange={setClientId}
+                clients={clientsData?.items || []}
+                status={status}
+                onStatusChange={(val) => setStatus(val as ProjectType['status'])}
+                targetDeadline={targetDeadline}
+                onDeadlineChange={setTargetDeadline}
+                description={description}
+                onDescriptionChange={setDescription}
+                isPinned={isPinned}
+                onIsPinnedChange={setIsPinned}
+              />
 
-            <hr className="border-neutral-200 dark:border-[#334155]" />
+              <hr className="border-neutral-200 dark:border-[#334155]" />
 
-            <ProjectTechStackFields
-              techStack={techStack}
-              techInput={techInput}
-              onTechInputChange={setTechInput}
-              onAddTech={() => {
-                if (techInput.trim() && !techStack.includes(techInput.trim())) {
-                  setTechStack([...techStack, techInput.trim()]);
-                  setTechInput('');
-                }
-              }}
-              onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))}
-            />
-
-            <hr className="border-neutral-200 dark:border-[#334155]" />
-
-            <ProjectLinksInputs
-              links={links}
-              onAddLink={() => setLinks([...links, { title: '', url: '', category: 'repository' }])}
-              onRemoveLink={(i) => setLinks(links.filter((_, idx) => idx !== i))}
-              onUpdateLink={(i, f, v) =>
-                setLinks(links.map((l, idx) => (idx === i ? { ...l, [f]: v } : l)))
-              }
-            />
-
-            <hr className="border-neutral-200 dark:border-[#334155]" />
-
-            <ProjectCredentialInputs
-              credentials={credentials}
-              onAddCredential={() => setCredentials([...credentials, { title: '', environment: 'development' }])}
-              onRemoveCredential={(i) => setCredentials(credentials.filter((_, idx) => idx !== i))}
-              onUpdateCredential={(i, f, v) =>
-                setCredentials(credentials.map((c, idx) => (idx === i ? { ...c, [f]: v } : c)))
-              }
-            />
-
-            {!project && (
-              <>
-                <hr className="border-neutral-200 dark:border-[#334155]" />
-                <ProjectMilestoneInputs
-                  milestones={milestones}
-                  onAddMilestone={() => setMilestones([...milestones, { title: '', amount: 0 }])}
-                  onRemoveMilestone={(i) => setMilestones(milestones.filter((_, idx) => idx !== i))}
-                  onUpdateMilestone={(i, f, v) =>
-                    setMilestones(milestones.map((m, idx) => (idx === i ? { ...m, [f]: v } : m)))
+              <ProjectTechStackFields
+                techStack={techStack}
+                techInput={techInput}
+                onTechInputChange={setTechInput}
+                onAddTech={() => {
+                  if (techInput.trim() && !techStack.includes(techInput.trim())) {
+                    setTechStack([...techStack, techInput.trim()]);
+                    setTechInput('');
                   }
-                />
-              </>
-            )}
+                }}
+                onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))}
+              />
 
-            <div className="pt-4 border-t border-neutral-200 dark:border-[#334155] flex justify-end gap-3 sticky bottom-0 bg-white dark:bg-[#1E293B] pb-2">
+              <hr className="border-neutral-200 dark:border-[#334155]" />
+
+              <ProjectLinksInputs
+                links={links}
+                onAddLink={() => setLinks([...links, { title: '', url: '', category: 'repository' }])}
+                onRemoveLink={(i) => setLinks(links.filter((_, idx) => idx !== i))}
+                onUpdateLink={(i, f, v) =>
+                  setLinks(links.map((l, idx) => (idx === i ? { ...l, [f]: v } : l)))
+                }
+              />
+
+              <hr className="border-neutral-200 dark:border-[#334155]" />
+
+              <ProjectCredentialInputs
+                credentials={credentials}
+                onAddCredential={() => setCredentials([...credentials, { title: '', environment: 'development' }])}
+                onRemoveCredential={(i) => setCredentials(credentials.filter((_, idx) => idx !== i))}
+                onUpdateCredential={(i, f, v) =>
+                  setCredentials(credentials.map((c, idx) => (idx === i ? { ...c, [f]: v } : c)))
+                }
+              />
+
+              {!project && (
+                <>
+                  <hr className="border-neutral-200 dark:border-[#334155]" />
+                  <ProjectMilestoneInputs
+                    milestones={milestones}
+                    onAddMilestone={() => setMilestones([...milestones, { title: '', amount: 0 }])}
+                    onRemoveMilestone={(i) => setMilestones(milestones.filter((_, idx) => idx !== i))}
+                    onUpdateMilestone={(i, f, v) =>
+                      setMilestones(milestones.map((m, idx) => (idx === i ? { ...m, [f]: v } : m)))
+                    }
+                  />
+                </>
+              )}
+            </div>
+
+            <div className="p-4 px-6 border-t border-neutral-200 dark:border-[#334155] bg-neutral-50/60 dark:bg-[#0F172A]/60 flex items-center justify-end gap-3 flex-shrink-0">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-md border border-neutral-200 dark:border-[#334155] text-xs font-semibold"
+                className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isPending}
-                className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-100 disabled:opacity-50 transition-all cursor-pointer shadow-sm"
               >
                 {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 <span>{project ? 'Save Changes' : 'Create Project'}</span>

@@ -55,14 +55,12 @@ export class TaskService {
     return task;
   }
 
-  /**
-   * Retrieves tasks with optional filtering by project, milestone, or status.
-   */
   static async getTasks(filter: {
     projectId?: string;
     milestoneId?: string;
     status?: string;
     priority?: string;
+    search?: string;
   }): Promise<ITask[]> {
     await dbConnect();
     const query: Record<string, unknown> = {};
@@ -71,8 +69,15 @@ export class TaskService {
     if (filter.milestoneId) query.milestoneId = new mongoose.Types.ObjectId(filter.milestoneId);
     if (filter.status) query.status = filter.status;
     if (filter.priority) query.priority = filter.priority;
+    if (filter.search) {
+      query.title = { $regex: filter.search, $options: 'i' };
+    }
 
-    return Task.find(query).sort({ createdAt: -1 });
+    return Task.find(query)
+      .populate('projectId', 'title isPinned status clientId')
+      .populate('milestoneId', 'title status')
+      .sort({ createdAt: -1 })
+      .lean();
   }
 
   /**

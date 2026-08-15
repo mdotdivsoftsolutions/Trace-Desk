@@ -8,7 +8,8 @@ import { KanbanColumn } from './KanbanColumn';
 
 interface KanbanBoardProps {
   tasks: Task[];
-  projectId: string;
+  projectId?: string;
+  showProjectBadge?: boolean;
   onAddTask: (status?: TaskStatus) => void;
   onEditTask: (task: Task) => void;
   onDeleteTask: (task: Task) => void;
@@ -24,6 +25,7 @@ const columns: Array<{ id: TaskStatus; title: string }> = [
 export function KanbanBoard({
   tasks,
   projectId,
+  showProjectBadge = false,
   onAddTask,
   onEditTask,
   onDeleteTask,
@@ -53,6 +55,7 @@ export function KanbanBoard({
               status={col.id}
               title={col.title}
               tasks={colTasks}
+              showProjectBadge={showProjectBadge}
               onAddTask={(st) => onAddTask(st)}
               onEditTask={onEditTask}
               onDeleteTask={onDeleteTask}

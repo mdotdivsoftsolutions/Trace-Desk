@@ -4,22 +4,31 @@ import { queryKeys } from './query-keys';
 import { TaskType, TaskStatus } from '@/types';
 
 export function useTasks(
-  projectId: string | undefined | null,
-  filters?: { milestoneId?: string; status?: string; priority?: string }
+  projectId?: string | null,
+  filters?: { milestoneId?: string; status?: string; priority?: string; search?: string }
 ) {
+  const isAll = !projectId || projectId === 'all';
   return useQuery({
-    queryKey: projectId ? queryKeys.tasks.byProject(projectId, filters) : queryKeys.tasks.lists(),
+    queryKey: isAll ? [...queryKeys.tasks.lists(), filters || {}] : queryKeys.tasks.byProject(projectId, filters),
     queryFn: async () => {
-      if (!projectId) return [];
       const params = new URLSearchParams();
+      if (!isAll && projectId) params.append('projectId', projectId);
       if (filters?.milestoneId) params.append('milestoneId', filters.milestoneId);
       if (filters?.status) params.append('status', filters.status);
       if (filters?.priority) params.append('priority', filters.priority);
+      if (filters?.search) params.append('search', filters.search);
       const queryStr = params.toString() ? `?${params.toString()}` : '';
+
+      if (isAll) {
+        return apiClient.get<TaskType[]>(`/tasks${queryStr}`);
+      }
       return apiClient.get<TaskType[]>(`/projects/${projectId}/tasks${queryStr}`);
     },
-    enabled: !!projectId,
   });
+}
+
+export function useAllTasks(filters?: { projectId?: string; milestoneId?: string; status?: string; priority?: string; search?: string }) {
+  return useTasks(filters?.projectId || undefined, filters);
 }
 
 export function useTask(id: string | undefined | null) {
@@ -37,7 +46,7 @@ export function useCreateTask(defaultProjectId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ projectId, ...data }: { projectId?: string; [key: string]: any }) => {
+    mutationFn: ({ projectId, ...data }: { projectId?: string; [key: string]: unknown }) => {
       const pid = projectId || defaultProjectId;
       return apiClient.post<TaskType>(`/projects/${pid}/tasks`, data);
     },
@@ -54,7 +63,7 @@ export function useUpdateTask(defaultProjectId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, projectId, data }: { id: string; projectId?: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: string; projectId?: string; data: Record<string, unknown> }) =>
       apiClient.patch<TaskType>(`/tasks/${id}`, data),
     onSuccess: (_data, variables) => {
       const pid = variables.projectId || defaultProjectId;

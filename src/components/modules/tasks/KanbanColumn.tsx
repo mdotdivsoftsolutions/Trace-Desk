@@ -11,6 +11,7 @@ interface KanbanColumnProps {
   status: TaskStatus;
   title: string;
   tasks: Task[];
+  showProjectBadge?: boolean;
   onAddTask: (status: TaskStatus) => void;
   onEditTask: (task: Task) => void;
   onDeleteTask: (task: Task) => void;
@@ -20,6 +21,7 @@ export function KanbanColumn({
   status,
   title,
   tasks,
+  showProjectBadge = false,
   onAddTask,
   onEditTask,
   onDeleteTask,
@@ -36,8 +38,9 @@ export function KanbanColumn({
           </span>
         </div>
         <button
+          type="button"
           onClick={() => onAddTask(status)}
-          className="p-1 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-[#1E293B] transition-colors"
+          className="p-1 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-white dark:hover:bg-[#1E293B] transition-colors cursor-pointer"
           title={`Add task to ${title}`}
         >
           <Plus className="w-3.5 h-3.5" />
@@ -59,6 +62,7 @@ export function KanbanColumn({
                 key={task._id}
                 task={task}
                 index={index}
+                showProjectBadge={showProjectBadge}
                 onEdit={onEditTask}
                 onDelete={onDeleteTask}
               />

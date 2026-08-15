@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, FolderKanban, Receipt, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, FolderKanban, Kanban, Receipt, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SidebarNavProps {
@@ -15,6 +15,7 @@ const navItems = [
   { label: 'Dashboard', href: '/', icon: LayoutDashboard },
   { label: 'Clients', href: '/clients', icon: Users },
   { label: 'Projects', href: '/projects', icon: FolderKanban },
+  { label: 'Kanban Board', href: '/tasks', icon: Kanban },
   { label: 'Invoices & Billing', href: '/invoices', icon: Receipt },
   { label: 'Settings', href: '/settings', icon: Settings },
 ];
