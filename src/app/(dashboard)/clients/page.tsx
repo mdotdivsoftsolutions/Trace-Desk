@@ -17,7 +17,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { useClients, useDeleteClient, useConfirmDialog } from '@/hooks';
-import { ClientFormModal } from '@/components/modules/clients/client-form-modal';
+import { ClientFormDrawer } from '@/components/modules/clients/ClientFormDrawer';
 import { ClientDrawer } from '@/components/modules/clients/client-drawer';
 import { Pagination } from '@/components/common/pagination';
 import { formatCurrency, cn } from '@/lib/utils';
@@ -302,8 +302,8 @@ export default function ClientsPage() {
         </div>
       )}
 
-      {/* Create / Edit Client Modal */}
-      <ClientFormModal
+      {/* Create / Edit Client Drawer */}
+      <ClientFormDrawer
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
         client={editingClient}

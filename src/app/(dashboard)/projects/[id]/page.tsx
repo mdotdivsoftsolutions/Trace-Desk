@@ -31,8 +31,8 @@ import {
   useInvoices,
 } from '@/hooks';
 import { KanbanBoard } from '@/components/modules/tasks/KanbanBoard';
-import { TaskFormModal } from '@/components/modules/tasks/task-form-modal';
-import { MilestoneFormModal } from '@/components/modules/projects/milestone-form-modal';
+import { TaskFormDrawer } from '@/components/modules/tasks/TaskFormDrawer';
+import { MilestoneFormDrawer } from '@/components/modules/milestones/MilestoneFormDrawer';
 import { formatCurrency, formatDate, formatRelativeDeadline, cn } from '@/lib/utils';
 import { TaskType, MilestoneType } from '@/types';
 
@@ -445,8 +445,8 @@ export default function ProjectWorkspacePage({
         </div>
       )}
 
-      {/* Task Modal */}
-      <TaskFormModal
+      {/* Task Drawer */}
+      <TaskFormDrawer
         isOpen={isTaskModalOpen}
         onClose={() => setIsTaskModalOpen(false)}
         projectId={projectId}
@@ -455,8 +455,8 @@ export default function ProjectWorkspacePage({
         defaultStatus={defaultTaskStatus}
       />
 
-      {/* Milestone Modal */}
-      <MilestoneFormModal
+      {/* Milestone Drawer */}
+      <MilestoneFormDrawer
         isOpen={isMilestoneModalOpen}
         onClose={() => setIsMilestoneModalOpen(false)}
         projectId={projectId}

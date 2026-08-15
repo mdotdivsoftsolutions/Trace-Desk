@@ -17,7 +17,7 @@ import {
   FileSpreadsheet,
 } from 'lucide-react';
 import { useInvoices } from '@/hooks';
-import { RecordPaymentModal } from '@/components/modules/invoices/record-payment-modal';
+import { RecordPaymentDrawer } from '@/components/modules/payments/RecordPaymentDrawer';
 import { Pagination } from '@/components/common/pagination';
 import { formatCurrency, formatDate, cn } from '@/lib/utils';
 import { InvoiceType } from '@/types';
@@ -333,8 +333,8 @@ export default function InvoicesPage() {
         </div>
       )}
 
-      {/* Record Payment Modal */}
-      <RecordPaymentModal
+      {/* Record Payment Drawer */}
+      <RecordPaymentDrawer
         isOpen={!!selectedPaymentInvoice}
         onClose={() => setSelectedPaymentInvoice(null)}
         invoice={selectedPaymentInvoice}

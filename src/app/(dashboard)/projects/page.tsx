@@ -15,7 +15,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { useProjects, useClients } from '@/hooks';
-import { ProjectFormModal } from '@/components/modules/projects/project-form-modal';
+import { ProjectFormDrawer } from '@/components/modules/projects/ProjectFormDrawer';
 import { Pagination } from '@/components/common/pagination';
 import { formatCurrency, formatDate, cn } from '@/lib/utils';
 import { ProjectType } from '@/types';
@@ -318,8 +318,8 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      {/* Create / Edit Project Modal */}
-      <ProjectFormModal
+      {/* Create / Edit Project Drawer */}
+      <ProjectFormDrawer
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
         project={editingProject}

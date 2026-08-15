@@ -21,7 +21,7 @@ import {
   AlertCircle,
   Layers,
 } from 'lucide-react';
-import { useUpdateTaskStatus, useDeleteTask } from '@/hooks';
+import { useUpdateTaskStatus, useDeleteTask, useConfirmDialog } from '@/hooks';
 import { formatDate, formatRelativeDeadline, cn } from '@/lib/utils';
 import { TaskType, MilestoneType } from '@/types';
 
@@ -93,6 +93,7 @@ export function KanbanBoard({
 
   const updateStatusMutation = useUpdateTaskStatus(projectId);
   const deleteTaskMutation = useDeleteTask(projectId);
+  const { confirm: confirmDialog } = useConfirmDialog();
 
   // Fix SSR hydration issues for Drag and Drop
   useEffect(() => {
@@ -288,14 +289,22 @@ export function KanbanBoard({
                                           <Edit2 className="w-3 h-3" />
                                         </button>
                                         <button
-                                          onClick={() => {
-                                            if (confirm('Delete task?')) deleteTaskMutation.mutate(task._id);
-                                          }}
-                                          className="p-1 text-neutral-400 hover:text-rose-500 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                                          title="Delete Task"
-                                        >
-                                          <Trash2 className="w-3 h-3" />
-                                        </button>
+                                           onClick={async () => {
+                                             const ok = await confirmDialog({
+                                               title: `Delete Task "${task.title}"?`,
+                                               description: 'Are you sure you want to remove this task? This action cannot be undone.',
+                                               variant: 'danger',
+                                               confirmText: 'Delete Task',
+                                             });
+                                             if (ok) {
+                                               deleteTaskMutation.mutate(task._id);
+                                             }
+                                           }}
+                                           className="p-1 text-neutral-400 hover:text-rose-500 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                                           title="Delete Task"
+                                         >
+                                           <Trash2 className="w-3 h-3" />
+                                         </button>
                                       </div>
                                     </div>
 

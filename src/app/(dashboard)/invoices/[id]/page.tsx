@@ -20,7 +20,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { useInvoice, useUpdateInvoice, useInvoicePayments } from '@/hooks';
-import { RecordPaymentModal } from '@/components/modules/invoices/record-payment-modal';
+import { RecordPaymentDrawer } from '@/components/modules/payments/RecordPaymentDrawer';
 import { formatCurrency, formatDate, cn } from '@/lib/utils';
 
 export default function InvoiceDetailPage({
@@ -333,8 +333,8 @@ export default function InvoiceDetailPage({
         )}
       </div>
 
-      {/* Record Payment Modal */}
-      <RecordPaymentModal
+      {/* Record Payment Drawer */}
+      <RecordPaymentDrawer
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
         invoice={invoice}
