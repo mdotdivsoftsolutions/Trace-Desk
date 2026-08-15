@@ -73,6 +73,14 @@ export class InvoiceService {
   static async createInvoice(data: CreateInvoiceInput): Promise<IInvoice> {
     await dbConnect();
 
+    let { invoiceNumber } = data;
+    if (!invoiceNumber) {
+      const settings = await mongoose.models.Settings?.findOne();
+      const prefix = settings?.invoicePrefix || 'INV-';
+      const count = await Invoice.countDocuments();
+      invoiceNumber = `${prefix}${(count + 1).toString().padStart(4, '0')}`;
+    }
+
     const calculations = this.calculateTotals(
       data.items,
       data.taxRate || 0,
@@ -82,6 +90,7 @@ export class InvoiceService {
 
     const invoiceData: any = {
       ...data,
+      invoiceNumber,
       clientId: new mongoose.Types.ObjectId(data.clientId),
       projectId: data.projectId ? new mongoose.Types.ObjectId(data.projectId) : undefined,
       items: calculations.items,
@@ -334,3 +343,5 @@ export class InvoiceService {
 }
 
 export default InvoiceService;
+
+

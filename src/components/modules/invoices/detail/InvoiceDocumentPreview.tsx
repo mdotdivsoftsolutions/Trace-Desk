@@ -2,6 +2,7 @@ import React from 'react';
 import { Layers, Building, CreditCard } from 'lucide-react';
 import { Invoice, Settings } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
+import SafeHTML from '@/components/common/SafeHTML';
 
 interface InvoiceDocumentPreviewProps {
   invoice: Invoice;
@@ -87,7 +88,7 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
               {bank.upiId && <div>UPI ID: <span className="font-mono text-neutral-900 dark:text-white">{bank.upiId}</span></div>}
             </div>
           )}
-          {invoice.notes && <p className="text-neutral-500 italic">{invoice.notes}</p>}
+          {invoice.notes && <SafeHTML html={invoice.notes} className="text-neutral-500 italic" />}
         </div>
 
         <div className="space-y-2 text-xs w-full sm:w-64">

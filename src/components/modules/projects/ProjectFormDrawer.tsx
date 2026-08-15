@@ -77,7 +77,7 @@ export function ProjectFormDrawer({ isOpen, onClose, project, preselectedClientI
           <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
             <ProjectBasicInfoFields title={title} onTitleChange={setTitle} clientId={clientId} onClientChange={setClientId} clients={clientsData?.items || []} status={status} onStatusChange={setStatus} targetDeadline={targetDeadline} onDeadlineChange={setTargetDeadline} description={description} onDescriptionChange={setDescription} />
             <hr className="border-neutral-200 dark:border-[#334155]" />
-            <ProjectTechStackFields techStack={techStack} techInput={techInput} onTechInputChange={setTechInput} onAddTech={() => { if (techInput.trim() && !techStack.includes(techInput.trim())) { setTechStack([...techStack, techInput.trim()]); setTechInput(''); } }} onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))} githubRepo="" onGithubChange={() => {}} liveUrl="" onLiveUrlChange={() => {}} />
+            <ProjectTechStackFields techStack={techStack} techInput={techInput} onTechInputChange={setTechInput} onAddTech={() => { if (techInput.trim() && !techStack.includes(techInput.trim())) { setTechStack([...techStack, techInput.trim()]); setTechInput(''); } }} onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))} />
             {!project && (
               <>
                 <hr className="border-neutral-200 dark:border-[#334155]" />

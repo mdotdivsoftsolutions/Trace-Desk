@@ -8,6 +8,7 @@ import { useClients } from '@/hooks/useClients';
 import { useCreateProject } from '@/hooks/useProjects';
 import { ProjectBasicInfoFields } from '@/components/modules/projects/form/ProjectBasicInfoFields';
 import { ProjectTechStackFields } from '@/components/modules/projects/form/ProjectTechStackFields';
+import { ProjectLinksInputs, LinkDraft } from '@/components/modules/projects/form/ProjectLinksInputs';
 import { ProjectMilestoneInputs, MilestoneDraft } from '@/components/modules/projects/form/ProjectMilestoneInputs';
 import { ProjectCredentialInputs, CredentialDraft } from '@/components/modules/projects/form/ProjectCredentialInputs';
 import { RichTextEditor } from '@/components/common/RichTextEditor';
@@ -24,8 +25,7 @@ export default function NewProjectPage() {
   const [targetDeadline, setTargetDeadline] = useState('');
   const [techStack, setTechStack] = useState<string[]>(['Next.js', 'TypeScript', 'Tailwind']);
   const [techInput, setTechInput] = useState('');
-  const [githubRepo, setGithubRepo] = useState('');
-  const [liveUrl, setLiveUrl] = useState('');
+  const [links, setLinks] = useState<LinkDraft[]>([]);
   const [milestones, setMilestones] = useState<MilestoneDraft[]>([]);
   const [credentials, setCredentials] = useState<CredentialDraft[]>([]);
 
@@ -41,6 +41,9 @@ export default function NewProjectPage() {
       notes: c.url,
     }));
 
+    const repoUrl = links.find(l => l.category === 'repository')?.url;
+    const liveUrl = links.find(l => l.category === 'production' || l.category === 'staging')?.url;
+
     const newProj = await createProjectMutation.mutateAsync({
       title,
       clientId,
@@ -48,12 +51,12 @@ export default function NewProjectPage() {
       status: status as any,
       budgetType: 'fixed' as const,
       currency: 'INR',
-      links: [],
+      links: links as any,
       progressPercentage: 0,
       targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined,
       techStack,
-      repoUrl: githubRepo || undefined,
-      liveUrl: liveUrl || undefined,
+      repoUrl,
+      liveUrl,
       totalBudget,
       credentials: formattedCredentials,
     });
@@ -104,21 +107,35 @@ export default function NewProjectPage() {
         </div>
 
         <hr className="border-neutral-200 dark:border-[#334155]" />
+        
         <ProjectTechStackFields
-          techStack={techStack} techInput={techInput} onTechInputChange={setTechInput}
+          techStack={techStack} 
+          techInput={techInput} 
+          onTechInputChange={setTechInput}
           onAddTech={() => { if (techInput.trim() && !techStack.includes(techInput.trim())) { setTechStack([...techStack, techInput.trim()]); setTechInput(''); } }}
           onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))}
-          githubRepo={githubRepo} onGithubChange={setGithubRepo}
-          liveUrl={liveUrl} onLiveUrlChange={setLiveUrl}
         />
+        
         <hr className="border-neutral-200 dark:border-[#334155]" />
+        
+        <ProjectLinksInputs
+          links={links}
+          onAddLink={() => setLinks([...links, { title: '', url: '', category: 'repository' }])}
+          onRemoveLink={(i) => setLinks(links.filter((_, idx) => idx !== i))}
+          onUpdateLink={(i, f, v) => setLinks(links.map((l, idx) => idx === i ? { ...l, [f]: v as any } : l))}
+        />
+
+        <hr className="border-neutral-200 dark:border-[#334155]" />
+        
         <ProjectMilestoneInputs
           milestones={milestones}
           onAddMilestone={() => setMilestones([...milestones, { title: '', amount: 0 }])}
           onRemoveMilestone={(i) => setMilestones(milestones.filter((_, idx) => idx !== i))}
           onUpdateMilestone={(i, f, v) => setMilestones(milestones.map((m, idx) => idx === i ? { ...m, [f]: v } : m))}
         />
+        
         <hr className="border-neutral-200 dark:border-[#334155]" />
+        
         <ProjectCredentialInputs
           credentials={credentials}
           onAddCredential={() => setCredentials([...credentials, { title: '', environment: 'development' }])}

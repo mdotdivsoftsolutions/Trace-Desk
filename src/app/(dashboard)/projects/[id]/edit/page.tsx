@@ -8,6 +8,7 @@ import { useClients } from '@/hooks/useClients';
 import { useProject, useUpdateProject } from '@/hooks/useProjects';
 import { ProjectBasicInfoFields } from '@/components/modules/projects/form/ProjectBasicInfoFields';
 import { ProjectTechStackFields } from '@/components/modules/projects/form/ProjectTechStackFields';
+import { ProjectLinksInputs, LinkDraft } from '@/components/modules/projects/form/ProjectLinksInputs';
 import { ProjectCredentialInputs, CredentialDraft } from '@/components/modules/projects/form/ProjectCredentialInputs';
 import { ProjectCredential, Project } from '@/types';
 import { RichTextEditor } from '@/components/common/RichTextEditor';
@@ -27,8 +28,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
   const [targetDeadline, setTargetDeadline] = useState('');
   const [techStack, setTechStack] = useState<string[]>([]);
   const [techInput, setTechInput] = useState('');
-  const [githubRepo, setGithubRepo] = useState('');
-  const [liveUrl, setLiveUrl] = useState('');
+  const [links, setLinks] = useState<LinkDraft[]>([]);
   const [credentials, setCredentials] = useState<CredentialDraft[]>([]);
 
   const [prevProject, setPrevProject] = useState<Project | null>(null);
@@ -41,8 +41,11 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
     setStatus(project.status);
     setTargetDeadline(project.targetDeadline ? new Date(project.targetDeadline).toISOString().split('T')[0] : '');
     setTechStack(project.techStack || []);
-    setGithubRepo(project.repoUrl || '');
-    setLiveUrl(project.liveUrl || '');
+    setLinks((project.links || []).map((l: any) => ({
+      title: l.title || '',
+      url: l.url || '',
+      category: l.category || 'other',
+    })));
     setCredentials((project.credentials || []).map((c: ProjectCredential): CredentialDraft => ({
       title: c.serviceName || c.title || 'Credential',
       username: c.accountId || c.username,
@@ -62,6 +65,9 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
       notes: c.url,
     }));
 
+    const repoUrl = links.find(l => l.category === 'repository')?.url;
+    const liveUrl = links.find(l => l.category === 'production' || l.category === 'staging')?.url;
+
     await updateProjectMutation.mutateAsync({
       id,
       data: {
@@ -71,7 +77,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         status: status as Project['status'],
         targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined,
         techStack,
-        repoUrl: githubRepo || undefined,
+        links: links as any,
+        repoUrl: repoUrl || undefined,
         liveUrl: liveUrl || undefined,
         credentials: formattedCredentials,
       },
@@ -128,14 +135,26 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         </div>
 
         <hr className="border-neutral-200 dark:border-[#334155]" />
+        
         <ProjectTechStackFields
-          techStack={techStack} techInput={techInput} onTechInputChange={setTechInput}
+          techStack={techStack} 
+          techInput={techInput} 
+          onTechInputChange={setTechInput}
           onAddTech={() => { if (techInput.trim() && !techStack.includes(techInput.trim())) { setTechStack([...techStack, techInput.trim()]); setTechInput(''); } }}
           onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))}
-          githubRepo={githubRepo} onGithubChange={setGithubRepo}
-          liveUrl={liveUrl} onLiveUrlChange={setLiveUrl}
         />
+        
         <hr className="border-neutral-200 dark:border-[#334155]" />
+        
+        <ProjectLinksInputs
+          links={links}
+          onAddLink={() => setLinks([...links, { title: '', url: '', category: 'repository' }])}
+          onRemoveLink={(i) => setLinks(links.filter((_, idx) => idx !== i))}
+          onUpdateLink={(i, f, v) => setLinks(links.map((l, idx) => idx === i ? { ...l, [f]: v as any } : l))}
+        />
+
+        <hr className="border-neutral-200 dark:border-[#334155]" />
+        
         <ProjectCredentialInputs
           credentials={credentials}
           onAddCredential={() => setCredentials([...credentials, { title: '', environment: 'development' }])}

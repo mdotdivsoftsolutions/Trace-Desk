@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText, MapPin, Building, Globe, Mail, Phone } from 'lucide-react';
 import { Client } from '@/types';
+import SafeHTML from '@/components/common/SafeHTML';
 
 interface ClientNotesTabProps {
   client: Client;
@@ -28,9 +29,7 @@ export function ClientNotesTab({ client }: ClientNotesTabProps) {
           <span>Internal Agency Notes</span>
         </h3>
         {client.notes ? (
-          <p className="text-xs text-neutral-600 dark:text-neutral-300 whitespace-pre-wrap leading-relaxed">
-            {client.notes}
-          </p>
+          <SafeHTML html={client.notes} className="text-neutral-600 dark:text-neutral-300" />
         ) : (
           <p className="text-xs text-neutral-400 italic">No notes recorded for this client account.</p>
         )}

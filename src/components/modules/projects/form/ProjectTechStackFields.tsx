@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Plus, GitBranch, ExternalLink } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 
 interface ProjectTechStackFieldsProps {
   techStack: string[];
@@ -7,10 +7,6 @@ interface ProjectTechStackFieldsProps {
   onTechInputChange: (val: string) => void;
   onAddTech: () => void;
   onRemoveTech: (tech: string) => void;
-  githubRepo: string;
-  onGithubChange: (val: string) => void;
-  liveUrl: string;
-  onLiveUrlChange: (val: string) => void;
 }
 
 export function ProjectTechStackFields({
@@ -19,10 +15,6 @@ export function ProjectTechStackFields({
   onTechInputChange,
   onAddTech,
   onRemoveTech,
-  githubRepo,
-  onGithubChange,
-  liveUrl,
-  onLiveUrlChange,
 }: ProjectTechStackFieldsProps) {
   return (
     <div className="space-y-4">
@@ -55,34 +47,6 @@ export function ProjectTechStackFields({
             ))}
           </div>
         )}
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-            <GitBranch className="w-3.5 h-3.5" /><span>GitHub / GitLab Repository</span>
-          </label>
-          <input
-            type="url"
-            placeholder="https://github.com/org/repo"
-            value={githubRepo}
-            onChange={(e) => onGithubChange(e.target.value)}
-            className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 font-mono"
-          />
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
-            <ExternalLink className="w-3.5 h-3.5" /><span>Live Deployment / Preview URL</span>
-          </label>
-          <input
-            type="url"
-            placeholder="https://project.agency.com"
-            value={liveUrl}
-            onChange={(e) => onLiveUrlChange(e.target.value)}
-            className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 font-mono"
-          />
-        </div>
       </div>
     </div>
   );
