@@ -7,11 +7,20 @@ import { AgencyProfileTab } from '@/components/modules/settings/AgencyProfileTab
 import { CurrencyFinanceTab } from '@/components/modules/settings/CurrencyFinanceTab';
 import { BankUpiTab } from '@/components/modules/settings/BankUpiTab';
 import { InvoiceConfigTab } from '@/components/modules/settings/InvoiceConfigTab';
+import { TabBar, TabPanel } from '@/components/common/TabPanel';
 import { SettingsType } from '@/types';
-import { cn } from '@/lib/utils';
+
+type SettingsTab = 'profile' | 'currency' | 'bank' | 'invoice';
+
+const SETTINGS_TABS = [
+  { key: 'profile',  label: 'Agency Profile' },
+  { key: 'currency', label: 'Currency & Finance' },
+  { key: 'bank',     label: 'Bank & UPI' },
+  { key: 'invoice',  label: 'Invoice Config' },
+];
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<'profile' | 'currency' | 'bank' | 'invoice'>('profile');
+  const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
   const [formData, setFormData] = useState<Partial<SettingsType>>({});
   const [savedSuccess, setSavedSuccess] = useState(false);
 
@@ -50,15 +59,14 @@ export default function SettingsPage() {
             Platform & Agency Settings
           </h1>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-            Manage your agency branding, platform currency, remittance details, and automated invoicing parameters.
+            Manage agency branding, currency, remittance details, and invoicing parameters.
           </p>
         </div>
-
         <div className="flex items-center gap-3">
           {savedSuccess && (
             <span className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800 dark:text-neutral-200 animate-in fade-in">
               <CheckCircle className="w-4 h-4 text-emerald-500" />
-              <span>Saved successfully</span>
+              <span>Saved</span>
             </span>
           )}
           <button
@@ -72,33 +80,26 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="border-b border-neutral-200 dark:border-[#334155] flex gap-6 text-xs font-semibold">
-        {(['profile', 'currency', 'bank', 'invoice'] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
-            className={cn(
-              'pb-3 capitalize transition-colors relative',
-              activeTab === tab
-                ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white font-bold'
-                : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
-            )}
-          >
-            {tab === 'profile' && 'Agency Profile'}
-            {tab === 'currency' && 'Currency & Finance'}
-            {tab === 'bank' && 'Bank & UPI Details'}
-            {tab === 'invoice' && 'Invoice Config'}
-          </button>
-        ))}
-      </div>
+      {/* CLS-safe tab bar */}
+      <TabBar
+        tabs={SETTINGS_TABS}
+        activeTab={activeTab}
+        onTabChange={(k) => setActiveTab(k as SettingsTab)}
+      />
 
-      <div>
-        {activeTab === 'profile' && <AgencyProfileTab formData={formData} onChange={handleChange} />}
-        {activeTab === 'currency' && <CurrencyFinanceTab formData={formData} onChange={handleChange} />}
-        {activeTab === 'bank' && <BankUpiTab formData={formData} onChange={handleChange} />}
-        {activeTab === 'invoice' && <InvoiceConfigTab formData={formData} onChange={handleChange} />}
-      </div>
+      {/* CLS-safe panels */}
+      <TabPanel tabKey="profile" activeTab={activeTab} minHeight={320}>
+        <AgencyProfileTab formData={formData} onChange={handleChange} />
+      </TabPanel>
+      <TabPanel tabKey="currency" activeTab={activeTab} minHeight={320}>
+        <CurrencyFinanceTab formData={formData} onChange={handleChange} />
+      </TabPanel>
+      <TabPanel tabKey="bank" activeTab={activeTab} minHeight={320}>
+        <BankUpiTab formData={formData} onChange={handleChange} />
+      </TabPanel>
+      <TabPanel tabKey="invoice" activeTab={activeTab} minHeight={320}>
+        <InvoiceConfigTab formData={formData} onChange={handleChange} />
+      </TabPanel>
     </form>
   );
 }

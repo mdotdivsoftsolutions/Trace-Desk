@@ -14,22 +14,24 @@ import { ClientNotesTab } from '@/components/modules/clients/detail/ClientNotesT
 import { ClientFormDrawer } from '@/components/modules/clients/ClientFormDrawer';
 import { ProjectFormDrawer } from '@/components/modules/projects/ProjectFormDrawer';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
-import { cn } from '@/lib/utils';
+import { TabBar, TabPanel } from '@/components/common/TabPanel';
+
+type ClientTab = 'projects' | 'invoices' | 'notes';
 
 export default function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'projects' | 'invoices' | 'notes'>('projects');
+  const [activeTab, setActiveTab] = useState<ClientTab>('projects');
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isNewProjectDrawerOpen, setIsNewProjectDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const { data: client, isLoading: isClientLoading } = useClient(id);
+  const { data: client, isLoading } = useClient(id);
   const { data: projectsData } = useProjects({ clientId: id });
   const { data: invoicesData } = useInvoices({ clientId: id });
   const deleteClientMutation = useDeleteClient();
 
-  if (isClientLoading) {
+  if (isLoading) {
     return (
       <div className="p-12 text-center">
         <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
@@ -37,7 +39,6 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
       </div>
     );
   }
-
   if (!client) {
     return (
       <div className="p-12 text-center text-neutral-500">
@@ -54,22 +55,45 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   const totalCollected = totalBilled - totalOutstanding;
   const activeProjectsCount = projects.filter((p: ProjectType) => ['discovery', 'in_progress', 'review'].includes(p.status)).length;
 
+  const clientTabs = [
+    { key: 'projects',  label: 'Projects',  count: projects.length },
+    { key: 'invoices',  label: 'Invoices',  count: invoices.length },
+    { key: 'notes',     label: 'Notes' },
+  ];
+
   return (
     <div className="space-y-6">
-      <ClientHeaderBanner client={client} onEdit={() => setIsEditDrawerOpen(true)} onAddProject={() => setIsNewProjectDrawerOpen(true)} onDelete={() => setIsDeleteDialogOpen(true)} />
-      <ClientFinancialKpis totalBilled={totalBilled} totalCollected={totalCollected} totalOutstanding={totalOutstanding} activeProjectsCount={activeProjectsCount} />
-      <div className="border-b border-neutral-200 dark:border-[#334155] flex gap-6 text-xs font-semibold">
-        {(['projects', 'invoices', 'notes'] as const).map((tab) => (
-          <button key={tab} onClick={() => setActiveTab(tab)} className={cn('pb-3 capitalize transition-colors relative', activeTab === tab ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white font-bold' : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white')}>
-            {tab} {tab === 'projects' && `(${projects.length})`} {tab === 'invoices' && `(${invoices.length})`}
-          </button>
-        ))}
-      </div>
-      <div>
-        {activeTab === 'projects' && <ClientProjectsTab projects={projects} clientId={id} onAddProject={() => setIsNewProjectDrawerOpen(true)} />}
-        {activeTab === 'invoices' && <ClientInvoicesTab invoices={invoices} clientId={id} />}
-        {activeTab === 'notes' && <ClientNotesTab client={client} />}
-      </div>
+      <ClientHeaderBanner
+        client={client}
+        onEdit={() => setIsEditDrawerOpen(true)}
+        onAddProject={() => setIsNewProjectDrawerOpen(true)}
+        onDelete={() => setIsDeleteDialogOpen(true)}
+      />
+      <ClientFinancialKpis
+        totalBilled={totalBilled}
+        totalCollected={totalCollected}
+        totalOutstanding={totalOutstanding}
+        activeProjectsCount={activeProjectsCount}
+      />
+
+      {/* CLS-safe tab bar */}
+      <TabBar
+        tabs={clientTabs}
+        activeTab={activeTab}
+        onTabChange={(k) => setActiveTab(k as ClientTab)}
+      />
+
+      {/* CLS-safe panels */}
+      <TabPanel tabKey="projects" activeTab={activeTab} minHeight={260}>
+        <ClientProjectsTab projects={projects} clientId={id} onAddProject={() => setIsNewProjectDrawerOpen(true)} />
+      </TabPanel>
+      <TabPanel tabKey="invoices" activeTab={activeTab} minHeight={260}>
+        <ClientInvoicesTab invoices={invoices} clientId={id} />
+      </TabPanel>
+      <TabPanel tabKey="notes" activeTab={activeTab} minHeight={180}>
+        <ClientNotesTab client={client} />
+      </TabPanel>
+
       <ClientFormDrawer isOpen={isEditDrawerOpen} onClose={() => setIsEditDrawerOpen(false)} client={client} />
       <ProjectFormDrawer isOpen={isNewProjectDrawerOpen} onClose={() => setIsNewProjectDrawerOpen(false)} preselectedClientId={id} />
       <ConfirmDialog

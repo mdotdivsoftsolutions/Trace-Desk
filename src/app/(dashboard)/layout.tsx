@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const userRole = user?.role || 'super_admin';
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0F172A] text-neutral-900 dark:text-neutral-100 antialiased font-sans">
+    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0F172A] text-neutral-900 dark:text-neutral-100 antialiased font-sans overflow-x-clip">
       {/* Sidebar Component with User Profile Footer */}
       <Sidebar
         isCollapsed={isCollapsed}
@@ -34,10 +34,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         setIsMobileOpen={setIsMobileOpen}
       />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Header Bar */}
-        <header className="sticky top-0 z-30 h-16 border-b border-neutral-200 dark:border-[#334155] bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+      {/* Main Content Area — flex-1 with stable min-width to prevent scroll-caused shifts */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+        {/* Top Header Bar — sticky + explicit h-16 so it never shifts */}
+        <header className="sticky top-0 z-30 h-16 shrink-0 border-b border-neutral-200 dark:border-[#334155] bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileOpen(true)}
@@ -49,7 +49,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span className="font-heading font-bold text-sm text-neutral-900 dark:text-white hidden sm:inline">
                 {agencyName}
               </span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-neutral-100 dark:bg-[#334155] text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#334155] uppercase tracking-wider">
+              {/* Fixed min-w so role badge never causes header width jitter */}
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-neutral-100 dark:bg-[#334155] text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#334155] uppercase tracking-wider min-w-[68px] justify-center">
                 {userRole.replace('_', ' ')}
               </span>
             </div>
@@ -107,8 +108,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </header>
 
-        {/* Dynamic Route View */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full">
+        {/* Dynamic Route View — min-h prevents collapse when content is short */}
+        <main className="flex-1 min-h-[calc(100vh-4rem)] p-4 sm:p-6 lg:p-8 w-full">
           {children}
         </main>
       </div>

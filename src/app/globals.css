@@ -23,21 +23,19 @@
   --color-warning: #D97706;
   --color-danger: #DC2626;
 
-  /* Restrict maximum border radius to 8px (rounded-lg) across all components */
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
-  --radius-md: 0.375rem; /* 6px */
-  --radius-lg: 0.5rem;   /* 8px */
-  --radius-xl: 0.5rem;   /* Clamped to 8px max */
-  --radius-2xl: 0.5rem;  /* Clamped to 8px max */
-  --radius-3xl: 0.5rem;  /* Clamped to 8px max */
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.5rem;
+  --radius-3xl: 0.5rem;
 }
 
 @layer base {
   :root {
-    /* ☀️ Light Theme (White main + Near-black text + Gray support) */
     --background: #FFFFFF;
-    --background-subtle: #F9FAFB; /* Page canvas behind cards */
+    --background-subtle: #F9FAFB;
     --card: #FFFFFF;
     --card-foreground: #111827;
     --popover: #FFFFFF;
@@ -45,12 +43,12 @@
     --border: #E5E7EB;
     --input: #E5E7EB;
 
-    --foreground: #111827;        /* Near-black text */
+    --foreground: #111827;
     --muted: #F9FAFB;
-    --muted-foreground: #6B7280; /* Gray secondary support */
+    --muted-foreground: #6B7280;
     --placeholder: #9CA3AF;
 
-    --primary: #111827;          /* Solid Near-Black for primary buttons in light mode */
+    --primary: #111827;
     --primary-foreground: #FFFFFF;
     --secondary: #F3F4F6;
     --secondary-foreground: #111827;
@@ -59,28 +57,27 @@
     --warning: #D97706;
     --destructive: #DC2626;
     --destructive-foreground: #FFFFFF;
-    
-    --radius: 0.5rem; /* 8px max (rounded-lg) */
+
+    --radius: 0.5rem;
   }
 
   .dark,
   [data-theme="dark"] {
-    /* 🌑 Soft Charcoal Dark Theme */
-    --background: #111318;        /* Soft deep charcoal background */
-    --background-subtle: #161920; /* Elevated container background */
-    --card: #1C2029;              /* Card / Surface */
-    --card-foreground: #F5F5F5;   /* Near-white primary text */
+    --background: #111318;
+    --background-subtle: #161920;
+    --card: #1C2029;
+    --card-foreground: #F5F5F5;
     --popover: #1C2029;
     --popover-foreground: #F5F5F5;
     --border: #2D333F;
     --input: #2D333F;
 
-    --foreground: #F5F5F5;        /* Near-white */
+    --foreground: #F5F5F5;
     --muted: #161920;
-    --muted-foreground: #9CA3AF; /* Gray support text */
+    --muted-foreground: #9CA3AF;
     --placeholder: #6B7280;
 
-    --primary: #FFFFFF;          /* Pure White for buttons in dark mode */
+    --primary: #FFFFFF;
     --primary-foreground: #111318;
     --secondary: #252B37;
     --secondary-foreground: #F5F5F5;
@@ -91,12 +88,20 @@
     --destructive-foreground: #FFFFFF;
   }
 
+  /* ── CLS Fix: Reserve scrollbar gutter so layout never shifts on content overflow ── */
+  html {
+    scrollbar-gutter: stable;
+    overflow-y: scroll;
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
+    /* tabular-nums prevents digit-width oscillation in financial metrics */
     font-feature-settings: 'tnum' on, 'cv05' on, 'cv11' on;
     font-variant-numeric: tabular-nums;
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6, .font-heading {
@@ -106,21 +111,60 @@
   }
 }
 
+/* ── Tab panel fade (opacity-only — zero layout shift) ───────────────── */
+@keyframes tab-fade-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.tab-panel-enter {
+  animation: tab-fade-in 150ms ease-out both;
+  /* contain prevents the inner animation from causing ancestor relayout */
+  contain: layout style;
+}
+
+/* ── Skeleton shimmer (sized from outside, no dimension change) ──────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(150,150,150,0.12) 25%,
+    rgba(150,150,150,0.06) 50%,
+    rgba(150,150,150,0.12) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 0.25rem;
+}
+
+/* ── Tabular numbers: financial columns, KPI cards ───────────────────── */
+.nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' on;
+}
+
+/* ── Avatar / badge containers: reserved dimensions ─────────────────── */
+.avatar-ring {
+  flex-shrink: 0;
+  contain: strict;
+}
+
 /* Custom minimal scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   background: rgba(150, 150, 150, 0.25);
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(150, 150, 150, 0.45);
 }
