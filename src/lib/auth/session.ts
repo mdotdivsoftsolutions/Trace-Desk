@@ -10,7 +10,8 @@ export const REFRESH_COOKIE_NAME = 'trace_desk_refresh_token';
 export function setAuthCookies(
   response: NextResponse,
   accessToken: string,
-  refreshToken?: string
+  refreshToken?: string,
+  rememberMe?: boolean
 ): NextResponse {
   // 15-minute access token cookie
   response.cookies.set({
@@ -23,7 +24,7 @@ export function setAuthCookies(
     maxAge: 60 * 15, // 15 minutes
   });
 
-  // 7-day refresh token cookie
+  // Refresh token cookie
   if (refreshToken) {
     response.cookies.set({
       name: REFRESH_COOKIE_NAME,
@@ -32,7 +33,7 @@ export function setAuthCookies(
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      ...(rememberMe ? { maxAge: 60 * 60 * 24 * 30 } : {}), // 30 days if rememberMe, else session
     });
   }
 

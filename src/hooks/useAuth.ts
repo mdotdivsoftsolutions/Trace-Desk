@@ -35,7 +35,7 @@ export function useAuth() {
           return response.data.data.user;
         }
         return null;
-      } catch (err: any) {
+      } catch (err: unknown) {
         return null;
       }
     },
@@ -44,7 +44,7 @@ export function useAuth() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: async (credentials: { email: string; password: string }) => {
+    mutationFn: async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
       const res = await axios.post('/api/auth/login', credentials);
       return res.data;
     },

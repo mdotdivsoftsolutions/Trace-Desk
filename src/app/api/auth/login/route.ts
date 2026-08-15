@@ -8,6 +8,7 @@ import { z } from 'zod';
 const loginSchema = z.object({
   email: z.string().email('Invalid email address').trim().toLowerCase(),
   password: z.string().min(1, 'Password is required'),
+  rememberMe: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { email, password } = parseResult.data;
+    const { email, password, rememberMe } = parseResult.data;
 
     const user = await User.findOne({ email: email.toLowerCase() });
 
@@ -90,11 +91,12 @@ export async function POST(req: NextRequest) {
     });
 
     // Attach dual cookies
-    return setAuthCookies(response, accessToken, refreshToken);
-  } catch (error: any) {
+    return setAuthCookies(response, accessToken, refreshToken, rememberMe);
+  } catch (error: unknown) {
     console.error('[API /api/auth/login Error]:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
     return NextResponse.json(
-      { success: false, error: error.message || 'Internal Server Error' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
