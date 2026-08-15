@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Settings, LogOut, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks';
+import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 
 interface SidebarUserFooterProps {
   isCollapsed: boolean;
@@ -13,6 +14,7 @@ interface SidebarUserFooterProps {
 export function SidebarUserFooter({ isCollapsed }: SidebarUserFooterProps) {
   const { user, logout, isLoggingOut } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const userName = user?.name || 'Manu .M (M.Div SoftSolutions )';
   const userEmail = user?.email || 'manum66466@gmail.com';
@@ -20,6 +22,20 @@ export function SidebarUserFooter({ isCollapsed }: SidebarUserFooterProps) {
 
   return (
     <div className="p-3 border-t border-neutral-200 dark:border-[#334155] relative">
+      <ConfirmDialog
+        isOpen={showLogoutConfirm}
+        title="Sign Out Confirmation"
+        description="Are you sure you want to sign out of your session? Any unsaved changes in open forms may be lost."
+        confirmText={isLoggingOut ? 'Signing out...' : 'Sign Out'}
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isLoggingOut}
+        onConfirm={() => {
+          logout();
+        }}
+        onCancel={() => setShowLogoutConfirm(false)}
+      />
+
       {isUserMenuOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} />
@@ -52,9 +68,10 @@ export function SidebarUserFooter({ isCollapsed }: SidebarUserFooterProps) {
 
             <div className="border-t border-neutral-200 dark:border-[#334155] pt-1">
               <button
+                type="button"
                 onClick={() => {
                   setIsUserMenuOpen(false);
-                  logout();
+                  setShowLogoutConfirm(true);
                 }}
                 disabled={isLoggingOut}
                 className="w-full flex items-center gap-2.5 px-3.5 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-colors text-left disabled:opacity-50"
