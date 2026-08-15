@@ -29,6 +29,7 @@ export interface ProjectType {
   progressPercentage: number;
   startDate?: string;
   targetDeadline?: string;
+  milestones?: MilestoneType[];
   createdAt: string;
   updatedAt: string;
 }
@@ -79,14 +80,18 @@ export interface InvoiceType {
   taxRate?: number;
   taxAmount?: number;
   discountAmount?: number;
+  discount?: number;
   totalAmount: number;
   paidAmount: number;
+  amountPaid?: number;
   balanceDue: number;
   currency: string;
   status: 'draft' | 'sent' | 'partially_paid' | 'paid' | 'overdue' | 'cancelled';
   issueDate: string;
   dueDate: string;
+  paymentTerms?: string;
   notes?: string;
+  payments?: PaymentType[];
   createdAt: string;
   updatedAt: string;
 }
