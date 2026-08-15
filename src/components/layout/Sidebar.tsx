@@ -61,15 +61,15 @@ export function Sidebar({
 
       <aside
         className={cn(
-          'fixed lg:sticky top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-neutral-200 dark:border-[#2A2A2A] bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-xl transition-all duration-300 ease-in-out',
+          'fixed lg:sticky top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-neutral-200 dark:border-[#2D333F] bg-white/95 dark:bg-[#1C2029]/95 backdrop-blur-xl transition-all duration-300 ease-in-out',
           isCollapsed ? 'w-20' : 'w-64',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         {/* Sidebar Header with M.Div Softsolutions branding */}
-        <div className="h-16 px-4 flex items-center justify-between border-b border-neutral-200 dark:border-[#2A2A2A]">
+        <div className="h-16 px-4 flex items-center justify-between border-b border-neutral-200 dark:border-[#2D333F]">
           <Link href="/" className="flex items-center gap-3 overflow-hidden group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform flex-shrink-0">
               <Layers className="w-5 h-5" />
             </div>
             {!isCollapsed && (
@@ -119,12 +119,19 @@ export function Sidebar({
                 className={cn(
                   'flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-xs transition-all group relative',
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-sm font-semibold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/80 dark:hover:bg-neutral-800/80'
+                    ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm font-semibold'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-[#161920]'
                 )}
                 title={isCollapsed ? item.label : undefined}
               >
-                <Icon className={cn('w-4 h-4 flex-shrink-0', isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-900 dark:group-hover:text-white')} />
+                <Icon
+                  className={cn(
+                    'w-4 h-4 flex-shrink-0',
+                    isActive
+                      ? 'text-white dark:text-neutral-900'
+                      : 'text-neutral-500 group-hover:text-neutral-900 dark:group-hover:text-white'
+                  )}
+                />
                 {!isCollapsed && <span className="truncate">{item.label}</span>}
               </Link>
             );
@@ -132,8 +139,8 @@ export function Sidebar({
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-neutral-200/80 dark:border-[#2A2A2A]/80">
-          <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-200/60 dark:border-[#2A2A2A]/60 flex items-center gap-2.5">
+        <div className="p-3 border-t border-neutral-200/80 dark:border-[#2D333F]/80">
+          <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-[#111318] border border-neutral-200/60 dark:border-[#2D333F]/60 flex items-center gap-2.5">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">

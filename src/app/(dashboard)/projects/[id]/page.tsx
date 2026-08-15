@@ -90,10 +90,10 @@ export default function ProjectWorkspacePage({
 
   if (!project) {
     return (
-      <div className="p-12 text-center space-y-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A]">
+      <div className="p-12 text-center space-y-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F]">
         <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
         <h2 className="font-heading text-lg font-bold text-neutral-900 dark:text-white">Project Not Found</h2>
-        <Link href="/projects" className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+        <Link href="/projects" className="inline-flex items-center gap-1 text-xs font-semibold text-neutral-900 dark:text-white hover:underline">
           <ArrowLeft className="w-3.5 h-3.5" /> Back to Projects Directory
         </Link>
       </div>
@@ -141,7 +141,7 @@ export default function ProjectWorkspacePage({
 
   const milestoneStatusColors: Record<string, string> = {
     pending: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
-    in_progress: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20',
+    in_progress: 'bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] border-neutral-200 dark:border-[#2D333F]',
     completed: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
     invoiced: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 font-bold',
     paid: 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20 font-bold',
@@ -166,11 +166,11 @@ export default function ProjectWorkspacePage({
   return (
     <div className="w-full space-y-6 animate-in fade-in duration-300">
       {/* Top Workspace Header */}
-      <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-6">
+      <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-6">
         {/* Breadcrumb & Top External Links */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            <Link href="/projects" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1">
+            <Link href="/projects" className="hover:text-neutral-900 dark:text-white dark:hover:text-neutral-600 dark:text-neutral-400 transition-colors flex items-center gap-1">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Projects</span>
             </Link>
@@ -184,7 +184,7 @@ export default function ProjectWorkspacePage({
                 href={project.repoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#0A0A0A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#2A2A2A] transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#111318] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#2D333F] transition-colors"
               >
                 <GitBranch className="w-3.5 h-3.5" />
                 <span>Repository</span>
@@ -195,7 +195,7 @@ export default function ProjectWorkspacePage({
                 href={project.liveUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-xs font-semibold text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#252B37] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#2D333F] transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Live Staging</span>
@@ -203,9 +203,9 @@ export default function ProjectWorkspacePage({
             )}
             <Link
               href={`/projects/${projectId}/edit`}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1A1A1A] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1C2029] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 transition-colors shadow-sm"
             >
-              <Edit2 className="w-3.5 h-3.5 text-indigo-500" />
+              <Edit2 className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
               <span>Edit Project</span>
             </Link>
           </div>
@@ -218,7 +218,7 @@ export default function ProjectWorkspacePage({
               <h1 className="font-heading text-2xl lg:text-3xl font-extrabold text-neutral-900 dark:text-white">
                 {project.title}
               </h1>
-              <span className="px-2.5 py-0.5 text-xs font-bold rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 text-xs font-bold rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] border border-neutral-200 dark:border-[#2D333F] uppercase tracking-wider">
                 {project.status.replace('_', ' ')}
               </span>
             </div>
@@ -232,7 +232,7 @@ export default function ProjectWorkspacePage({
                 <>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-indigo-500" />
+                    <Calendar className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
                     <span>Kickoff: {formatDate(project.startDate)}</span>
                   </span>
                 </>
@@ -253,15 +253,15 @@ export default function ProjectWorkspacePage({
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => handleOpenCreateTask()}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1A1A1A] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold text-xs transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1C2029] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold text-xs transition-colors shadow-sm"
             >
-              <Plus className="w-3.5 h-3.5 text-indigo-500" />
+              <Plus className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
               <span>Add Task</span>
             </button>
 
             <button
               onClick={handleOpenCreateMilestone}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-indigo-600/25 transition-all"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-sm transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Milestone</span>
@@ -270,18 +270,18 @@ export default function ProjectWorkspacePage({
         </div>
 
         {/* Dynamic Progress Velocity Bar */}
-        <div className="space-y-2 pt-2 border-t border-neutral-100 dark:border-[#2A2A2A]">
+        <div className="space-y-2 pt-2 border-t border-neutral-100 dark:border-[#2D333F]">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold text-neutral-600 dark:text-neutral-400">
               Project Delivery Velocity
             </span>
-            <span className="font-extrabold text-indigo-600 dark:text-indigo-400 text-sm font-mono">
+            <span className="font-extrabold text-neutral-900 dark:text-white text-sm font-mono">
               {project.progressPercentage}% Complete
             </span>
           </div>
-          <div className="w-full bg-neutral-100 dark:bg-[#0A0A0A] h-2.5 rounded-full overflow-hidden">
+          <div className="w-full bg-neutral-100 dark:bg-[#111318] h-2.5 rounded-full overflow-hidden">
             <div
-              className="bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 h-full rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-neutral-800 to-neutral-600 dark:from-white dark:to-neutral-300 h-full rounded-full transition-all duration-500"
               style={{ width: `${project.progressPercentage}%` }}
             />
           </div>
@@ -293,7 +293,7 @@ export default function ProjectWorkspacePage({
             {project.techStack.map((tech, idx) => (
               <span
                 key={idx}
-                className="px-2.5 py-0.5 text-xs font-medium rounded-md bg-neutral-100 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A] text-neutral-700 dark:text-neutral-300"
+                className="px-2.5 py-0.5 text-xs font-medium rounded-md bg-neutral-100 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F] text-neutral-700 dark:text-neutral-300"
               >
                 {tech}
               </span>
@@ -303,14 +303,14 @@ export default function ProjectWorkspacePage({
       </div>
 
       {/* 2. Mini Client Snapshot Card (Bi-directional Linking) */}
-      <div className="p-4 rounded-lg bg-gradient-to-r from-indigo-900/10 via-purple-900/5 to-transparent dark:from-indigo-950/40 dark:via-[#1A1A1A] dark:to-[#1A1A1A] border border-indigo-200 dark:border-indigo-900/40 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-4 rounded-lg bg-gradient-to-r bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold flex-shrink-0 shadow-md shadow-indigo-600/20">
+          <div className="w-10 h-10 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 flex items-center justify-center font-bold flex-shrink-0 shadow-sm">
             <Building2 className="w-5 h-5" />
           </div>
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-bold text-indigo-600 dark:text-indigo-400 tracking-wider">
+              <span className="text-[10px] uppercase font-bold text-neutral-900 dark:text-white tracking-wider">
                 Client Account Snapshot
               </span>
             </div>
@@ -320,7 +320,7 @@ export default function ProjectWorkspacePage({
             <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400">
               {clientEmail && (
                 <span className="flex items-center gap-1">
-                  <Mail className="w-3 h-3 text-indigo-500" />
+                  <Mail className="w-3 h-3 text-neutral-700 dark:text-neutral-300" />
                   <span>{clientEmail}</span>
                 </span>
               )}
@@ -328,7 +328,7 @@ export default function ProjectWorkspacePage({
                 <>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <Phone className="w-3 h-3 text-indigo-500" />
+                    <Phone className="w-3 h-3 text-neutral-700 dark:text-neutral-300" />
                     <span>{clientPhone}</span>
                   </span>
                 </>
@@ -344,7 +344,7 @@ export default function ProjectWorkspacePage({
         {clientId && (
           <Link
             href={`/clients/${clientId}`}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-white dark:bg-[#1A1A1A] hover:bg-indigo-50 dark:hover:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 text-xs font-bold transition-all shadow-sm flex-shrink-0 self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-white dark:bg-[#1C2029] hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-[#2D333F] text-neutral-900 dark:text-white text-xs font-bold transition-all shadow-sm flex-shrink-0 self-start sm:self-auto"
           >
             <span>View Client Profile</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -353,13 +353,13 @@ export default function ProjectWorkspacePage({
       </div>
 
       {/* Workspace Tabs Navigation */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-neutral-200 dark:border-[#2A2A2A] pb-1">
+      <div className="flex flex-wrap items-center gap-2 border-b border-neutral-200 dark:border-[#2D333F] pb-1">
         <button
           onClick={() => setActiveTab('milestones')}
           className={cn(
             'flex items-center gap-2 px-3.5 py-2 rounded-md font-bold text-xs transition-all',
             activeTab === 'milestones'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+              ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
           )}
         >
@@ -372,7 +372,7 @@ export default function ProjectWorkspacePage({
           className={cn(
             'flex items-center gap-2 px-3.5 py-2 rounded-md font-bold text-xs transition-all',
             activeTab === 'tasks'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+              ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
           )}
         >
@@ -385,7 +385,7 @@ export default function ProjectWorkspacePage({
           className={cn(
             'flex items-center gap-2 px-3.5 py-2 rounded-md font-bold text-xs transition-all',
             activeTab === 'financials'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+              ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
           )}
         >
@@ -398,7 +398,7 @@ export default function ProjectWorkspacePage({
           className={cn(
             'flex items-center gap-2 px-3.5 py-2 rounded-md font-bold text-xs transition-all',
             activeTab === 'links'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+              ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
           )}
         >
@@ -411,7 +411,7 @@ export default function ProjectWorkspacePage({
           className={cn(
             'flex items-center gap-2 px-3.5 py-2 rounded-md font-bold text-xs transition-all',
             activeTab === 'vault'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+              ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
           )}
         >
@@ -424,7 +424,7 @@ export default function ProjectWorkspacePage({
           className={cn(
             'flex items-center gap-2 px-3.5 py-2 rounded-md font-bold text-xs transition-all',
             activeTab === 'scope'
-              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+              ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
           )}
         >
@@ -447,7 +447,7 @@ export default function ProjectWorkspacePage({
             </div>
             <button
               onClick={handleOpenCreateMilestone}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Milestone</span>
@@ -455,8 +455,8 @@ export default function ProjectWorkspacePage({
           </div>
 
           {(!project.milestones || project.milestones.length === 0) ? (
-            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2A2A2A] text-center space-y-3 bg-white/50 dark:bg-[#1A1A1A]/50">
-              <Milestone className="w-8 h-8 text-indigo-500 mx-auto" />
+            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2D333F] text-center space-y-3 bg-white/50 dark:bg-[#1C2029]/50">
+              <Milestone className="w-8 h-8 text-neutral-700 dark:text-neutral-300 mx-auto" />
               <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                 No milestones defined for this workspace
               </h4>
@@ -465,7 +465,7 @@ export default function ProjectWorkspacePage({
               </p>
               <button
                 onClick={handleOpenCreateMilestone}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create Milestone</span>
@@ -477,11 +477,11 @@ export default function ProjectWorkspacePage({
                 return (
                   <div
                     key={m._id || index}
-                    className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-indigo-500/40 transition-colors"
+                    className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-neutral-200 dark:border-[#2D333F] transition-colors"
                   >
                     <div className="space-y-1.5 flex-1 min-w-0">
                       <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">
+                        <div className="w-6 h-6 rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">
                           {index + 1}
                         </div>
                         <h4 className="font-heading font-bold text-sm text-neutral-900 dark:text-white truncate">
@@ -503,7 +503,7 @@ export default function ProjectWorkspacePage({
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-5 pl-9 sm:pl-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-neutral-100 dark:border-[#2A2A2A]">
+                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-5 pl-9 sm:pl-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-neutral-100 dark:border-[#2D333F]">
                       <div className="text-right">
                         <div className="text-[10px] text-neutral-400 font-bold uppercase">Allocated Budget</div>
                         <div className="text-sm font-mono font-extrabold text-neutral-900 dark:text-white">
@@ -523,7 +523,7 @@ export default function ProjectWorkspacePage({
                       <div className="flex items-center gap-1.5">
                         <Link
                           href={`/invoices/new?projectId=${projectId}&milestoneId=${m._id}`}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-[11px] font-bold transition-colors border border-indigo-200 dark:border-indigo-900/50"
+                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-[11px] font-bold transition-colors border border-neutral-200 dark:border-[#2D333F]"
                           title="Generate Invoice for Milestone"
                         >
                           <Receipt className="w-3.5 h-3.5" />
@@ -562,13 +562,13 @@ export default function ProjectWorkspacePage({
 
             <div className="flex items-center gap-3">
               {/* View Toggle */}
-              <div className="flex items-center p-1 rounded-md bg-neutral-100 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A]">
+              <div className="flex items-center p-1 rounded-md bg-neutral-100 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F]">
                 <button
                   onClick={() => setTaskViewMode('kanban')}
                   className={cn(
                     'p-1.5 rounded text-xs font-semibold flex items-center gap-1 transition-all',
                     taskViewMode === 'kanban'
-                      ? 'bg-white dark:bg-[#1A1A1A] text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
+                      ? 'bg-white dark:bg-[#1C2029] text-neutral-900 dark:text-white shadow-sm font-bold'
                       : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
                   )}
                   title="Kanban Board"
@@ -581,7 +581,7 @@ export default function ProjectWorkspacePage({
                   className={cn(
                     'p-1.5 rounded text-xs font-semibold flex items-center gap-1 transition-all',
                     taskViewMode === 'list'
-                      ? 'bg-white dark:bg-[#1A1A1A] text-indigo-600 dark:text-indigo-400 shadow-sm font-bold'
+                      ? 'bg-white dark:bg-[#1C2029] text-neutral-900 dark:text-white shadow-sm font-bold'
                       : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
                   )}
                   title="Task List"
@@ -593,7 +593,7 @@ export default function ProjectWorkspacePage({
 
               <button
                 onClick={() => handleOpenCreateTask()}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm transition-all"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Task</span>
@@ -610,7 +610,7 @@ export default function ProjectWorkspacePage({
               onOpenEditTask={handleOpenEditTask}
             />
           ) : (
-            <div className="rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm overflow-hidden">
+            <div className="rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm overflow-hidden">
               {(!tasks || tasks.length === 0) ? (
                 <div className="p-12 text-center text-xs text-neutral-500">
                   No tasks created in this workspace yet. Click &quot;Add Task&quot; to begin.
@@ -618,7 +618,7 @@ export default function ProjectWorkspacePage({
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-neutral-50 dark:bg-[#0A0A0A] border-b border-neutral-200 dark:border-[#2A2A2A] text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">
+                    <thead className="bg-neutral-50 dark:bg-[#111318] border-b border-neutral-200 dark:border-[#2D333F] text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">
                       <tr>
                         <th className="px-5 py-3">Task</th>
                         <th className="px-5 py-3">Status</th>
@@ -628,11 +628,11 @@ export default function ProjectWorkspacePage({
                         <th className="px-5 py-3 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-neutral-100 dark:divide-[#2A2A2A]/70 font-medium">
+                    <tbody className="divide-y divide-neutral-100 dark:divide-[#2D333F]/70 font-medium">
                       {tasks.map((task) => (
                         <tr
                           key={task._id}
-                          className="hover:bg-neutral-50/60 dark:hover:bg-[#0A0A0A]/40 transition-colors"
+                          className="hover:bg-neutral-50/60 dark:hover:bg-[#111318]/40 transition-colors"
                         >
                           <td className="px-5 py-3.5">
                             <div className="font-bold text-neutral-900 dark:text-white">
@@ -645,7 +645,7 @@ export default function ProjectWorkspacePage({
                             )}
                           </td>
                           <td className="px-5 py-3.5">
-                            <span className="px-2 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider bg-neutral-100 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A] text-neutral-700 dark:text-neutral-300">
+                            <span className="px-2 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider bg-neutral-100 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F] text-neutral-700 dark:text-neutral-300">
                               {task.status.replace('_', ' ')}
                             </span>
                           </td>
@@ -691,7 +691,7 @@ export default function ProjectWorkspacePage({
         <div className="space-y-6">
           {/* Financial KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
+            <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
               <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
                 Total Project Budget
               </span>
@@ -701,17 +701,17 @@ export default function ProjectWorkspacePage({
               <p className="text-[11px] text-neutral-400 capitalize">{project.budgetType} billing scope</p>
             </div>
 
-            <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
-              <span className="text-[11px] font-bold text-indigo-500 uppercase tracking-wider">
+            <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
+              <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider">
                 Total Invoiced
               </span>
-              <div className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 font-mono">
+              <div className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono">
                 {formatCurrency(totalInvoiced, project.currency)}
               </div>
               <p className="text-[11px] text-neutral-400">Total billings raised</p>
             </div>
 
-            <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
+            <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
               <span className="text-[11px] font-bold text-emerald-500 uppercase tracking-wider">
                 Payments Settled
               </span>
@@ -721,7 +721,7 @@ export default function ProjectWorkspacePage({
               <p className="text-[11px] text-neutral-400">Total cash collected</p>
             </div>
 
-            <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
+            <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
               <span className="text-[11px] font-bold text-amber-500 uppercase tracking-wider">
                 Unbilled Budget Remaining
               </span>
@@ -745,7 +745,7 @@ export default function ProjectWorkspacePage({
               </div>
               <Link
                 href={`/invoices/new?projectId=${projectId}`}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm transition-all"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Create Invoice</span>
@@ -753,8 +753,8 @@ export default function ProjectWorkspacePage({
             </div>
 
             {(!invoices || invoices.length === 0) ? (
-              <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2A2A2A] text-center space-y-3 bg-white/50 dark:bg-[#1A1A1A]/50">
-                <Receipt className="w-8 h-8 text-indigo-500 mx-auto" />
+              <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2D333F] text-center space-y-3 bg-white/50 dark:bg-[#1C2029]/50">
+                <Receipt className="w-8 h-8 text-neutral-700 dark:text-neutral-300 mx-auto" />
                 <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                   No invoices recorded for this project
                 </h4>
@@ -763,17 +763,17 @@ export default function ProjectWorkspacePage({
                 </p>
                 <Link
                   href={`/invoices/new?projectId=${projectId}`}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Create Invoice</span>
                 </Link>
               </div>
             ) : (
-              <div className="rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm overflow-hidden">
+              <div className="rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-neutral-50 dark:bg-[#0A0A0A] border-b border-neutral-200 dark:border-[#2A2A2A] text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">
+                    <thead className="bg-neutral-50 dark:bg-[#111318] border-b border-neutral-200 dark:border-[#2D333F] text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">
                       <tr>
                         <th className="px-5 py-3">Invoice #</th>
                         <th className="px-5 py-3">Issue Date</th>
@@ -784,13 +784,13 @@ export default function ProjectWorkspacePage({
                         <th className="px-5 py-3 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-neutral-100 dark:divide-[#2A2A2A]/70 font-medium">
+                    <tbody className="divide-y divide-neutral-100 dark:divide-[#2D333F]/70 font-medium">
                       {invoices.map((inv) => (
                         <tr
                           key={inv._id}
-                          className="hover:bg-neutral-50/60 dark:hover:bg-[#0A0A0A]/40 transition-colors"
+                          className="hover:bg-neutral-50/60 dark:hover:bg-[#111318]/40 transition-colors"
                         >
-                          <td className="px-5 py-3.5 font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                          <td className="px-5 py-3.5 font-mono font-bold text-neutral-900 dark:text-white">
                             <Link href={`/invoices/${inv._id}`} className="hover:underline">
                               {inv.invoiceNumber}
                             </Link>
@@ -863,7 +863,7 @@ export default function ProjectWorkspacePage({
             </div>
             <Link
               href={`/projects/${projectId}/edit`}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Manage URLs</span>
@@ -871,8 +871,8 @@ export default function ProjectWorkspacePage({
           </div>
 
           {(!project.links || project.links.length === 0) ? (
-            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2A2A2A] text-center space-y-3 bg-white/50 dark:bg-[#1A1A1A]/50">
-              <Globe className="w-8 h-8 text-indigo-500 mx-auto" />
+            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2D333F] text-center space-y-3 bg-white/50 dark:bg-[#1C2029]/50">
+              <Globe className="w-8 h-8 text-neutral-700 dark:text-neutral-300 mx-auto" />
               <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                 No deployment links configured yet
               </h4>
@@ -881,7 +881,7 @@ export default function ProjectWorkspacePage({
               </p>
               <Link
                 href={`/projects/${projectId}/edit`}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Environment URLs</span>
@@ -892,7 +892,7 @@ export default function ProjectWorkspacePage({
               {project.links.map((link, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex items-center justify-between gap-3 hover:border-indigo-500/40 transition-colors"
+                  className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex items-center justify-between gap-3 hover:border-neutral-200 dark:border-[#2D333F] transition-colors"
                 >
                   <div className="min-w-0 space-y-1">
                     <div className="flex items-center gap-2">
@@ -903,7 +903,7 @@ export default function ProjectWorkspacePage({
                             : link.category === 'staging'
                             ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
                             : link.category === 'api'
-                            ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20'
+                            ? 'bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] border-neutral-200 dark:border-[#2D333F]'
                             : 'bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border-neutral-500/20'
                         }`}
                       >
@@ -917,7 +917,7 @@ export default function ProjectWorkspacePage({
                       href={link.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-xs font-mono text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 truncate"
+                      className="text-xs font-mono text-neutral-900 dark:text-white hover:underline flex items-center gap-1 truncate"
                     >
                       <span className="truncate">{link.url}</span>
                       <ExternalLink className="w-3 h-3 flex-shrink-0" />
@@ -928,7 +928,7 @@ export default function ProjectWorkspacePage({
                     href={link.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 rounded-md bg-neutral-100 dark:bg-[#0A0A0A] text-neutral-600 dark:text-neutral-300 hover:text-indigo-600 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors flex-shrink-0"
+                    className="p-2 rounded-md bg-neutral-100 dark:bg-[#111318] text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:text-white dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors flex-shrink-0"
                     title="Open Link in New Tab"
                   >
                     <ExternalLink className="w-4 h-4" />
@@ -954,7 +954,7 @@ export default function ProjectWorkspacePage({
             </div>
             <Link
               href={`/projects/${projectId}/edit`}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Credential</span>
@@ -962,7 +962,7 @@ export default function ProjectWorkspacePage({
           </div>
 
           {(!project.credentials || project.credentials.length === 0) ? (
-            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2A2A2A] text-center space-y-3 bg-white/50 dark:bg-[#1A1A1A]/50">
+            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2D333F] text-center space-y-3 bg-white/50 dark:bg-[#1C2029]/50">
               <Key className="w-8 h-8 text-amber-500 mx-auto" />
               <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                 No credentials stored in this project vault
@@ -972,7 +972,7 @@ export default function ProjectWorkspacePage({
               </p>
               <Link
                 href={`/projects/${projectId}/edit`}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-semibold shadow-sm"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Store Service Account</span>
@@ -983,9 +983,9 @@ export default function ProjectWorkspacePage({
               {project.credentials.map((cred, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-3"
+                  className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-3"
                 >
-                  <div className="flex items-center justify-between gap-2 border-b border-neutral-100 dark:border-[#2A2A2A]/70 pb-2">
+                  <div className="flex items-center justify-between gap-2 border-b border-neutral-100 dark:border-[#2D333F]/70 pb-2">
                     <div className="flex items-center gap-2">
                       <Key className="w-4 h-4 text-amber-500" />
                       <span className="font-heading text-xs font-bold text-neutral-900 dark:text-white">
@@ -993,7 +993,7 @@ export default function ProjectWorkspacePage({
                       </span>
                     </div>
                     {cred.environment && (
-                      <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-neutral-100 dark:bg-[#0A0A0A] text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#2A2A2A]">
+                      <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-neutral-100 dark:bg-[#111318] text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#2D333F]">
                         {cred.environment}
                       </span>
                     )}
@@ -1023,7 +1023,7 @@ export default function ProjectWorkspacePage({
                               onClick={() =>
                                 setShowSecretMap((prev) => ({ ...prev, [idx]: !prev[idx] }))
                               }
-                              className="text-[10px] text-indigo-500 hover:underline flex items-center gap-0.5"
+                              className="text-[10px] text-neutral-700 dark:text-neutral-300 hover:underline flex items-center gap-0.5"
                             >
                               {showSecretMap[idx] ? (
                                 <>
@@ -1057,7 +1057,7 @@ export default function ProjectWorkspacePage({
                             </button>
                           </div>
                         </div>
-                        <div className="p-2 rounded bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A] font-mono text-[11px] text-neutral-800 dark:text-neutral-200 truncate mt-1">
+                        <div className="p-2 rounded bg-neutral-50 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F] font-mono text-[11px] text-neutral-800 dark:text-neutral-200 truncate mt-1">
                           {showSecretMap[idx] ? cred.accessKeyOrUrl : '••••••••••••••••••••••••••••••••'}
                         </div>
                       </div>
@@ -1065,7 +1065,7 @@ export default function ProjectWorkspacePage({
                   </div>
 
                   {cred.notes && (
-                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 italic pt-2 border-t border-neutral-100 dark:border-[#2A2A2A]/70">
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 italic pt-2 border-t border-neutral-100 dark:border-[#2D333F]/70">
                       {cred.notes}
                     </p>
                   )}
@@ -1079,17 +1079,17 @@ export default function ProjectWorkspacePage({
       {/* TAB 6: Scope & Architecture (Rich Text View) */}
       {activeTab === 'scope' && (
         <div className="space-y-6">
-          <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-3">
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
+          <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-3">
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-indigo-500" />
+                <FileText className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                 <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
                   Project Scope & Architectural Deliverables
                 </h3>
               </div>
               <Link
                 href={`/projects/${projectId}/edit`}
-                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                className="text-xs font-bold text-neutral-900 dark:text-white hover:underline flex items-center gap-1"
               >
                 <Edit2 className="w-3 h-3" /> Edit Scope
               </Link>
@@ -1107,8 +1107,8 @@ export default function ProjectWorkspacePage({
             )}
           </div>
 
-          <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-3">
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
+          <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-3">
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
               <div className="flex items-center gap-2">
                 <Key className="w-4 h-4 text-emerald-500" />
                 <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
@@ -1117,7 +1117,7 @@ export default function ProjectWorkspacePage({
               </div>
               <Link
                 href={`/projects/${projectId}/edit`}
-                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                className="text-xs font-bold text-neutral-900 dark:text-white hover:underline flex items-center gap-1"
               >
                 <Edit2 className="w-3 h-3" /> Edit Notes
               </Link>

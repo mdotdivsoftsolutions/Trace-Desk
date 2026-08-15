@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const agencyName = settings?.agencyName || 'M.Div Softsolutions';
 
   return (
-    <div className="min-h-screen flex bg-[#F9FAFB] dark:bg-[#0A0A0A] text-neutral-900 dark:text-neutral-100 antialiased font-sans">
+    <div className="min-h-screen flex bg-[#F9FAFB] dark:bg-[#111318] text-neutral-900 dark:text-neutral-100 antialiased font-sans">
       {/* Sidebar Component */}
       <Sidebar
         isCollapsed={isCollapsed}
@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header Bar */}
-        <header className="sticky top-0 z-30 h-16 border-b border-neutral-200 dark:border-[#2A2A2A] bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-30 h-16 border-b border-neutral-200 dark:border-[#2D333F] bg-white/95 dark:bg-[#1C2029]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileOpen(true)}
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span className="font-heading font-bold text-sm text-neutral-900 dark:text-white hidden sm:inline">
                 {agencyName}
               </span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700">
                 PRO
               </span>
             </div>
@@ -58,7 +58,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="relative">
               <button
                 onClick={() => setIsQuickAddOpen(!isQuickAddOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold shadow-sm transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-bold shadow-sm transition-all"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Quick Create</span>
@@ -70,13 +70,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className="fixed inset-0 z-40"
                     onClick={() => setIsQuickAddOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <Link
                       href="/projects/new"
                       onClick={() => setIsQuickAddOpen(false)}
                       className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                     >
-                      <FolderKanban className="w-4 h-4 text-indigo-500" />
+                      <FolderKanban className="w-4 h-4 text-neutral-600 dark:text-neutral-300" />
                       <span>New Project</span>
                     </Link>
                     <Link
@@ -84,7 +84,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       onClick={() => setIsQuickAddOpen(false)}
                       className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                     >
-                      <UserPlus className="w-4 h-4 text-indigo-500" />
+                      <UserPlus className="w-4 h-4 text-neutral-600 dark:text-neutral-300" />
                       <span>New Client</span>
                     </Link>
                     <Link
@@ -92,7 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       onClick={() => setIsQuickAddOpen(false)}
                       className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                     >
-                      <Receipt className="w-4 h-4 text-indigo-500" />
+                      <Receipt className="w-4 h-4 text-neutral-600 dark:text-neutral-300" />
                       <span>New Invoice</span>
                     </Link>
                   </div>

@@ -11,13 +11,13 @@
   --color-brand: #4F46E5;
 
   --color-bg-light: #FFFFFF;
-  --color-bg-dark: #0A0A0A;
+  --color-bg-dark: #111318;
 
   --color-surface-light: #FFFFFF;
-  --color-surface-dark: #1A1A1A;
+  --color-surface-dark: #1C2029;
 
   --color-border-light: #E5E7EB;
-  --color-border-dark: #2A2A2A;
+  --color-border-dark: #2D333F;
 
   --color-success: #16A34A;
   --color-warning: #D97706;
@@ -50,7 +50,7 @@
     --muted-foreground: #6B7280; /* Gray secondary support */
     --placeholder: #9CA3AF;
 
-    --primary: #4F46E5;          /* Brand Indigo */
+    --primary: #111827;          /* Solid Near-Black for primary buttons in light mode */
     --primary-foreground: #FFFFFF;
     --secondary: #F3F4F6;
     --secondary-foreground: #111827;
@@ -65,24 +65,24 @@
 
   .dark,
   [data-theme="dark"] {
-    /* 🌑 Dark Theme (Special black #0A0A0A + Gray text + Near-white) */
-    --background: #0A0A0A;        /* Special black page background */
-    --background-subtle: #141414; /* Elevated container background */
-    --card: #1A1A1A;              /* Card / Surface */
+    /* 🌑 Soft Charcoal Dark Theme */
+    --background: #111318;        /* Soft deep charcoal background */
+    --background-subtle: #161920; /* Elevated container background */
+    --card: #1C2029;              /* Card / Surface */
     --card-foreground: #F5F5F5;   /* Near-white primary text */
-    --popover: #1A1A1A;
+    --popover: #1C2029;
     --popover-foreground: #F5F5F5;
-    --border: #2A2A2A;
-    --input: #2A2A2A;
+    --border: #2D333F;
+    --input: #2D333F;
 
     --foreground: #F5F5F5;        /* Near-white */
-    --muted: #141414;
-    --muted-foreground: #A1A1AA; /* Gray support text */
-    --placeholder: #71717A;
+    --muted: #161920;
+    --muted-foreground: #9CA3AF; /* Gray support text */
+    --placeholder: #6B7280;
 
-    --primary: #6366F1;          /* Indigo-500 high contrast */
-    --primary-foreground: #FFFFFF;
-    --secondary: #242424;
+    --primary: #FFFFFF;          /* Pure White for buttons in dark mode */
+    --primary-foreground: #111318;
+    --secondary: #252B37;
     --secondary-foreground: #F5F5F5;
 
     --success: #22C55E;

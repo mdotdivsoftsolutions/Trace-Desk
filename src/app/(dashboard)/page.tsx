@@ -33,10 +33,10 @@ export default function DashboardPage() {
   return (
     <div className="w-full space-y-6 animate-in fade-in duration-300">
       {/* Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm relative overflow-hidden">
         <div className="space-y-1 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] border border-neutral-200 dark:border-[#2D333F] uppercase tracking-wider">
               Live Operations
             </span>
             <span className="text-xs text-neutral-400">
@@ -54,14 +54,14 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2.5 relative z-10">
           <Link
             href="/invoices"
-            className="flex items-center gap-2 px-3.5 py-2 rounded-md bg-white dark:bg-[#0A0A0A] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 transition-all shadow-sm"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-md bg-white dark:bg-[#111318] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 transition-all shadow-sm"
           >
             <Receipt className="w-4 h-4 text-amber-500" />
             <span>Create Invoice</span>
           </Link>
           <Link
             href="/projects/new"
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-xs font-bold text-white shadow-md shadow-indigo-600/30 transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-bold shadow-sm transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>New Project</span>
@@ -72,7 +72,7 @@ export default function DashboardPage() {
       {/* 4 Top KPI Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total Revenue */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Collected Revenue
@@ -97,7 +97,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 2: Pending Receivables */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Pending Invoices
@@ -127,12 +127,12 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 3: Active Projects & Avg Progress */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Active Projects
             </span>
-            <div className="w-8 h-8 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] flex items-center justify-center">
               <FolderKanban className="w-4 h-4" />
             </div>
           </div>
@@ -150,9 +150,9 @@ export default function DashboardPage() {
               )}
             </div>
             <div className="mt-2 flex items-center gap-2">
-              <div className="flex-1 bg-neutral-100 dark:bg-[#0A0A0A] h-1.5 rounded-full overflow-hidden">
+              <div className="flex-1 bg-neutral-100 dark:bg-[#111318] h-1.5 rounded-full overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-full rounded-full transition-all duration-500"
+                  className="bg-neutral-900 dark:bg-white h-full rounded-full transition-all duration-500"
                   style={{ width: `${metrics?.projects.averageCompletionRate || 0}%` }}
                 />
               </div>
@@ -164,7 +164,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 4: Open & Overdue Tasks */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Open Tasks
@@ -205,7 +205,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <h2 className="font-heading text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                <FolderKanban className="w-4 h-4 text-indigo-500" />
+                <FolderKanban className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                 <span>Active Project Execution</span>
               </h2>
               <p className="text-xs text-neutral-500">
@@ -214,7 +214,7 @@ export default function DashboardPage() {
             </div>
             <Link
               href="/projects"
-              className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+              className="text-xs font-semibold text-neutral-900 dark:text-white hover:underline flex items-center gap-1"
             >
               <span>View All Projects</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -231,8 +231,8 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : activeProjects.length === 0 ? (
-            <div className="p-10 rounded-lg border border-dashed border-neutral-300 dark:border-[#2A2A2A] text-center space-y-3 bg-white/50 dark:bg-[#1A1A1A]/50">
-              <div className="w-12 h-12 rounded-lg bg-indigo-500/10 text-indigo-500 mx-auto flex items-center justify-center">
+            <div className="p-10 rounded-lg border border-dashed border-neutral-300 dark:border-[#2D333F] text-center space-y-3 bg-white/50 dark:bg-[#1C2029]/50">
+              <div className="w-12 h-12 rounded-lg bg-neutral-100 dark:bg-[#252B37] text-neutral-700 dark:text-neutral-300 mx-auto flex items-center justify-center">
                 <Layers className="w-6 h-6" />
               </div>
               <h3 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
@@ -243,7 +243,7 @@ export default function DashboardPage() {
               </p>
               <Link
                 href="/projects/new"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shadow-sm"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create First Project</span>
@@ -256,7 +256,7 @@ export default function DashboardPage() {
                   typeof project.clientId === 'object' ? (project.clientId as any)?.name : 'Client';
                 const statusColors: Record<string, string> = {
                   discovery: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-                  in_progress: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
+                  in_progress: 'bg-neutral-100 dark:bg-[#252B37] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-[#2D333F]',
                   review: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
                   completed: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
                 };
@@ -264,14 +264,14 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={project._id}
-                    className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] hover:border-indigo-500/40 transition-all group shadow-sm"
+                    className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] hover:border-neutral-200 dark:border-[#2D333F] transition-all group shadow-sm"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/projects/${project._id}`}
-                            className="font-heading font-bold text-neutral-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-sm"
+                            className="font-heading font-bold text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors text-sm"
                           >
                             {project.title}
                           </Link>
@@ -300,7 +300,7 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-3">
                         <Link
                           href={`/projects/${project._id}`}
-                          className="px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#0A0A0A] hover:bg-indigo-50 dark:hover:bg-indigo-950/50 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-indigo-600 dark:hover:text-indigo-400 border border-neutral-200 dark:border-[#2A2A2A] transition-colors"
+                          className="px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#111318] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-[#2D333F] transition-colors"
                         >
                           Workspace →
                         </Link>
@@ -315,9 +315,9 @@ export default function DashboardPage() {
                           {project.progressPercentage}%
                         </span>
                       </div>
-                      <div className="w-full bg-neutral-100 dark:bg-[#0A0A0A] h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-neutral-100 dark:bg-[#111318] h-2 rounded-full overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-indigo-500 to-violet-500 h-full rounded-full transition-all duration-500"
+                          className="bg-neutral-900 dark:bg-white h-full rounded-full transition-all duration-500"
                           style={{ width: `${project.progressPercentage}%` }}
                         />
                       </div>
@@ -329,7 +329,7 @@ export default function DashboardPage() {
                         {project.techStack.map((tech, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-0.5 text-[10px] font-medium rounded-md bg-neutral-100 dark:bg-[#0A0A0A] text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-[#2A2A2A]"
+                            className="px-2 py-0.5 text-[10px] font-medium rounded-md bg-neutral-100 dark:bg-[#111318] text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-[#2D333F]"
                           >
                             {tech}
                           </span>
@@ -346,8 +346,8 @@ export default function DashboardPage() {
         {/* Right 1 Col: Urgent Deadlines & Unbilled Milestones */}
         <div className="space-y-6">
           {/* Urgent Deadlines Widget */}
-          <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-[#2A2A2A] pb-3">
+          <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-[#2D333F] pb-3">
               <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                 <Clock className="w-4 h-4 text-amber-500" />
                 <span>Urgent Deadlines (48h)</span>
@@ -359,8 +359,8 @@ export default function DashboardPage() {
 
             {isMetricsLoading ? (
               <div className="space-y-2">
-                <div className="h-12 bg-neutral-100 dark:bg-[#0A0A0A] rounded-md animate-pulse" />
-                <div className="h-12 bg-neutral-100 dark:bg-[#0A0A0A] rounded-md animate-pulse" />
+                <div className="h-12 bg-neutral-100 dark:bg-[#111318] rounded-md animate-pulse" />
+                <div className="h-12 bg-neutral-100 dark:bg-[#111318] rounded-md animate-pulse" />
               </div>
             ) : (metrics?.tasks.upcomingTasks48h?.length || 0) === 0 &&
               (metrics?.tasks.overdueTasks?.length || 0) === 0 ? (
@@ -420,8 +420,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Unbilled Milestones Card */}
-          <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-[#2A2A2A] pb-3">
+          <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-[#2D333F] pb-3">
               <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                 <Receipt className="w-4 h-4 text-emerald-500" />
                 <span>Ready to Invoice</span>
@@ -432,7 +432,7 @@ export default function DashboardPage() {
             </div>
 
             {isMetricsLoading ? (
-              <div className="h-16 bg-neutral-100 dark:bg-[#0A0A0A] rounded-md animate-pulse" />
+              <div className="h-16 bg-neutral-100 dark:bg-[#111318] rounded-md animate-pulse" />
             ) : (metrics?.milestones.unbilledMilestones?.length || 0) === 0 ? (
               <div className="py-4 text-center text-xs text-neutral-500 dark:text-neutral-400">
                 All completed milestones are invoiced.
@@ -442,7 +442,7 @@ export default function DashboardPage() {
                 {metrics?.milestones.unbilledMilestones.slice(0, 3).map((m: any) => (
                   <div
                     key={m._id}
-                    className="p-2.5 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A] flex items-center justify-between gap-2 text-xs"
+                    className="p-2.5 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F] flex items-center justify-between gap-2 text-xs"
                   >
                     <div className="min-w-0">
                       <div className="font-semibold text-neutral-800 dark:text-neutral-200 truncate">
@@ -460,7 +460,7 @@ export default function DashboardPage() {
 
                 <Link
                   href="/invoices"
-                  className="block w-full py-2 text-center rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors border border-indigo-200 dark:border-indigo-800"
+                  className="block w-full py-2 text-center rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] text-xs font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors border border-neutral-200 dark:border-[#2D333F]"
                 >
                   Convert to Invoices →
                 </Link>

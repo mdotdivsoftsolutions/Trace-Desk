@@ -41,7 +41,7 @@ export default function ProjectsPage() {
 
   const statusColors: Record<string, string> = {
     discovery: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-    in_progress: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
+    in_progress: 'bg-neutral-100 dark:bg-[#252B37] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-[#2D333F]',
     review: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
     completed: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
     on_hold: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
@@ -53,7 +53,7 @@ export default function ProjectsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-heading text-2xl font-bold text-neutral-900 dark:text-white flex items-center gap-2.5">
-            <FolderKanban className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <FolderKanban className="w-6 h-6 text-neutral-800 dark:text-neutral-200" />
             <span>Projects & Workspaces</span>
           </h1>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
@@ -63,7 +63,7 @@ export default function ProjectsPage() {
 
         <Link
           href="/projects/new"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all self-start sm:self-auto"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-sm transition-all self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>New Project</span>
@@ -71,7 +71,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex flex-col md:flex-row items-center gap-3">
+      <div className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex flex-col md:flex-row items-center gap-3">
         {/* Search */}
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
@@ -83,21 +83,21 @@ export default function ProjectsPage() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400"
           />
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-2.5 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           {/* Status Filter */}
-          <div className="relative flex-1 md:flex-initial">
+          <div className="w-full sm:w-40">
             <select
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400"
             >
               <option value="all">All Statuses</option>
               <option value="discovery">Discovery</option>
@@ -109,14 +109,14 @@ export default function ProjectsPage() {
           </div>
 
           {/* Client Filter */}
-          <div className="relative flex-1 md:flex-initial">
+          <div className="w-full sm:w-44">
             <select
               value={clientFilter}
               onChange={(e) => {
                 setClientFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400"
             >
               <option value="all">All Clients</option>
               {clients?.map((client) => (
@@ -131,13 +131,13 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       {isLoading ? (
-        <div className="p-12 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-3">
-          <div className="inline-block w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+        <div className="p-12 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] text-center space-y-3">
+          <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
           <p className="text-xs text-neutral-500">Loading project registry...</p>
         </div>
       ) : projects.length === 0 ? (
-        <div className="p-12 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-4">
-          <div className="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center mx-auto">
+        <div className="p-12 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] text-center space-y-4">
+          <div className="w-12 h-12 rounded-lg bg-neutral-100 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F] text-neutral-700 dark:text-neutral-300 flex items-center justify-center mx-auto">
             <FolderKanban className="w-6 h-6" />
           </div>
           <div className="space-y-1">
@@ -152,7 +152,7 @@ export default function ProjectsPage() {
           </div>
           <Link
             href="/projects/new"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-bold shadow-sm transition-all"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Project</span>
@@ -166,7 +166,7 @@ export default function ProjectsPage() {
               return (
                 <div
                   key={project._id}
-                  className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm hover:border-indigo-500/40 transition-all flex flex-col justify-between group"
+                  className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm hover:border-neutral-200 dark:border-[#2D333F] transition-all flex flex-col justify-between group"
                 >
                   <div className="space-y-3.5">
                     {/* Header: Client & Status */}
@@ -189,7 +189,7 @@ export default function ProjectsPage() {
                     <div>
                       <Link
                         href={`/projects/${project._id}`}
-                        className="font-heading font-bold text-base text-neutral-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors line-clamp-1"
+                        className="font-heading font-bold text-base text-neutral-900 dark:text-white hover:text-neutral-900 dark:text-white dark:hover:text-neutral-600 dark:text-neutral-400 transition-colors line-clamp-1"
                       >
                         {project.title}
                       </Link>
@@ -202,7 +202,7 @@ export default function ProjectsPage() {
                     <div className="space-y-1.5 pt-1">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="text-neutral-500 font-medium flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3 text-indigo-500" />
+                          <TrendingUp className="w-3 h-3 text-neutral-700 dark:text-neutral-300" />
                           Progress
                         </span>
                         <span className="font-bold text-neutral-900 dark:text-white">
@@ -211,14 +211,14 @@ export default function ProjectsPage() {
                       </div>
                       <div className="w-full h-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
                         <div
-                          className="h-full bg-indigo-600 rounded-full transition-all duration-500"
+                          className="h-full bg-neutral-900 dark:bg-white rounded-full transition-all duration-500"
                           style={{ width: `${project.progressPercentage || 0}%` }}
                         />
                       </div>
                     </div>
 
                     {/* Meta: Budget & Target Date */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-[#2A2A2A] text-xs">
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-[#2D333F] text-xs">
                       <div>
                         <span className="text-[10px] text-neutral-400 block uppercase font-bold tracking-wider">
                           Budget
@@ -261,7 +261,7 @@ export default function ProjectsPage() {
                   </div>
 
                   {/* Footer Action Links */}
-                  <div className="mt-5 pt-3 border-t border-neutral-100 dark:border-[#2A2A2A] flex items-center justify-between gap-2">
+                  <div className="mt-5 pt-3 border-t border-neutral-100 dark:border-[#2D333F] flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       {project.repoUrl && (
                         <a
@@ -290,14 +290,14 @@ export default function ProjectsPage() {
                     <div className="flex items-center gap-1.5">
                       <Link
                         href={`/projects/${project._id}/edit`}
-                        className="p-1.5 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                        className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-900 dark:text-white dark:hover:text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                         title="Edit Project"
                       >
                         <Edit2 className="w-4 h-4" />
                       </Link>
                       <Link
                         href={`/projects/${project._id}`}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-xs font-semibold transition-colors"
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors"
                       >
                         <span>Open Workspace</span>
                         <ChevronRight className="w-3.5 h-3.5" />
@@ -310,7 +310,7 @@ export default function ProjectsPage() {
           </div>
 
           {/* Backend Pagination Bar */}
-          <div className="rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] overflow-hidden">
+          <div className="rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] overflow-hidden">
             <Pagination
               pagination={projectsData?.pagination}
               onPageChange={(newPage) => setPage(newPage)}

@@ -168,17 +168,17 @@ function NewProjectForm() {
   return (
     <div className="w-full space-y-8 pb-20 animate-in fade-in duration-300">
       {/* Top Breadcrumb & Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200 dark:border-[#2A2A2A]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200 dark:border-[#2D333F]">
         <div className="space-y-1">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:text-white dark:hover:text-neutral-600 dark:text-neutral-400 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Projects</span>
           </Link>
           <h1 className="font-heading text-2xl font-bold text-neutral-900 dark:text-white flex items-center gap-2.5">
-            <FolderKanban className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <FolderKanban className="w-6 h-6 text-neutral-900 dark:text-white" />
             <span>New Project Workspace</span>
           </h1>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -190,7 +190,7 @@ function NewProjectForm() {
         <div className="flex items-center gap-2.5">
           <Link
             href="/projects"
-            className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1A1A1A] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors"
+            className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1C2029] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors"
           >
             Cancel
           </Link>
@@ -198,7 +198,7 @@ function NewProjectForm() {
             type="submit"
             form="new-project-form"
             disabled={isSubmitting}
-            className="flex items-center gap-1.5 px-5 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-indigo-600/25 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-5 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-sm transition-all disabled:opacity-50"
           >
             {isSubmitting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -218,9 +218,9 @@ function NewProjectForm() {
 
       <form id="new-project-form" onSubmit={handleSubmit} className="space-y-8">
         {/* SECTION 1: General & Financial Setup */}
-        <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-5">
-          <div className="flex items-center gap-2 pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
-            <Building2 className="w-4 h-4 text-indigo-500" />
+        <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-5">
+          <div className="flex items-center gap-2 pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
+            <Building2 className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
             <h2 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
               1. General & Financial Setup
             </h2>
@@ -243,7 +243,7 @@ function NewProjectForm() {
                     currency: selectedClient?.currency || formData.currency || 'INR',
                   });
                 }}
-                className="w-full px-3.5 py-2.5 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               >
                 <option value="">-- Select Client Account --</option>
                 {clients.map((c) => (
@@ -265,7 +265,7 @@ function NewProjectForm() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="e.g. Next.js Multi-Tenant SaaS Platform"
-                className="w-full px-3.5 py-2.5 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
           </div>
@@ -279,7 +279,7 @@ function NewProjectForm() {
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               >
                 <option value="discovery">Discovery & Planning</option>
                 <option value="in_progress">In Progress (Active)</option>
@@ -297,7 +297,7 @@ function NewProjectForm() {
               <select
                 value={formData.budgetType}
                 onChange={(e) => setFormData({ ...formData, budgetType: e.target.value as any })}
-                className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               >
                 <option value="fixed">Fixed Milestone Scope</option>
                 <option value="hourly">Time & Materials (Hourly)</option>
@@ -317,12 +317,12 @@ function NewProjectForm() {
                   value={formData.totalBudget || ''}
                   onChange={(e) => setFormData({ ...formData, totalBudget: parseFloat(e.target.value) || 0 })}
                   placeholder="0.00"
-                  className="flex-1 px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="flex-1 px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 />
                 <select
                   value={formData.currency}
                   onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                  className="w-24 px-2 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-24 px-2 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 >
                   <option value="INR">INR (₹)</option>
                   <option value="USD">USD ($)</option>
@@ -349,7 +349,7 @@ function NewProjectForm() {
                     startDate: e.target.value ? new Date(e.target.value) : undefined,
                   })
                 }
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
 
@@ -366,7 +366,7 @@ function NewProjectForm() {
                     targetDeadline: e.target.value ? new Date(e.target.value) : undefined,
                   })
                 }
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
           </div>
@@ -388,7 +388,7 @@ function NewProjectForm() {
                   }
                 }}
                 placeholder="Type tech name and press Enter (e.g. Next.js, Node.js, Stripe, PostgreSQL)..."
-                className="flex-1 px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="flex-1 px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
               <button
                 type="button"
@@ -405,13 +405,13 @@ function NewProjectForm() {
                 {formData.techStack.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 text-[11px] font-semibold"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] text-[11px] font-semibold"
                   >
                     <span>{tag}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveTech(tag)}
-                      className="text-indigo-400 hover:text-indigo-600 dark:hover:text-white"
+                      className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:text-white dark:hover:text-white"
                     >
                       ×
                     </button>
@@ -423,9 +423,9 @@ function NewProjectForm() {
         </div>
 
         {/* SECTION 2: Project Scope & Deliverables (Rich Text Editor) */}
-        <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
-            <FileText className="w-4 h-4 text-indigo-500" />
+        <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
+          <div className="flex items-center gap-2 pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
+            <FileText className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
             <h2 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
               2. Scope, Architecture & Deliverables
             </h2>
@@ -444,10 +444,10 @@ function NewProjectForm() {
         </div>
 
         {/* SECTION 3: Multi-Environment Deployment & Service URLs */}
-        <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
+        <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-indigo-500" />
+              <Globe className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
               <h2 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
                 3. Deployment Domains & Environment URLs
               </h2>
@@ -467,7 +467,7 @@ function NewProjectForm() {
               {formData.links.map((link, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between gap-3 p-3 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A]"
+                  className="flex items-center justify-between gap-3 p-3 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F]"
                 >
                   <div className="flex items-center gap-2.5 min-w-0 flex-1">
                     <span
@@ -477,7 +477,7 @@ function NewProjectForm() {
                           : link.category === 'staging'
                           ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
                           : link.category === 'api'
-                          ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20'
+                          ? 'bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] border-neutral-200 dark:border-[#2D333F]'
                           : 'bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border-neutral-500/20'
                       }`}
                     >
@@ -491,7 +491,7 @@ function NewProjectForm() {
                         href={link.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[11px] font-mono text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 truncate"
+                        className="text-[11px] font-mono text-neutral-900 dark:text-white hover:underline flex items-center gap-1 truncate"
                       >
                         <span className="truncate">{link.url}</span>
                         <ExternalLink className="w-3 h-3 flex-shrink-0" />
@@ -512,7 +512,7 @@ function NewProjectForm() {
           )}
 
           {/* Add Link Row Form */}
-          <div className="p-4 rounded-md bg-neutral-50/70 dark:bg-[#0A0A0A]/70 border border-dashed border-neutral-300 dark:border-neutral-700 space-y-3">
+          <div className="p-4 rounded-md bg-neutral-50/70 dark:bg-[#111318]/70 border border-dashed border-neutral-300 dark:border-neutral-700 space-y-3">
             <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider block">
               + Add Deployment Link / Domain
             </span>
@@ -523,7 +523,7 @@ function NewProjectForm() {
                   value={newLink.title}
                   onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
                   placeholder="e.g. Prod Frontend"
-                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 />
               </div>
 
@@ -531,7 +531,7 @@ function NewProjectForm() {
                 <select
                   value={newLink.category}
                   onChange={(e) => setNewLink({ ...newLink, category: e.target.value as any })}
-                  className="w-full px-2.5 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-2.5 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 >
                   <option value="production">Production Domain</option>
                   <option value="api">Backend API / Server</option>
@@ -549,7 +549,7 @@ function NewProjectForm() {
                   value={newLink.url}
                   onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
                   placeholder="https://app.clientdomain.com"
-                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 font-mono"
                 />
               </div>
 
@@ -557,7 +557,7 @@ function NewProjectForm() {
                 <button
                   type="button"
                   onClick={handleAddLink}
-                  className="w-full py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center font-bold shadow-sm"
+                  className="w-full py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 flex items-center justify-center font-bold shadow-sm"
                   title="Add Link"
                 >
                   <Plus className="w-4 h-4" />
@@ -568,8 +568,8 @@ function NewProjectForm() {
         </div>
 
         {/* SECTION 4: 3rd-Party Service Accounts & Credentials Vault */}
-        <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
+        <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-emerald-500" />
               <h2 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
@@ -591,7 +591,7 @@ function NewProjectForm() {
               {formData.credentials.map((cred, idx) => (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A] space-y-2"
+                  className="p-3.5 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F] space-y-2"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
@@ -636,7 +636,7 @@ function NewProjectForm() {
                           <button
                             type="button"
                             onClick={() => toggleSecretVisibility(idx)}
-                            className="text-[10px] text-indigo-500 hover:underline flex items-center gap-0.5"
+                            className="text-[10px] text-neutral-700 dark:text-neutral-300 hover:underline flex items-center gap-0.5"
                           >
                             {showSecretMap[idx] ? (
                               <>
@@ -669,7 +669,7 @@ function NewProjectForm() {
           )}
 
           {/* Add Credential Form Row */}
-          <div className="p-4 rounded-md bg-neutral-50/70 dark:bg-[#0A0A0A]/70 border border-dashed border-neutral-300 dark:border-neutral-700 space-y-3">
+          <div className="p-4 rounded-md bg-neutral-50/70 dark:bg-[#111318]/70 border border-dashed border-neutral-300 dark:border-neutral-700 space-y-3">
             <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider block">
               + Store 3rd-Party Service / API Key
             </span>
@@ -680,7 +680,7 @@ function NewProjectForm() {
                 value={newCred.serviceName}
                 onChange={(e) => setNewCred({ ...newCred, serviceName: e.target.value })}
                 placeholder="Service (e.g. Stripe Gateway, AWS S3)"
-                className="px-3 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="px-3 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
 
               <input
@@ -688,7 +688,7 @@ function NewProjectForm() {
                 value={newCred.accountId || ''}
                 onChange={(e) => setNewCred({ ...newCred, accountId: e.target.value })}
                 placeholder="Login Email / Account ID"
-                className="px-3 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="px-3 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
 
               <input
@@ -696,7 +696,7 @@ function NewProjectForm() {
                 value={newCred.environment || ''}
                 onChange={(e) => setNewCred({ ...newCred, environment: e.target.value })}
                 placeholder="Env (e.g. Production / Sandbox)"
-                className="px-3 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="px-3 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
 
@@ -707,7 +707,7 @@ function NewProjectForm() {
                   value={newCred.accessKeyOrUrl || ''}
                   onChange={(e) => setNewCred({ ...newCred, accessKeyOrUrl: e.target.value })}
                   placeholder="API Secret Key / Token / Endpoint URL"
-                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 font-mono"
                 />
               </div>
 
@@ -717,7 +717,7 @@ function NewProjectForm() {
                   value={newCred.notes || ''}
                   onChange={(e) => setNewCred({ ...newCred, notes: e.target.value })}
                   placeholder="Remarks (e.g. webhook secret for invoices)"
-                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1A1A1A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-md bg-white dark:bg-[#1C2029] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 />
               </div>
 
@@ -725,7 +725,7 @@ function NewProjectForm() {
                 <button
                   type="button"
                   onClick={handleAddCredential}
-                  className="w-full py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center font-bold shadow-sm"
+                  className="w-full py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 flex items-center justify-center font-bold shadow-sm"
                   title="Add Credential"
                 >
                   <Plus className="w-4 h-4" />
@@ -736,9 +736,9 @@ function NewProjectForm() {
         </div>
 
         {/* SECTION 5: Integration & Webhook Setup Notes (Rich Text Editor) */}
-        <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
-            <Key className="w-4 h-4 text-indigo-500" />
+        <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
+          <div className="flex items-center gap-2 pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
+            <Key className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
             <h2 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
               5. Integration Procedures & Webhook Notes
             </h2>
@@ -757,17 +757,17 @@ function NewProjectForm() {
         </div>
 
         {/* Bottom Submit Bar */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-[#2A2A2A]">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-[#2D333F]">
           <Link
             href="/projects"
-            className="px-5 py-2.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1A1A1A] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors"
+            className="px-5 py-2.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1C2029] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-md bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-lg shadow-indigo-600/25 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-lg shadow-sm transition-all disabled:opacity-50"
           >
             {isSubmitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />

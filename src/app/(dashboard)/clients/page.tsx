@@ -66,7 +66,7 @@ export default function ClientsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-heading text-2xl font-bold text-neutral-900 dark:text-white flex items-center gap-2.5">
-            <Users className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <Users className="w-6 h-6 text-neutral-800 dark:text-neutral-200" />
             <span>Client Management</span>
           </h1>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
@@ -76,7 +76,7 @@ export default function ClientsPage() {
 
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all self-start sm:self-auto"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-sm transition-all self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Client</span>
@@ -84,19 +84,19 @@ export default function ClientsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex flex-col md:flex-row items-center gap-3">
+      <div className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex flex-col md:flex-row items-center gap-3">
         {/* Search Input */}
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input
             type="text"
-            placeholder="Search by name, company, or email..."
+            placeholder="Search clients by name, company, email, or country..."
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400"
           />
         </div>
 
@@ -110,11 +110,12 @@ export default function ClientsPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full md:w-36 px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400"
             >
               <option value="all">All Statuses</option>
+              <option value="lead">Lead</option>
               <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="archived">Archived</option>
             </select>
           </div>
 
@@ -122,8 +123,11 @@ export default function ClientsPage() {
           <div className="relative flex-1 md:flex-initial">
             <select
               value={currencyFilter}
-              onChange={(e) => setCurrencyFilter(e.target.value)}
-              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onChange={(e) => {
+                setCurrencyFilter(e.target.value);
+                setPage(1);
+              }}
+              className="w-full md:w-36 px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400"
             >
               <option value="all">All Currencies</option>
               <option value="INR">INR (₹)</option>
@@ -138,13 +142,13 @@ export default function ClientsPage() {
 
       {/* Data Table */}
       {isLoading ? (
-        <div className="p-8 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-3">
-          <div className="inline-block w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+        <div className="p-8 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] text-center space-y-3">
+          <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
           <p className="text-xs text-neutral-500">Loading client registry...</p>
         </div>
       ) : filteredClients.length === 0 ? (
-        <div className="p-12 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-4">
-          <div className="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center mx-auto">
+        <div className="p-12 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] text-center space-y-4">
+          <div className="w-12 h-12 rounded-lg bg-neutral-100 dark:bg-[#111318] border border-neutral-200 dark:border-[#2D333F] text-neutral-700 dark:text-neutral-300 flex items-center justify-center mx-auto">
             <Users className="w-6 h-6" />
           </div>
           <div className="space-y-1">
@@ -159,17 +163,17 @@ export default function ClientsPage() {
           </div>
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-xs font-bold shadow-md shadow-indigo-600/30"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 text-xs font-bold shadow-sm transition-all"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Client</span>
           </button>
         </div>
       ) : (
-        <div className="rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm overflow-hidden">
+        <div className="rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-neutral-50 dark:bg-[#0A0A0A] text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-[#2A2A2A]">
+              <thead className="bg-neutral-50 dark:bg-[#111318] text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-[#2D333F]">
                 <tr>
                   <th className="px-5 py-3.5 font-bold uppercase tracking-wider">Client & Company</th>
                   <th className="px-5 py-3.5 font-bold uppercase tracking-wider">Contact Info</th>
@@ -178,7 +182,7 @@ export default function ClientsPage() {
                   <th className="px-5 py-3.5 font-bold uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-200 dark:divide-[#2A2A2A] font-medium">
+              <tbody className="divide-y divide-neutral-200 dark:divide-[#2D333F] font-medium">
                 {filteredClients.map((client) => (
                   <tr
                     key={client._id}
@@ -188,7 +192,7 @@ export default function ClientsPage() {
                     {/* Name & Company */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs uppercase border border-indigo-200/50 dark:border-indigo-800/50 flex-shrink-0 group-hover:scale-105 transition-transform">
+                        <div className="w-9 h-9 rounded-md bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] flex items-center justify-center font-bold text-xs uppercase border border-neutral-200 dark:border-[#2D333F] flex-shrink-0 group-hover:scale-105 transition-transform">
                           {client.name.charAt(0)}
                         </div>
                         <div className="flex flex-col min-w-0">

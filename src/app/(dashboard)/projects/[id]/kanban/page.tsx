@@ -46,7 +46,7 @@ export default function ProjectKanbanPage({
       <div className="p-12 text-center space-y-4">
         <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
         <h2 className="text-lg font-bold">Project Not Found</h2>
-        <Link href="/projects" className="text-xs font-semibold text-indigo-600 hover:underline">
+        <Link href="/projects" className="text-xs font-semibold text-neutral-900 dark:text-white hover:underline">
           ← Back to Projects
         </Link>
       </div>
@@ -77,12 +77,12 @@ export default function ProjectKanbanPage({
       <div className="p-6 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80 shadow-sm space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs font-medium text-neutral-500">
-            <Link href="/projects" className="hover:text-indigo-600 transition-colors flex items-center gap-1">
+            <Link href="/projects" className="hover:text-neutral-900 dark:text-white transition-colors flex items-center gap-1">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Projects</span>
             </Link>
             <ChevronRight className="w-3.5 h-3.5" />
-            <Link href={`/projects/${projectId}`} className="hover:text-indigo-600 transition-colors">
+            <Link href={`/projects/${projectId}`} className="hover:text-neutral-900 dark:text-white transition-colors">
               {project.title}
             </Link>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -90,12 +90,12 @@ export default function ProjectKanbanPage({
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+            <span className="text-xs font-bold text-neutral-900 dark:text-white">
               {project.progressPercentage}% Completed
             </span>
             <div className="w-24 bg-neutral-100 dark:bg-neutral-800 h-2 rounded-full overflow-hidden">
               <div
-                className="bg-indigo-600 h-full rounded-full transition-all"
+                className="bg-neutral-900 dark:bg-white h-full rounded-full transition-all"
                 style={{ width: `${project.progressPercentage}%` }}
               />
             </div>
@@ -105,7 +105,7 @@ export default function ProjectKanbanPage({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h1 className="text-2xl font-extrabold text-neutral-900 dark:text-white flex items-center gap-2.5">
-              <FolderKanban className="w-6 h-6 text-indigo-500" />
+              <FolderKanban className="w-6 h-6 text-neutral-700 dark:text-neutral-300" />
               <span>{project.title} &mdash; Task Pipeline</span>
             </h1>
             <p className="text-xs text-neutral-500 mt-0.5">

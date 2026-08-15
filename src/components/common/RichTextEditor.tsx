@@ -74,16 +74,16 @@ export function RichTextEditor({
   return (
     <div
       className={cn(
-        'w-full rounded-lg border bg-neutral-50 dark:bg-[#0A0A0A] transition-all overflow-hidden flex flex-col',
+        'w-full rounded-lg border bg-neutral-50 dark:bg-[#111318] transition-all overflow-hidden flex flex-col',
         isFocused
-          ? 'border-indigo-500 ring-2 ring-indigo-500/20'
+          ? 'border-neutral-900 dark:border-white ring-2 ring-neutral-400/20'
           : 'border-neutral-300 dark:border-neutral-700',
         disabled && 'opacity-60 cursor-not-allowed',
         className
       )}
     >
       {/* Formatting Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 p-1.5 border-b border-neutral-200 dark:border-[#2A2A2A] bg-white/80 dark:bg-[#1A1A1A]/80 backdrop-blur-sm text-neutral-600 dark:text-neutral-300">
+      <div className="flex flex-wrap items-center gap-0.5 p-1.5 border-b border-neutral-200 dark:border-[#2D333F] bg-white/80 dark:bg-[#1C2029]/80 backdrop-blur-sm text-neutral-600 dark:text-neutral-300">
         <button
           type="button"
           disabled={disabled}
@@ -121,7 +121,7 @@ export function RichTextEditor({
           <Strikethrough className="w-3.5 h-3.5" />
         </button>
 
-        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2A2A2A] mx-1" />
+        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2D333F] mx-1" />
 
         <button
           type="button"
@@ -142,7 +142,7 @@ export function RichTextEditor({
           <Heading3 className="w-3.5 h-3.5" />
         </button>
 
-        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2A2A2A] mx-1" />
+        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2D333F] mx-1" />
 
         <button
           type="button"
@@ -163,7 +163,7 @@ export function RichTextEditor({
           <ListOrdered className="w-3.5 h-3.5" />
         </button>
 
-        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2A2A2A] mx-1" />
+        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2D333F] mx-1" />
 
         <button
           type="button"
@@ -193,7 +193,7 @@ export function RichTextEditor({
           <LinkIcon className="w-3.5 h-3.5" />
         </button>
 
-        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2A2A2A] mx-1" />
+        <div className="h-4 w-px bg-neutral-200 dark:bg-[#2D333F] mx-1" />
 
         <button
           type="button"
@@ -223,9 +223,9 @@ export function RichTextEditor({
           '[&_h3]:text-xs [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1',
           '[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-1',
           '[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1',
-          '[&_blockquote]:border-l-2 [&_blockquote]:border-indigo-500 [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:my-1.5 [&_blockquote]:text-neutral-500',
-          '[&_pre]:bg-neutral-200/60 [&_pre]:dark:bg-[#1A1A1A] [&_pre]:p-2 [&_pre]:rounded [&_pre]:font-mono [&_pre]:text-[11px] [&_pre]:my-1.5',
-          '[&_a]:text-indigo-600 [&_a]:dark:text-indigo-400 [&_a]:underline'
+          '[&_blockquote]:border-l-2 [&_blockquote]:border-neutral-900 dark:border-white [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:my-1.5 [&_blockquote]:text-neutral-500',
+          '[&_pre]:bg-neutral-200/60 [&_pre]:dark:bg-[#1C2029] [&_pre]:p-2 [&_pre]:rounded [&_pre]:font-mono [&_pre]:text-[11px] [&_pre]:my-1.5',
+          '[&_a]:text-neutral-900 dark:text-white [&_a]:dark:text-neutral-600 dark:text-neutral-400 [&_a]:underline'
         )}
       />
     </div>

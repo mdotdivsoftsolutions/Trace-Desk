@@ -52,9 +52,9 @@ export function ConfirmDialog({
     },
     info: {
       icon: Info,
-      iconContainer: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20',
+      iconContainer: 'bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] border border-neutral-200 dark:border-[#2D333F]',
       confirmButton:
-        'bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white shadow-md shadow-indigo-600/25 focus:ring-indigo-500',
+        'bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 shadow-sm focus:ring-neutral-400 dark:focus:ring-neutral-500',
     },
   }[variant];
 
@@ -82,7 +82,7 @@ export function ConfirmDialog({
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-md rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-2xl z-10 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-2xl z-10 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="p-6">
           {/* Header Area */}
           <div className="flex items-start gap-4">
@@ -116,12 +116,12 @@ export function ConfirmDialog({
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-6 flex items-center justify-end gap-2.5 pt-2 border-t border-neutral-100 dark:border-[#2A2A2A]/60">
+          <div className="mt-6 flex items-center justify-end gap-2.5 pt-2 border-t border-neutral-100 dark:border-[#2D333F]/60">
             <button
               type="button"
               disabled={isLoading}
               onClick={onClose}
-              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#0A0A0A] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#111318] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
             >
               {cancelText}
             </button>
@@ -131,7 +131,7 @@ export function ConfirmDialog({
               disabled={isLoading}
               onClick={onConfirm}
               className={cn(
-                'flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-[#1A1A1A] disabled:opacity-50',
+                'flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-[#1C2029] disabled:opacity-50',
                 variantConfig.confirmButton
               )}
             >

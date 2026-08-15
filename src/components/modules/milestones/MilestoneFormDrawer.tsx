@@ -117,11 +117,11 @@ export function MilestoneFormDrawer({
       />
 
       {/* Slide-over Drawer Panel */}
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#1A1A1A] border-l border-neutral-200 dark:border-[#2A2A2A] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300">
+      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#1C2029] border-l border-neutral-200 dark:border-[#2D333F] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300">
         {/* Header */}
-        <div className="p-5 border-b border-neutral-200 dark:border-[#2A2A2A] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#0A0A0A]/50">
+        <div className="p-5 border-b border-neutral-200 dark:border-[#2D333F] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#111318]/50">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+              <div className="w-9 h-9 rounded-lg bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] flex items-center justify-center font-bold">
                 {isEditing ? <Edit2 className="w-4 h-4" /> : <Milestone className="w-4 h-4" />}
               </div>
               <div>
@@ -165,7 +165,7 @@ export function MilestoneFormDrawer({
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="e.g. Phase 1: Architecture & Auth Setup"
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
 
@@ -179,7 +179,7 @@ export function MilestoneFormDrawer({
                 value={formData.description || ''}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="List key requirements for this milestone to be marked complete..."
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
 
@@ -199,7 +199,7 @@ export function MilestoneFormDrawer({
                     setFormData({ ...formData, allocatedAmount: parseFloat(e.target.value) || 0 })
                   }
                   placeholder="0.00"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 font-mono"
                 />
               </div>
 
@@ -213,7 +213,7 @@ export function MilestoneFormDrawer({
                   value={formData.order}
                   onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
                   placeholder="0"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 />
               </div>
             </div>
@@ -227,7 +227,7 @@ export function MilestoneFormDrawer({
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 >
                   <option value="pending">Pending</option>
                   <option value="in_progress">In Progress</option>
@@ -249,19 +249,19 @@ export function MilestoneFormDrawer({
                       dueDate: e.target.value ? new Date(e.target.value) : undefined,
                     })
                   }
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                 />
               </div>
             </div>
           </form>
 
           {/* Sticky Bottom Action Bar */}
-          <div className="p-4 border-t border-neutral-200 dark:border-[#2A2A2A] flex items-center justify-end gap-2.5 bg-neutral-50 dark:bg-[#0A0A0A]">
+          <div className="p-4 border-t border-neutral-200 dark:border-[#2D333F] flex items-center justify-end gap-2.5 bg-neutral-50 dark:bg-[#111318]">
             <button
               type="button"
               disabled={isLoading}
               onClick={onClose}
-              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1A1A1A] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1C2029] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
@@ -269,7 +269,7 @@ export function MilestoneFormDrawer({
               type="submit"
               form="milestone-form"
               disabled={isLoading}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-indigo-600/25 transition-all disabled:opacity-50"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-sm transition-all disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />

@@ -68,7 +68,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
               </div>
               {client?.companyName && (
                 <p className="text-xs font-semibold text-neutral-500 flex items-center gap-1.5">
-                  <Building2 className="w-3.5 h-3.5 text-indigo-500" />
+                  <Building2 className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
                   <span>{client.companyName}</span>
                 </p>
               )}
@@ -103,8 +103,8 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
             ) : (
               <>
                 {/* Financial Summary Card */}
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-neutral-500/5 border border-indigo-500/20">
-                  <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+                <div className="p-5 rounded-2xl bg-gradient-to-br bg-neutral-50 dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F]">
+                  <span className="text-[11px] font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
                     Financial Ledger
                   </span>
                   <div className="grid grid-cols-3 gap-3 mt-3">
@@ -137,14 +137,14 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
                       <Mail className="w-3.5 h-3.5 text-neutral-400" />
-                      <a href={`mailto:${client?.email}`} className="hover:text-indigo-500 truncate">
+                      <a href={`mailto:${client?.email}`} className="hover:text-neutral-700 dark:text-neutral-300 truncate">
                         {client?.email}
                       </a>
                     </div>
                     {client?.phone && (
                       <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
                         <Phone className="w-3.5 h-3.5 text-neutral-400" />
-                        <a href={`tel:${client.phone}`} className="hover:text-indigo-500 truncate">
+                        <a href={`tel:${client.phone}`} className="hover:text-neutral-700 dark:text-neutral-300 truncate">
                           {client.phone}
                         </a>
                       </div>
@@ -172,7 +172,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                      <FolderKanban className="w-4 h-4 text-indigo-500" />
+                      <FolderKanban className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                       <span>Linked Projects ({client?.projects?.length || 0})</span>
                     </h3>
                   </div>
@@ -191,7 +191,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                           className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/40 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-200/60 dark:border-neutral-700/60 transition-all flex items-center justify-between group"
                         >
                           <div className="min-w-0 space-y-1">
-                            <div className="font-semibold text-xs text-neutral-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                            <div className="font-semibold text-xs text-neutral-900 dark:text-white group-hover:text-neutral-900 dark:text-white dark:group-hover:text-neutral-600 dark:text-neutral-400 transition-colors truncate">
                               {project.title}
                             </div>
                             <div className="flex items-center gap-2 text-[10px] text-neutral-500">
@@ -200,7 +200,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                               <span>{project.progressPercentage || 0}% complete</span>
                             </div>
                           </div>
-                          <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-indigo-500 transition-transform group-hover:translate-x-0.5" />
+                          <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-700 dark:text-neutral-300 transition-transform group-hover:translate-x-0.5" />
                         </Link>
                       ))}
                     </div>

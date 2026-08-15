@@ -50,7 +50,7 @@ export default function InvoiceDetailPage({
       <div className="p-12 text-center space-y-4">
         <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
         <h2 className="text-lg font-bold">Invoice Not Found</h2>
-        <Link href="/invoices" className="text-xs font-semibold text-indigo-600 hover:underline">
+        <Link href="/invoices" className="text-xs font-semibold text-neutral-900 dark:text-white hover:underline">
           ← Back to Invoices
         </Link>
       </div>
@@ -87,7 +87,7 @@ export default function InvoiceDetailPage({
       {/* Top Action Bar (Hidden on Print) */}
       <div className="print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-xs font-medium text-neutral-500">
-          <Link href="/invoices" className="hover:text-indigo-600 transition-colors flex items-center gap-1">
+          <Link href="/invoices" className="hover:text-neutral-900 dark:text-white transition-colors flex items-center gap-1">
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Invoices</span>
           </Link>
@@ -133,11 +133,11 @@ export default function InvoiceDetailPage({
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 border-b border-neutral-200 dark:border-neutral-800 pb-8 print:border-neutral-300">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-sm shadow-md">
+              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-neutral-900 to-neutral-700 dark:from-white dark:to-neutral-300 flex items-center justify-center text-white font-black text-sm shadow-md">
                 TD
               </div>
               <span className="text-2xl font-black tracking-tight text-neutral-900 dark:text-white print:text-black">
-                Trace<span className="text-indigo-600">Desk</span>
+                Trace<span className="text-neutral-900 dark:text-white">Desk</span>
               </span>
             </div>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 print:text-neutral-600">

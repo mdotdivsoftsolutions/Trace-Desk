@@ -168,7 +168,7 @@ export default function NewInvoicePage() {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-medium text-neutral-500">
-            <Link href="/invoices" className="hover:text-indigo-600 transition-colors flex items-center gap-1">
+            <Link href="/invoices" className="hover:text-neutral-900 dark:text-white transition-colors flex items-center gap-1">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Invoices</span>
             </Link>
@@ -176,7 +176,7 @@ export default function NewInvoicePage() {
             <span className="text-neutral-900 dark:text-white font-semibold">New Invoice</span>
           </div>
           <h1 className="text-2xl font-extrabold text-neutral-900 dark:text-white flex items-center gap-2.5">
-            <Receipt className="w-7 h-7 text-indigo-500" />
+            <Receipt className="w-7 h-7 text-neutral-700 dark:text-neutral-300" />
             <span>Create Invoice</span>
           </h1>
         </div>
@@ -193,7 +193,7 @@ export default function NewInvoicePage() {
         {/* Step 1: Project & Client Assignment */}
         <div className="p-6 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80 shadow-sm space-y-4">
           <h2 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-indigo-500" />
+            <Building2 className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
             <span>1. Client & Project Details</span>
           </h2>
 
@@ -205,7 +205,7 @@ export default function NewInvoicePage() {
               <select
                 value={selectedProjectId}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               >
                 <option value="">No Project (Direct Client Bill)</option>
                 {projects?.map((p) => (
@@ -224,7 +224,7 @@ export default function NewInvoicePage() {
                 required
                 value={selectedClientId}
                 onChange={(e) => setSelectedClientId(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               >
                 <option value="">Select a Client</option>
                 {clients?.map((c) => (
@@ -244,7 +244,7 @@ export default function NewInvoicePage() {
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value.toUpperCase())}
                 placeholder="USD"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function NewInvoicePage() {
                 required
                 value={invoiceNumber}
                 onChange={(e) => setInvoiceNumber(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 font-mono"
               />
             </div>
 
@@ -272,7 +272,7 @@ export default function NewInvoicePage() {
                 required
                 value={issueDate}
                 onChange={(e) => setIssueDate(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
 
@@ -285,7 +285,7 @@ export default function NewInvoicePage() {
                 required
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
           </div>
@@ -293,10 +293,10 @@ export default function NewInvoicePage() {
 
         {/* Milestone Fast-Picker (If project has milestones) */}
         {selectedProject?.milestones && selectedProject.milestones.length > 0 && (
-          <div className="p-5 rounded-3xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/60 dark:border-indigo-800/60 space-y-3">
+          <div className="p-5 rounded-3xl bg-neutral-50 dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-indigo-500" />
+              <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                 <span>Quick Add From Project Milestones:</span>
               </span>
               <span className="text-[11px] text-neutral-500">
@@ -310,11 +310,11 @@ export default function NewInvoicePage() {
                   key={m._id}
                   type="button"
                   onClick={() => handleAddMilestoneAsItem(m)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-indigo-300 dark:border-indigo-800 hover:border-indigo-500 text-xs font-semibold text-neutral-800 dark:text-neutral-200 shadow-sm transition-all group"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-900 dark:border-white text-xs font-semibold text-neutral-800 dark:text-neutral-200 shadow-sm transition-all group"
                 >
-                  <Plus className="w-3.5 h-3.5 text-indigo-500 group-hover:scale-110 transition-transform" />
+                  <Plus className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300 group-hover:scale-110 transition-transform" />
                   <span>{m.title}</span>
-                  <span className="text-indigo-600 dark:text-indigo-400 font-bold">
+                  <span className="text-neutral-900 dark:text-white font-bold">
                     ({formatCurrency(m.allocatedAmount || 0, currency)})
                   </span>
                 </button>
@@ -327,14 +327,14 @@ export default function NewInvoicePage() {
         <div className="p-6 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <Receipt className="w-4 h-4 text-indigo-500" />
+              <Receipt className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
               <span>2. Invoice Line Items</span>
             </h2>
 
             <button
               type="button"
               onClick={handleAddItem}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400 text-xs font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-[#252B37] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-900 dark:text-white text-xs font-semibold transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Custom Item</span>
@@ -357,7 +357,7 @@ export default function NewInvoicePage() {
                     value={item.description}
                     onChange={(e) => handleItemChange(index, 'description', e.target.value)}
                     placeholder="Deliverable description, milestone phase, etc."
-                    className="w-full px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                   />
                 </div>
 
@@ -372,7 +372,7 @@ export default function NewInvoicePage() {
                     required
                     value={item.quantity || ''}
                     onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                    className="w-full px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-center"
+                    className="w-full px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 text-center"
                   />
                 </div>
 
@@ -387,7 +387,7 @@ export default function NewInvoicePage() {
                     required
                     value={item.unitPrice || ''}
                     onChange={(e) => handleItemChange(index, 'unitPrice', e.target.value)}
-                    className="w-full px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-right"
+                    className="w-full px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 text-right"
                   />
                 </div>
 
@@ -428,7 +428,7 @@ export default function NewInvoicePage() {
                 value={paymentTerms}
                 onChange={(e) => setPaymentTerms(e.target.value)}
                 placeholder="e.g. Net 14 Days (Wire Transfer / Stripe / UPI)"
-                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
 
@@ -441,7 +441,7 @@ export default function NewInvoicePage() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Bank routing info, UPI handle, or project delivery sign-off remarks..."
-                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
             </div>
           </div>
@@ -502,7 +502,7 @@ export default function NewInvoicePage() {
               {/* Total Due */}
               <div className="flex items-center justify-between pt-2">
                 <span className="text-sm font-extrabold text-neutral-900 dark:text-white">Total Amount Due:</span>
-                <span className="text-lg font-extrabold text-indigo-600 dark:text-indigo-400">
+                <span className="text-lg font-extrabold text-neutral-900 dark:text-white">
                   {formatCurrency(totalAmount, currency)}
                 </span>
               </div>
@@ -521,7 +521,7 @@ export default function NewInvoicePage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-lg shadow-sm transition-all disabled:opacity-50"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

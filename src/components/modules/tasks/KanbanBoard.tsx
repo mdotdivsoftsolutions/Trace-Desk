@@ -55,8 +55,8 @@ const COLUMNS: ColumnConfig[] = [
     id: 'in_progress',
     title: 'In Progress',
     dotColor: 'bg-indigo-500',
-    badgeBg: 'bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400',
-    borderAccent: 'border-indigo-500/20',
+    badgeBg: 'bg-indigo-100 dark:bg-indigo-950 text-neutral-900 dark:text-white',
+    borderAccent: 'border-neutral-200 dark:border-[#2D333F]',
   },
   {
     id: 'review',
@@ -167,7 +167,7 @@ export function KanbanBoard({
           <select
             value={selectedMilestoneFilter}
             onChange={(e) => setSelectedMilestoneFilter(e.target.value)}
-            className="px-2.5 py-1 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-medium text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="px-2.5 py-1 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-medium text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
           >
             <option value="all">All Delivery Phases ({tasks.length})</option>
             {milestones.map((m) => (
@@ -180,7 +180,7 @@ export function KanbanBoard({
 
         <button
           onClick={() => onOpenCreateTask('todo', selectedMilestoneFilter !== 'all' ? selectedMilestoneFilter : undefined)}
-          className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs shadow-sm transition-all"
+          className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-semibold text-xs shadow-sm transition-all"
         >
           <Plus className="w-4 h-4" />
           <span>New Task</span>
@@ -231,7 +231,7 @@ export function KanbanBoard({
                         {...provided.droppableProps}
                         className={cn(
                           'space-y-2.5 min-h-[380px] p-1 rounded-xl transition-colors',
-                          snapshot.isDraggingOver && 'bg-indigo-50/50 dark:bg-indigo-950/20 ring-2 ring-indigo-500/20'
+                          snapshot.isDraggingOver && 'bg-neutral-50 dark:bg-[#1C2029] ring-2 ring-neutral-400/20'
                         )}
                       >
                         {colTasks.length === 0 && !snapshot.isDraggingOver ? (
@@ -258,7 +258,7 @@ export function KanbanBoard({
                                     {...dragProvided.draggableProps}
                                     className={cn(
                                       'p-3.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700/80 shadow-sm transition-all space-y-2.5 group cursor-grab active:cursor-grabbing',
-                                      dragSnapshot.isDragging && 'shadow-2xl ring-2 ring-indigo-500 scale-[1.02] rotate-1 z-50 bg-white dark:bg-neutral-800'
+                                      dragSnapshot.isDragging && 'shadow-2xl ring-2 ring-neutral-400 scale-[1.02] rotate-1 z-50 bg-white dark:bg-neutral-800'
                                     )}
                                   >
                                     {/* Priority & Top Actions */}
@@ -322,7 +322,7 @@ export function KanbanBoard({
 
                                     {/* Milestone Badge */}
                                     {milestoneTitle && (
-                                      <div className="flex items-center gap-1 text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md truncate border border-indigo-200/40 dark:border-indigo-800/40">
+                                      <div className="flex items-center gap-1 text-[10px] font-semibold text-neutral-900 dark:text-white bg-neutral-100 dark:bg-[#252B37] px-2 py-0.5 rounded-md truncate border border-indigo-200/40 dark:border-indigo-800/40">
                                         <Milestone className="w-3 h-3 flex-shrink-0" />
                                         <span className="truncate">{milestoneTitle}</span>
                                       </div>
@@ -368,7 +368,7 @@ export function KanbanBoard({
                                         {col.id !== 'done' && (
                                           <button
                                             onClick={() => handleShiftStatus(task._id, task.status, 'next')}
-                                            className="p-1 rounded bg-indigo-50 dark:bg-indigo-950 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400"
+                                            className="p-1 rounded bg-indigo-50 dark:bg-indigo-950 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-900 dark:text-white"
                                             title="Move Right"
                                           >
                                             <ArrowRight className="w-2.5 h-2.5" />
