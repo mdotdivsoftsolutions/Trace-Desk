@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { FolderKanban, Plus } from 'lucide-react';
 import { useProjects } from '@/hooks/useProjects';
+import { useDebounce } from '@/hooks/useDebounce';
 import { ProjectFilterBar } from '@/components/modules/projects/list/ProjectFilterBar';
 import { ProjectGridCard } from '@/components/modules/projects/list/ProjectGridCard';
 import { ProjectCardSkeleton } from '@/components/common/skeletons/ProjectCardSkeleton';
@@ -11,18 +12,20 @@ import { Pagination } from '@/components/common/pagination';
 
 export default function ProjectsPage() {
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
   const limit = 12;
 
-  const { data, isLoading } = useProjects({
-    search: search || undefined,
+  const { data, isLoading, isFetching } = useProjects({
+    search: debouncedSearch || undefined,
     status: statusFilter === 'all' ? undefined : statusFilter,
     page,
     limit,
   });
 
   const projects = data?.items || [];
+  const isGridLoading = isLoading || isFetching || search !== debouncedSearch;
 
   return (
     <div className="space-y-6">
@@ -33,7 +36,7 @@ export default function ProjectsPage() {
         onStatusChange={(val) => { setStatusFilter(val); setPage(1); }}
       />
 
-      {isLoading ? (
+      {isGridLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <ProjectCardSkeleton key={i} />

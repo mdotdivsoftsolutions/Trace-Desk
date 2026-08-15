@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
-import { Invoice, Payment, Milestone, Client, Settings, IInvoice, IPayment } from '@/models';
+import { Invoice, Payment, Milestone, Client, Project, Settings, IInvoice, IPayment } from '@/models';
 import { CreateInvoiceInput, UpdateInvoiceInput } from '@/lib/validations/invoice.schema';
 import { CreatePaymentInput } from '@/lib/validations/payment.schema';
 
@@ -211,8 +211,41 @@ export class InvoiceService {
     if (filter.status && filter.status !== 'all') {
       query.status = filter.status;
     }
-    if (filter.search) {
-      query.invoiceNumber = { $regex: filter.search, $options: 'i' };
+    if (filter.search && filter.search.trim()) {
+      const searchRegex = new RegExp(
+        filter.search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        'i'
+      );
+
+      // Find matching clients
+      const matchingClients = await Client.find({
+        $or: [
+          { name: searchRegex },
+          { companyName: searchRegex },
+          { email: searchRegex },
+        ],
+      }).select('_id').lean();
+      const matchingClientIds = matchingClients.map((c) => c._id);
+
+      // Find matching projects
+      const matchingProjects = await Project.find({
+        title: searchRegex,
+      }).select('_id').lean();
+      const matchingProjectIds = matchingProjects.map((p) => p._id);
+
+      const orConditions: any[] = [
+        { invoiceNumber: searchRegex },
+      ];
+
+      if (matchingClientIds.length > 0) {
+        orConditions.push({ clientId: { $in: matchingClientIds } });
+      }
+
+      if (matchingProjectIds.length > 0) {
+        orConditions.push({ projectId: { $in: matchingProjectIds } });
+      }
+
+      query.$or = orConditions;
     }
 
     const page = Math.max(1, Number(filter.page) || 1);

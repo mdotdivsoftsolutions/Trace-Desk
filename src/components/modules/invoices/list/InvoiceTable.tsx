@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { Eye, DollarSign, Receipt, Plus } from 'lucide-react';
-import { Invoice } from '@/types';
+import { Invoice, Client, Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
+import { InvoiceTableSkeleton } from '@/components/common/skeletons/InvoiceTableSkeleton';
 
 interface InvoiceTableProps {
   invoices: Invoice[];
@@ -22,12 +23,7 @@ const statusBadgeStyles: Record<string, string> = {
 
 export function InvoiceTable({ invoices, isLoading, onRecordPayment }: InvoiceTableProps) {
   if (isLoading) {
-    return (
-      <div className="p-8 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] text-center space-y-3">
-        <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-neutral-500">Loading invoice ledger...</p>
-      </div>
-    );
+    return <InvoiceTableSkeleton />;
   }
 
   if (invoices.length === 0) {
@@ -64,8 +60,8 @@ export function InvoiceTable({ invoices, isLoading, onRecordPayment }: InvoiceTa
           </thead>
           <tbody className="divide-y divide-neutral-200 dark:divide-[#334155] font-medium">
             {invoices.map((inv) => {
-              const client = inv.clientId as any;
-              const project = inv.projectId as any;
+              const client = typeof inv.clientId === 'object' ? (inv.clientId as Client) : null;
+              const project = typeof inv.projectId === 'object' ? (inv.projectId as Project) : null;
               return (
                 <tr key={inv._id} className="hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40 transition-colors">
                   <td className="px-5 py-4">

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useClients, useDeleteClient } from '@/hooks/useClients';
+import { useDebounce } from '@/hooks/useDebounce';
 import { ClientType } from '@/types';
 import { ClientStatsHeader } from '@/components/modules/clients/list/ClientStatsHeader';
 import { ClientSearchFilter } from '@/components/modules/clients/list/ClientSearchFilter';
@@ -12,6 +13,7 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 
 export default function ClientsPage() {
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -20,8 +22,8 @@ export default function ClientsPage() {
   const [editingClient, setEditingClient] = useState<ClientType | null>(null);
   const [deletingClient, setDeletingClient] = useState<ClientType | null>(null);
 
-  const { data, isLoading } = useClients({
-    search: search || undefined,
+  const { data, isLoading, isFetching } = useClients({
+    search: debouncedSearch || undefined,
     status: statusFilter === 'all' ? undefined : statusFilter,
     page,
     limit,
@@ -34,6 +36,8 @@ export default function ClientsPage() {
     await deleteClientMutation.mutateAsync(deletingClient._id);
     setDeletingClient(null);
   };
+
+  const isTableLoading = isLoading || isFetching || search !== debouncedSearch;
 
   return (
     <div className="space-y-6">
@@ -51,7 +55,7 @@ export default function ClientsPage() {
 
       <ClientTable
         clients={data?.items || []}
-        isLoading={isLoading}
+        isLoading={isTableLoading}
         onEdit={(client) => { setEditingClient(client); setIsDrawerOpen(true); }}
         onDelete={(client) => setDeletingClient(client)}
         onAddNew={() => { setEditingClient(null); setIsDrawerOpen(true); }}

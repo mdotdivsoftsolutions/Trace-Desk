@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
-import { Project, Milestone, Task, Invoice, IProject } from '@/models';
+import { Project, Client, Milestone, Task, Invoice, IProject } from '@/models';
 import { CreateProjectInput, UpdateProjectInput } from '@/lib/validations/project.schema';
 
 export interface PaginatedProjectsResult {
@@ -45,11 +45,30 @@ export class ProjectService {
       query.status = filter.status;
     }
 
-    if (filter.search) {
-      query.$or = [
-        { title: { $regex: filter.search, $options: 'i' } },
-        { description: { $regex: filter.search, $options: 'i' } },
+    if (filter.search && filter.search.trim()) {
+      const searchRegex = new RegExp(
+        filter.search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        'i'
+      );
+
+      const matchingClients = await Client.find({
+        $or: [
+          { name: searchRegex },
+          { companyName: searchRegex },
+        ],
+      }).select('_id').lean();
+      const matchingClientIds = matchingClients.map((c) => c._id);
+
+      const orConditions: Record<string, unknown>[] = [
+        { title: searchRegex },
+        { description: searchRegex },
       ];
+
+      if (matchingClientIds.length > 0) {
+        orConditions.push({ clientId: { $in: matchingClientIds } });
+      }
+
+      query.$or = orConditions;
     }
 
     const page = Math.max(1, Number(filter.page) || 1);

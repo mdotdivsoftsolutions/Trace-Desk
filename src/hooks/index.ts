@@ -8,3 +8,4 @@ export * from './useDashboard';
 export * from './useSettings';
 export * from './useConfirmDialog';
 export * from './useAuth';
+export * from './useDebounce';
