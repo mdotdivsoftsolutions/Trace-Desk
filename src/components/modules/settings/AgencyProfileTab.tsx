@@ -4,7 +4,7 @@ import { Settings } from '@/types';
 
 interface AgencyProfileTabProps {
   formData: Partial<Settings>;
-  onChange: (field: keyof Settings, value: any) => void;
+  onChange: <K extends keyof Settings>(field: K, value: Settings[K]) => void;
   isEditing?: boolean;
 }
 

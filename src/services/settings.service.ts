@@ -21,22 +21,27 @@ export class SettingsService {
       });
     }
 
-    // Auto-migrate single bankDetails to bankAccounts if bankAccounts is empty
-    if ((!settings.bankAccounts || settings.bankAccounts.length === 0) && settings.bankDetails && (settings.bankDetails.bankName || settings.bankDetails.accountNumber || settings.bankDetails.upiId)) {
+    // Auto-migrate single bankDetails to bankAccounts if bankAccounts is empty and bankDetails has information
+    if (
+      (!settings.bankAccounts || settings.bankAccounts.length === 0) &&
+      settings.bankDetails &&
+      (settings.bankDetails.bankName || settings.bankDetails.accountNumber || settings.bankDetails.upiId || settings.bankDetails.accountName)
+    ) {
       settings.bankAccounts = [
         {
-          id: 'bank-1',
-          accountLabel: 'Primary Remittance Account',
+          id: settings.bankDetails.id || 'bank-1',
+          accountLabel: settings.bankDetails.accountLabel || 'Primary Bank Account',
           bankName: settings.bankDetails.bankName,
           accountName: settings.bankDetails.accountName,
           accountNumber: settings.bankDetails.accountNumber,
           ifscCode: settings.bankDetails.ifscCode,
           upiId: settings.bankDetails.upiId,
           swiftCode: settings.bankDetails.swiftCode,
+          accountType: settings.bankDetails.accountType || 'Current',
           isPrimary: true,
         },
       ];
-      await settings.save();
+      await Settings.updateOne({ _id: settings._id }, { $set: { bankAccounts: settings.bankAccounts } });
     }
 
     return settings;
@@ -52,28 +57,28 @@ export class SettingsService {
     if (data.bankAccounts && data.bankAccounts.length > 0) {
       const primaryAccount = data.bankAccounts.find((b) => b.isPrimary) || data.bankAccounts[0];
       data.bankDetails = {
-        id: primaryAccount.id,
-        accountLabel: primaryAccount.accountLabel,
-        bankName: primaryAccount.bankName,
-        accountName: primaryAccount.accountName,
-        accountNumber: primaryAccount.accountNumber,
-        ifscCode: primaryAccount.ifscCode,
-        upiId: primaryAccount.upiId,
-        swiftCode: primaryAccount.swiftCode,
+        id: primaryAccount.id || undefined,
+        accountLabel: primaryAccount.accountLabel || undefined,
+        bankName: primaryAccount.bankName || undefined,
+        accountName: primaryAccount.accountName || undefined,
+        accountNumber: primaryAccount.accountNumber || undefined,
+        ifscCode: primaryAccount.ifscCode || undefined,
+        upiId: primaryAccount.upiId || undefined,
+        swiftCode: primaryAccount.swiftCode || undefined,
+        accountType: primaryAccount.accountType || 'Current',
         isPrimary: true,
       };
     }
 
     const validatedData = updateSettingsSchema.parse(data);
 
-    let settings = await Settings.findOne();
-    if (!settings) {
-      settings = await Settings.create(validatedData);
-    } else {
-      Object.assign(settings, validatedData);
-      await settings.save();
-    }
+    const settings = await Settings.findOneAndUpdate(
+      {},
+      { $set: validatedData },
+      { new: true, upsert: true, runValidators: true }
+    );
 
-    return settings;
+    return settings!;
   }
 }
+

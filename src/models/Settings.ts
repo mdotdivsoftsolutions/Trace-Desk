@@ -88,6 +88,13 @@ const SettingsSchema: Schema = new Schema(
       default: 'MDIV-',
       required: true,
     },
+    nextInvoiceNumber: {
+      type: Number,
+      default: 1,
+    },
+    invoiceNotes: {
+      type: String,
+    },
     defaultTaxRate: {
       type: Number,
       default: 18,
@@ -96,10 +103,17 @@ const SettingsSchema: Schema = new Schema(
   },
   {
     timestamps: true,
+    strict: false,
   }
 );
+
+// Ensure model schema updates take effect during development HMR
+if (process.env.NODE_ENV !== 'production' && mongoose.models.Settings) {
+  delete (mongoose.models as any).Settings;
+}
 
 const Settings: Model<ISettings> =
   mongoose.models.Settings || mongoose.model<ISettings>('Settings', SettingsSchema);
 
 export default Settings;
+

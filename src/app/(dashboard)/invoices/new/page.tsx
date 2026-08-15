@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, FileText, Loader2 } from 'lucide-react';
+import { ArrowLeft, FileText, Loader2, AlertCircle } from 'lucide-react';
 import { useClients } from '@/hooks/useClients';
 import { useProjects } from '@/hooks/useProjects';
 import { useSettings } from '@/hooks/useSettings';
@@ -22,6 +22,7 @@ interface InvoiceFormProps {
   initialTaxRate: number;
   initialNotes: string;
   initialItems: InvoiceItemDraft[];
+  defaultCurrency?: string;
 }
 
 function InvoiceForm({
@@ -32,6 +33,7 @@ function InvoiceForm({
   initialTaxRate,
   initialNotes,
   initialItems,
+  defaultCurrency = 'INR',
 }: InvoiceFormProps) {
   const router = useRouter();
   const createInvoiceMutation = useCreateInvoice();
@@ -44,13 +46,19 @@ function InvoiceForm({
   const [discount, setDiscount] = useState(0);
   const [notes, setNotes] = useState(initialNotes);
   const [items, setItems] = useState<InvoiceItemDraft[]>(initialItems);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
   const taxAmount = (subtotal * taxRate) / 100;
   const totalAmount = Math.max(0, subtotal + taxAmount - discount);
 
+  const selectedProject = projects.find((p) => p._id === projectId);
+  const invoiceCurrency = selectedProject?.currency || defaultCurrency || 'INR';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+
     const calculatedItems = items.map((it) => ({
       description: it.description,
       quantity: it.quantity,
@@ -59,20 +67,28 @@ function InvoiceForm({
       milestoneId: it.milestoneId || undefined,
     }));
 
-    const created = await createInvoiceMutation.mutateAsync({
-      clientId,
-      projectId: projectId || undefined,
-      items: calculatedItems,
-      taxRate,
-      discount,
-      discountAmount: discount,
-      status: 'draft' as const,
-      currency: 'INR',
-      issueDate: new Date(issueDate),
-      dueDate: dueDate ? new Date(dueDate) : new Date(Date.now() + 14 * 86400000),
-      notes: notes || undefined,
-    });
-    router.push('/invoices/' + created._id);
+    try {
+      const created = await createInvoiceMutation.mutateAsync({
+        clientId,
+        projectId: projectId || undefined,
+        items: calculatedItems,
+        taxRate,
+        discount,
+        discountAmount: discount,
+        status: 'draft' as const,
+        currency: invoiceCurrency as any,
+        issueDate: new Date(issueDate),
+        dueDate: dueDate ? new Date(dueDate) : new Date(Date.now() + 14 * 86400000),
+        notes: notes || undefined,
+      });
+      router.push('/invoices/' + created._id);
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to generate invoice. Please check the details and try again.';
+      setErrorMessage(msg);
+    }
   };
 
   return (
@@ -87,6 +103,13 @@ function InvoiceForm({
           <span>Generate &amp; Issue Invoice</span>
         </button>
       </div>
+
+      {errorMessage && (
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs font-medium">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
 
       <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-6">
         <h2 className="font-heading text-lg font-bold text-neutral-900 dark:text-white">New Invoice Creation</h2>
@@ -202,6 +225,7 @@ function InvoiceFormContent() {
       initialTaxRate={initialTaxRate}
       initialNotes={initialNotes}
       initialItems={initialItems}
+      defaultCurrency={settings?.defaultCurrency || 'INR'}
     />
   );
 }

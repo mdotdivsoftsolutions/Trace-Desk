@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
-import { Invoice, Payment, Milestone, Client, IInvoice, IPayment } from '@/models';
+import { Invoice, Payment, Milestone, Client, Settings, IInvoice, IPayment } from '@/models';
 import { CreateInvoiceInput, UpdateInvoiceInput } from '@/lib/validations/invoice.schema';
 import { CreatePaymentInput } from '@/lib/validations/payment.schema';
 
@@ -68,6 +68,53 @@ export class InvoiceService {
   }
 
   /**
+   * Generates the next guaranteed-unique invoice number based on agency settings prefix.
+   */
+  static async getNextInvoiceNumber(): Promise<string> {
+    await dbConnect();
+    let settings = await Settings.findOne();
+    if (!settings) {
+      settings = await Settings.create({
+        agencyName: 'M.Div Softsolutions',
+        defaultCurrency: 'INR',
+        currencySymbol: '₹',
+        invoicePrefix: 'MDIV-',
+        nextInvoiceNumber: 1,
+        defaultTaxRate: 18,
+      });
+    }
+
+    const prefix = settings.invoicePrefix || 'MDIV-';
+    const escapedPrefix = prefix.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+    // Find existing invoices matching prefix
+    const existingInvoices = await Invoice.find(
+      { invoiceNumber: { $regex: `^${escapedPrefix}` } },
+      { invoiceNumber: 1 }
+    ).lean();
+
+    let maxNum = 0;
+    for (const inv of existingInvoices) {
+      const suffix = inv.invoiceNumber.slice(prefix.length);
+      const parsed = parseInt(suffix, 10);
+      if (!isNaN(parsed) && parsed > maxNum) {
+        maxNum = parsed;
+      }
+    }
+
+    let candidateNum = Math.max(maxNum + 1, settings.nextInvoiceNumber || 1);
+    let candidate = `${prefix}${candidateNum.toString().padStart(4, '0')}`;
+
+    // Loop check for collision safety
+    while (await Invoice.exists({ invoiceNumber: candidate })) {
+      candidateNum++;
+      candidate = `${prefix}${candidateNum.toString().padStart(4, '0')}`;
+    }
+
+    return candidate;
+  }
+
+  /**
    * Creates a new invoice with computed financial totals.
    */
   static async createInvoice(data: CreateInvoiceInput): Promise<IInvoice> {
@@ -75,10 +122,7 @@ export class InvoiceService {
 
     let { invoiceNumber } = data;
     if (!invoiceNumber) {
-      const settings = await mongoose.models.Settings?.findOne();
-      const prefix = settings?.invoicePrefix || 'INV-';
-      const count = await Invoice.countDocuments();
-      invoiceNumber = `${prefix}${(count + 1).toString().padStart(4, '0')}`;
+      invoiceNumber = await this.getNextInvoiceNumber();
     }
 
     const calculations = this.calculateTotals(
@@ -103,6 +147,22 @@ export class InvoiceService {
     };
 
     const invoice = await Invoice.create(invoiceData);
+
+    // Sync settings nextInvoiceNumber forward if applicable
+    try {
+      const settings = await Settings.findOne();
+      if (settings) {
+        const prefix = settings.invoicePrefix || 'MDIV-';
+        if (invoiceNumber.startsWith(prefix)) {
+          const numPart = parseInt(invoiceNumber.slice(prefix.length), 10);
+          if (!isNaN(numPart) && numPart >= (settings.nextInvoiceNumber || 1)) {
+            await Settings.updateOne({ _id: settings._id }, { $set: { nextInvoiceNumber: numPart + 1 } });
+          }
+        }
+      }
+    } catch {
+      // Non-blocking for invoice creation
+    }
 
     const milestoneIds = calculations.items
       .map((it: any) => it.milestoneId)
@@ -298,7 +358,7 @@ export class InvoiceService {
     projectId: string,
     milestoneIds: string[],
     options: {
-      invoiceNumber: string;
+      invoiceNumber?: string;
       dueDate: Date;
       taxRate?: number;
       notes?: string;

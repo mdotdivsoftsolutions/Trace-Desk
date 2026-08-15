@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Save, CheckCircle, Loader2, Pencil, X } from 'lucide-react';
 import { useSettings, useUpdateSettings } from '@/hooks/useSettings';
 import { AgencyProfileTab } from '@/components/modules/settings/AgencyProfileTab';
@@ -28,21 +28,20 @@ export default function SettingsPage() {
   const { data: settings, isLoading } = useSettings();
   const updateSettingsMutation = useUpdateSettings();
 
-  useEffect(() => {
-    if (settings) {
-      setFormData(settings);
-    }
-  }, [settings]);
+  const activeFormData = isEditing ? formData : (settings || {});
 
-  const handleChange = (field: keyof SettingsType, value: any) => {
+  const handleChange = <K extends keyof SettingsType>(field: K, value: SettingsType[K]) => {
     setFormData((prev: Partial<SettingsType>) => ({ ...prev, [field]: value }));
   };
 
+  const handleStartEdit = () => {
+    setFormData(settings || {});
+    setIsEditing(true);
+  };
+
   const handleCancel = () => {
-    if (settings) {
-      setFormData(settings);
-    }
     setIsEditing(false);
+    setFormData({});
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -50,8 +49,9 @@ export default function SettingsPage() {
     if (!isEditing) return;
 
     try {
-      await updateSettingsMutation.mutateAsync(formData as any);
+      await updateSettingsMutation.mutateAsync(formData as unknown as Parameters<typeof updateSettingsMutation.mutateAsync>[0]);
       setIsEditing(false);
+      setFormData({});
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3000);
     } catch (err) {
@@ -90,7 +90,7 @@ export default function SettingsPage() {
           {!isEditing ? (
             <button
               type="button"
-              onClick={() => setIsEditing(true)}
+              onClick={handleStartEdit}
               className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 text-xs font-bold shadow-sm transition"
             >
               <Pencil className="w-3.5 h-3.5" />
@@ -134,16 +134,16 @@ export default function SettingsPage() {
 
       {/* CLS-safe panels */}
       <TabPanel tabKey="profile" activeTab={activeTab} minHeight={320}>
-        <AgencyProfileTab formData={formData} onChange={handleChange} isEditing={isEditing} />
+        <AgencyProfileTab formData={activeFormData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
       <TabPanel tabKey="currency" activeTab={activeTab} minHeight={320}>
-        <CurrencyFinanceTab formData={formData} onChange={handleChange} isEditing={isEditing} />
+        <CurrencyFinanceTab formData={activeFormData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
       <TabPanel tabKey="bank" activeTab={activeTab} minHeight={320}>
-        <BankUpiTab formData={formData} onChange={handleChange} isEditing={isEditing} />
+        <BankUpiTab formData={activeFormData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
       <TabPanel tabKey="invoice" activeTab={activeTab} minHeight={320}>
-        <InvoiceConfigTab formData={formData} onChange={handleChange} isEditing={isEditing} />
+        <InvoiceConfigTab formData={activeFormData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
     </form>
   );

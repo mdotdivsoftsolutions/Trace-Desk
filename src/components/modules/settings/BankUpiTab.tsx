@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { CreditCard, Plus, Trash2, Copy, Check, Star, Building2, QrCode } from 'lucide-react';
-import { Settings, BankDetailsType } from '@/types';
+import { SettingsType, BankDetailsType } from '@/types';
 
 interface BankUpiTabProps {
-  formData: Partial<Settings>;
-  onChange: (field: keyof Settings, value: any) => void;
+  formData: Partial<SettingsType>;
+  onChange: <K extends keyof SettingsType>(field: K, value: SettingsType[K]) => void;
   isEditing?: boolean;
 }
 
@@ -16,7 +16,7 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
     if (formData.bankAccounts && formData.bankAccounts.length > 0) {
       return formData.bankAccounts;
     }
-    if (formData.bankDetails && (formData.bankDetails.bankName || formData.bankDetails.accountNumber || formData.bankDetails.upiId)) {
+    if (formData.bankDetails && (formData.bankDetails.bankName || formData.bankDetails.accountNumber || formData.bankDetails.upiId || formData.bankDetails.accountName)) {
       return [
         {
           id: formData.bankDetails.id || 'bank-1',
@@ -55,9 +55,8 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
     onChange('bankDetails', primary);
   };
 
-  const handleAccountChange = (index: number, field: keyof BankDetailsType, value: any) => {
-    const updated = [...accounts];
-    updated[index] = { ...updated[index], [field]: value };
+  const handleAccountChange = <K extends keyof BankDetailsType>(index: number, field: K, value: BankDetailsType[K]) => {
+    const updated = accounts.map((acc, idx) => (idx === index ? { ...acc, [field]: value } : acc));
     updateAccountsList(updated);
   };
 
@@ -82,7 +81,7 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
     const isRemovingPrimary = accounts[index].isPrimary;
     const filtered = accounts.filter((_, idx) => idx !== index);
     if (isRemovingPrimary && filtered.length > 0) {
-      filtered[0].isPrimary = true;
+      filtered[0] = { ...filtered[0], isPrimary: true };
     }
     updateAccountsList(filtered);
   };
@@ -130,7 +129,7 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
         <div>
           <h3 className="font-heading text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
             <CreditCard className="w-4 h-4 text-neutral-500" />
-            <span>Remittance, Bank & UPI Payout Details</span>
+            <span>Remittance, Bank &amp; UPI Payout Details</span>
           </h3>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
             Configure multiple bank accounts and UPI IDs. These details can be rendered on client invoices and copied instantly.
@@ -150,7 +149,7 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 shadow-sm transition"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Add Bank / UPI</span>
+              <span>+ Add Bank / UPI</span>
             </button>
           )}
         </div>
@@ -186,6 +185,11 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
                         <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                           <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
                           Primary Default
+                        </span>
+                      )}
+                      {account.accountType && (
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">
+                          {account.accountType}
                         </span>
                       )}
                     </div>
@@ -268,11 +272,30 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
 
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                    Account Type
+                  </label>
+                  <select
+                    disabled={!isEditing}
+                    value={account.accountType || 'Current'}
+                    onChange={(e) => handleAccountChange(index, 'accountType', e.target.value)}
+                    className={inputClass}
+                  >
+                    <option value="Current">Current Account (Business)</option>
+                    <option value="Savings">Savings Account</option>
+                    <option value="Escrow">Escrow Account</option>
+                    <option value="NRE/NRO">NRE / NRO Account</option>
+                    <option value="Virtual/Wise">Virtual / Wise / Payoneer</option>
+                    <option value="International Wire">International Wire</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                     Bank Name
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. HDFC Bank, State Bank of India"
+                    placeholder="e.g. Federal Bank, HDFC Bank, SBI"
                     disabled={!isEditing}
                     value={account.bankName || ''}
                     onChange={(e) => handleAccountChange(index, 'bankName', e.target.value)}
@@ -314,7 +337,7 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. HDFC0000123"
+                    placeholder="e.g. FDRL0001440 / HDFC0000123"
                     disabled={!isEditing}
                     value={account.ifscCode || ''}
                     onChange={(e) => handleAccountChange(index, 'ifscCode', e.target.value)}
@@ -328,7 +351,7 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. HDFCINBBXXX"
+                    placeholder="e.g. FDRLINBBXXX"
                     disabled={!isEditing}
                     value={account.swiftCode || ''}
                     onChange={(e) => handleAccountChange(index, 'swiftCode', e.target.value)}
@@ -336,14 +359,14 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
                   />
                 </div>
 
-                <div className="sm:col-span-2 lg:col-span-3 space-y-1.5">
+                <div className="sm:col-span-2 lg:col-span-2 space-y-1.5">
                   <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5">
                     <QrCode className="w-3.5 h-3.5 text-neutral-500" />
                     <span>UPI ID / VPA (Instant QR Billing)</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. mdotdiv@okhdfcbank"
+                    placeholder="e.g. 917356924029@federal (VPA)"
                     disabled={!isEditing}
                     value={account.upiId || ''}
                     onChange={(e) => handleAccountChange(index, 'upiId', e.target.value)}
@@ -354,9 +377,24 @@ export function BankUpiTab({ formData, onChange, isEditing = false }: BankUpiTab
             </div>
           );
         })}
+
+        {/* Add Another Bank Account Card Button */}
+        {isEditing && (
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={handleAddAccount}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-700 dark:text-neutral-300 text-xs font-bold hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition shadow-sm"
+            >
+              <Plus className="w-4 h-4 text-neutral-500" />
+              <span>+ Add Another Bank / UPI Payout Account</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 export default BankUpiTab;
+

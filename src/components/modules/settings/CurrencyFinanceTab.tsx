@@ -1,10 +1,10 @@
 import React from 'react';
 import { DollarSign } from 'lucide-react';
-import { Settings } from '@/types';
+import { Settings, CurrencyCode } from '@/types';
 
 interface CurrencyFinanceTabProps {
   formData: Partial<Settings>;
-  onChange: (field: keyof Settings, value: any) => void;
+  onChange: <K extends keyof Settings>(field: K, value: Settings[K]) => void;
   isEditing?: boolean;
 }
 
@@ -40,7 +40,7 @@ export function CurrencyFinanceTab({ formData, onChange, isEditing = false }: Cu
           <select
             disabled={!isEditing}
             value={formData.defaultCurrency || 'INR'}
-            onChange={(e) => onChange('defaultCurrency', e.target.value)}
+            onChange={(e) => onChange('defaultCurrency', e.target.value as CurrencyCode)}
             className={inputClass}
           >
             <option value="INR">INR (₹) - Indian Rupee</option>
