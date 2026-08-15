@@ -7,6 +7,7 @@ import { InvoiceHeaderActions } from '@/components/modules/invoices/detail/Invoi
 import { InvoiceDocumentPreview } from '@/components/modules/invoices/detail/InvoiceDocumentPreview';
 import { InvoicePaymentHistory } from '@/components/modules/invoices/detail/InvoicePaymentHistory';
 import { RecordPaymentDrawer } from '@/components/modules/payments/RecordPaymentDrawer';
+import { InvoicePreviewSkeleton } from '@/components/common/skeletons/InvoicePreviewSkeleton';
 
 export default function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -17,12 +18,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   const { data: settings } = useSettings();
 
   if (isInvoiceLoading) {
-    return (
-      <div className="p-12 text-center">
-        <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-neutral-500 mt-2">Loading invoice document...</p>
-      </div>
-    );
+    return <InvoicePreviewSkeleton />;
   }
 
   if (!invoice) {

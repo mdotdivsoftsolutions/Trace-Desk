@@ -15,6 +15,7 @@ import { ClientFormDrawer } from '@/components/modules/clients/ClientFormDrawer'
 import { ProjectFormDrawer } from '@/components/modules/projects/ProjectFormDrawer';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { TabBar, TabPanel } from '@/components/common/TabPanel';
+import { ProjectWorkspaceSkeleton } from '@/components/common/skeletons/ProjectWorkspaceSkeleton';
 
 type ClientTab = 'projects' | 'invoices' | 'notes';
 
@@ -32,12 +33,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   const deleteClientMutation = useDeleteClient();
 
   if (isLoading) {
-    return (
-      <div className="p-12 text-center">
-        <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-neutral-500 mt-2">Loading client profile...</p>
-      </div>
-    );
+    return <ProjectWorkspaceSkeleton />;
   }
   if (!client) {
     return (

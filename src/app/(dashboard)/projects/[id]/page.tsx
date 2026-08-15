@@ -16,6 +16,7 @@ import { TaskFormDrawer } from '@/components/modules/tasks/TaskFormDrawer';
 import { MilestoneFormDrawer } from '@/components/modules/milestones/MilestoneFormDrawer';
 import { TabBar, TabPanel } from '@/components/common/TabPanel';
 import { Milestone, Task } from '@/types';
+import { ProjectWorkspaceSkeleton } from '@/components/common/skeletons/ProjectWorkspaceSkeleton';
 
 type ProjectTab = 'milestones' | 'tasks' | 'financials' | 'credentials';
 
@@ -42,12 +43,7 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
   const { data: invoicesData } = useInvoices({ projectId: id });
 
   if (isLoading) {
-    return (
-      <div className="p-12 text-center">
-        <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-neutral-500 mt-2">Loading workspace...</p>
-      </div>
-    );
+    return <ProjectWorkspaceSkeleton />;
   }
   if (!project) {
     return (

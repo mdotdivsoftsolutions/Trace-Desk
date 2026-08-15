@@ -6,6 +6,7 @@ import { FolderKanban, Plus } from 'lucide-react';
 import { useProjects } from '@/hooks/useProjects';
 import { ProjectFilterBar } from '@/components/modules/projects/list/ProjectFilterBar';
 import { ProjectGridCard } from '@/components/modules/projects/list/ProjectGridCard';
+import { ProjectCardSkeleton } from '@/components/common/skeletons/ProjectCardSkeleton';
 import { Pagination } from '@/components/common/pagination';
 
 export default function ProjectsPage() {
@@ -35,7 +36,7 @@ export default function ProjectsPage() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="h-56 rounded-lg bg-neutral-200/60 dark:bg-neutral-800/40 animate-pulse border border-neutral-200 dark:border-neutral-800" />
+            <ProjectCardSkeleton key={i} />
           ))}
         </div>
       ) : projects.length === 0 ? (

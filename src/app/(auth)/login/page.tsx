@@ -11,7 +11,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { login, isLoggingIn, loginError } = useAuth();
   const [email, setEmail] = useState('manum66466@gmail.com');
-  const [password, setPassword] = useState('Manumanoj$14');
+  const [password, setPassword] = useState('Password@1');
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -21,8 +21,9 @@ export default function LoginPage() {
     try {
       await login({ email, password });
       router.push('/');
-    } catch (err: any) {
-      setFormError(err.response?.data?.message || err.message || 'Login failed. Please verify your credentials.');
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } }; message?: string };
+      setFormError(error.response?.data?.message || error.message || 'Login failed. Please verify your credentials.');
     }
   };
 

@@ -4,6 +4,7 @@ import React from 'react';
 import { DollarSign, TrendingUp, Receipt, Clock, FolderKanban, AlertCircle, CheckCircle } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
 import { DashboardMetrics } from '@/types';
+import { DashboardMetricsSkeleton } from '@/components/common/skeletons/DashboardMetricsSkeleton';
 
 interface KpiGridProps {
   metrics: DashboardMetrics | undefined;
@@ -28,15 +29,15 @@ function KpiCard({ title, icon, children }: { title: string; icon: React.ReactNo
 }
 
 export function KpiGrid({ metrics, isLoading }: KpiGridProps) {
+  if (isLoading) {
+    return <DashboardMetricsSkeleton />;
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <KpiCard title="Collected Revenue" icon={<DollarSign className="w-4 h-4" />}>
-        {/* h-8 w-28 fixed skeleton prevents height oscillation */}
         <div className="h-8 flex items-center">
-          {isLoading
-            ? <div className="skeleton h-7 w-28" />
-            : <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{formatCurrency(metrics?.financials.totalRevenue || 0)}</span>
-          }
+          <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{formatCurrency(metrics?.financials.totalRevenue || 0)}</span>
         </div>
         <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1 h-4">
           <TrendingUp className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300 shrink-0" />
@@ -46,27 +47,17 @@ export function KpiGrid({ metrics, isLoading }: KpiGridProps) {
 
       <KpiCard title="Pending Invoices" icon={<Receipt className="w-4 h-4" />}>
         <div className="h-8 flex items-center">
-          {isLoading
-            ? <div className="skeleton h-7 w-28" />
-            : <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{formatCurrency(metrics?.financials.pendingReceivables || 0)}</span>
-          }
+          <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{formatCurrency(metrics?.financials.pendingReceivables || 0)}</span>
         </div>
         <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 h-4">
-          {isLoading ? <span className="skeleton h-3 w-36 inline-block" /> : <span>{metrics?.financials.pendingInvoicesCount || 0} unpaid sent invoices</span>}
+          <span>{metrics?.financials.pendingInvoicesCount || 0} unpaid sent invoices</span>
         </p>
       </KpiCard>
 
       <KpiCard title="Active Projects" icon={<FolderKanban className="w-4 h-4" />}>
         <div className="h-8 flex items-center gap-2">
-          {isLoading
-            ? <div className="skeleton h-7 w-16" />
-            : (
-              <>
-                <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{metrics?.projects.activeCount || 0}</span>
-                <span className="text-xs font-normal text-neutral-400 nums">of {metrics?.projects.totalCount || 0} total</span>
-              </>
-            )
-          }
+          <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{metrics?.projects.activeCount || 0}</span>
+          <span className="text-xs font-normal text-neutral-400 nums">of {metrics?.projects.totalCount || 0} total</span>
         </div>
         <div className="mt-2 flex items-center gap-2 h-4">
           <div className="flex-1 bg-neutral-100 dark:bg-[#0F172A] h-1.5 rounded-full overflow-hidden">
@@ -83,10 +74,7 @@ export function KpiGrid({ metrics, isLoading }: KpiGridProps) {
 
       <KpiCard title="Open Tasks" icon={<Clock className="w-4 h-4" />}>
         <div className="h-8 flex items-center">
-          {isLoading
-            ? <div className="skeleton h-7 w-16" />
-            : <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{metrics?.tasks.totalOpenTasks || 0}</span>
-          }
+          <span className="text-2xl font-extrabold text-neutral-900 dark:text-white font-mono nums">{metrics?.tasks.totalOpenTasks || 0}</span>
         </div>
         <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1 h-4">
           {(metrics?.tasks.overdueTasks?.length || 0) > 0 ? (

@@ -8,6 +8,7 @@ import { useTasks, useDeleteTask } from '@/hooks/useTasks';
 import { KanbanBoard } from '@/components/modules/tasks/KanbanBoard';
 import { TaskFormDrawer } from '@/components/modules/tasks/TaskFormDrawer';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
+import { KanbanBoardSkeleton } from '@/components/common/skeletons/KanbanBoardSkeleton';
 import { Task, TaskStatus } from '@/types';
 
 export default function ProjectKanbanPage({ params }: { params: Promise<{ id: string }> }) {
@@ -22,12 +23,7 @@ export default function ProjectKanbanPage({ params }: { params: Promise<{ id: st
   const deleteTaskMutation = useDeleteTask(id);
 
   if (isProjectLoading || isTasksLoading) {
-    return (
-      <div className="p-12 text-center">
-        <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-neutral-500 mt-2">Loading Kanban board...</p>
-      </div>
-    );
+    return <KanbanBoardSkeleton />;
   }
 
   return (

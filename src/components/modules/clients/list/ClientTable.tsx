@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Mail, Phone, MapPin, Eye, Edit, Trash2, Users, Plus } from 'lucide-react';
 import { Client } from '@/types';
 import { cn } from '@/lib/utils';
+import { ClientTableSkeleton } from '@/components/common/skeletons/ClientTableSkeleton';
 
 interface ClientTableProps {
   clients: Client[];
@@ -20,12 +21,7 @@ export function ClientTable({
   onAddNew,
 }: ClientTableProps) {
   if (isLoading) {
-    return (
-      <div className="p-8 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] text-center space-y-3">
-        <div className="inline-block w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-neutral-500">Loading client directory...</p>
-      </div>
-    );
+    return <ClientTableSkeleton />;
   }
 
   if (clients.length === 0) {
