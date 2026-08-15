@@ -124,7 +124,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
           {/* Form Scrollable Body */}
           <form id="client-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
             {error && (
-              <div className="p-3 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold">
+              <div className="p-3 rounded-md bg-rose-500/10 border border-rose-500/20 text-neutral-700 dark:text-neutral-300 dark:text-rose-400 text-xs font-semibold">
                 {error}
               </div>
             )}
@@ -132,7 +132,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
             {/* Name */}
             <div>
               <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Contact / Representative Name <span className="text-rose-500">*</span>
+                Contact / Representative Name <span className="text-neutral-700 dark:text-neutral-300">*</span>
               </label>
               <input
                 type="text"
@@ -162,7 +162,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Email Address <span className="text-rose-500">*</span>
+                  Email Address <span className="text-neutral-700 dark:text-neutral-300">*</span>
                 </label>
                 <input
                   type="email"

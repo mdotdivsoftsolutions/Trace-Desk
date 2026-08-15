@@ -44,7 +44,7 @@ export default function ProjectKanbanPage({
   if (!project) {
     return (
       <div className="p-12 text-center space-y-4">
-        <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
+        <AlertCircle className="w-10 h-10 text-neutral-700 dark:text-neutral-300 mx-auto" />
         <h2 className="text-lg font-bold">Project Not Found</h2>
         <Link href="/projects" className="text-xs font-semibold text-neutral-900 dark:text-white hover:underline">
           ← Back to Projects

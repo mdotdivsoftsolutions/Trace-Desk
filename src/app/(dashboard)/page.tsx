@@ -56,7 +56,7 @@ export default function DashboardPage() {
             href="/invoices"
             className="flex items-center gap-2 px-3.5 py-2 rounded-md bg-white dark:bg-[#111318] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 transition-all shadow-sm"
           >
-            <Receipt className="w-4 h-4 text-amber-500" />
+            <Receipt className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
             <span>Create Invoice</span>
           </Link>
           <Link
@@ -77,7 +77,7 @@ export default function DashboardPage() {
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Collected Revenue
             </span>
-            <div className="w-8 h-8 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function DashboardPage() {
               )}
             </div>
             <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+              <TrendingUp className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
               <span>Settled milestone payouts</span>
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Pending Invoices
             </span>
-            <div className="w-8 h-8 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center">
               <Receipt className="w-4 h-4" />
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             </div>
             <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1">
               {metrics?.financials.overdueReceivables ? (
-                <span className="text-rose-500 font-semibold">
+                <span className="text-neutral-700 dark:text-neutral-300 font-semibold">
                   {formatCurrency(metrics.financials.overdueReceivables)} overdue
                 </span>
               ) : (
@@ -169,7 +169,7 @@ export default function DashboardPage() {
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Open Tasks
             </span>
-            <div className="w-8 h-8 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
@@ -183,12 +183,12 @@ export default function DashboardPage() {
             </div>
             <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1">
               {(metrics?.tasks.overdueTasks?.length || 0) > 0 ? (
-                <span className="text-rose-500 font-semibold flex items-center gap-1">
+                <span className="text-neutral-700 dark:text-neutral-300 font-semibold flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {metrics?.tasks.overdueTasks.length} overdue tasks
                 </span>
               ) : (
-                <span className="text-emerald-500 flex items-center gap-1">
+                <span className="text-neutral-700 dark:text-neutral-300 flex items-center gap-1">
                   <CheckCircle className="w-3.5 h-3.5" />
                   All deadlines on track
                 </span>
@@ -255,10 +255,10 @@ export default function DashboardPage() {
                 const clientName =
                   typeof project.clientId === 'object' ? (project.clientId as any)?.name : 'Client';
                 const statusColors: Record<string, string> = {
-                  discovery: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+                  discovery: 'bg-amber-500/10 text-neutral-700 dark:text-neutral-300 border-amber-500/20',
                   in_progress: 'bg-neutral-100 dark:bg-[#252B37] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-[#2D333F]',
-                  review: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
-                  completed: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+                  review: 'bg-purple-500/10 text-neutral-700 dark:text-neutral-300 border-purple-500/20',
+                  completed: 'bg-emerald-500/10 text-neutral-700 dark:text-neutral-300 border-emerald-500/20',
                 };
 
                 return (
@@ -349,10 +349,10 @@ export default function DashboardPage() {
           <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-neutral-200 dark:border-[#2D333F] pb-3">
               <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-500" />
+                <Clock className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                 <span>Urgent Deadlines (48h)</span>
               </h3>
-              <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-mono">
+              <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border border-amber-500/20 font-mono">
                 {(metrics?.tasks.upcomingTasks48h?.length || 0) + (metrics?.tasks.overdueTasks?.length || 0)}
               </span>
             </div>
@@ -365,7 +365,7 @@ export default function DashboardPage() {
             ) : (metrics?.tasks.upcomingTasks48h?.length || 0) === 0 &&
               (metrics?.tasks.overdueTasks?.length || 0) === 0 ? (
               <div className="py-6 text-center text-xs text-neutral-500 dark:text-neutral-400">
-                <CheckCircle className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
+                <CheckCircle className="w-8 h-8 text-neutral-700 dark:text-neutral-300 mx-auto mb-2 opacity-80" />
                 No impending deadlines in the next 48 hours.
               </div>
             ) : (
@@ -379,14 +379,14 @@ export default function DashboardPage() {
                       className="p-2.5 rounded-md bg-rose-500/10 border border-rose-500/20 flex items-start justify-between gap-2"
                     >
                       <div className="min-w-0">
-                        <div className="text-xs font-semibold text-rose-600 dark:text-rose-400 truncate">
+                        <div className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 dark:text-rose-400 truncate">
                           {task.title}
                         </div>
                         <div className="text-[10px] text-neutral-500 truncate">
                           {task.projectId?.title || 'Project'}
                         </div>
                       </div>
-                      <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 flex-shrink-0">
+                      <span className="text-[10px] font-bold text-neutral-700 dark:text-neutral-300 dark:text-rose-400 flex-shrink-0">
                         {deadline.text}
                       </span>
                     </div>
@@ -409,7 +409,7 @@ export default function DashboardPage() {
                           {task.projectId?.title || 'Project'}
                         </div>
                       </div>
-                      <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">
+                      <span className="text-[10px] font-bold text-neutral-700 dark:text-neutral-300 dark:text-amber-400 flex-shrink-0">
                         {deadline.text}
                       </span>
                     </div>
@@ -423,10 +423,10 @@ export default function DashboardPage() {
           <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-neutral-200 dark:border-[#2D333F] pb-3">
               <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                <Receipt className="w-4 h-4 text-emerald-500" />
+                <Receipt className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                 <span>Ready to Invoice</span>
               </h3>
-              <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+              <span className="text-xs font-extrabold text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 font-mono">
                 {formatCurrency(metrics?.milestones.unbilledTotalAmount || 0)}
               </span>
             </div>

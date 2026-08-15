@@ -247,7 +247,7 @@ export default function ClientsPage() {
                         className={cn(
                           'px-2.5 py-0.5 text-[10px] font-bold rounded-md border uppercase tracking-wider',
                           client.status === 'active'
-                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                            ? 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-emerald-500/20'
                             : 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20'
                         )}
                       >
@@ -285,7 +285,7 @@ export default function ClientsPage() {
                               await deleteClientMutation.mutateAsync(client._id);
                             }
                           }}
-                          className="p-1.5 rounded-md text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                          className="p-1.5 rounded-md text-neutral-700 dark:text-neutral-300 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                           title="Delete Client"
                         >
                           <Trash2 className="w-4 h-4" />

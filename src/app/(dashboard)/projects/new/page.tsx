@@ -211,7 +211,7 @@ function NewProjectForm() {
       </div>
 
       {error && (
-        <div className="p-4 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold">
+        <div className="p-4 rounded-lg bg-rose-500/10 border border-rose-500/20 text-neutral-700 dark:text-neutral-300 dark:text-rose-400 text-xs font-semibold">
           {error}
         </div>
       )}
@@ -230,7 +230,7 @@ function NewProjectForm() {
             {/* Client Account */}
             <div>
               <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                Client Account <span className="text-rose-500">*</span>
+                Client Account <span className="text-neutral-700 dark:text-neutral-300">*</span>
               </label>
               <select
                 required
@@ -257,7 +257,7 @@ function NewProjectForm() {
             {/* Project Title */}
             <div>
               <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                Project Workspace Title <span className="text-rose-500">*</span>
+                Project Workspace Title <span className="text-neutral-700 dark:text-neutral-300">*</span>
               </label>
               <input
                 type="text"
@@ -473,9 +473,9 @@ function NewProjectForm() {
                     <span
                       className={`px-2 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider border ${
                         link.category === 'production'
-                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                          ? 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-emerald-500/20'
                           : link.category === 'staging'
-                          ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
+                          ? 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-amber-500/20'
                           : link.category === 'api'
                           ? 'bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] border-neutral-200 dark:border-[#2D333F]'
                           : 'bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border-neutral-500/20'
@@ -502,7 +502,7 @@ function NewProjectForm() {
                   <button
                     type="button"
                     onClick={() => handleRemoveLink(idx)}
-                    className="p-1.5 text-neutral-400 hover:text-rose-500 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                    className="p-1.5 text-neutral-400 hover:text-neutral-700 dark:text-neutral-300 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -571,7 +571,7 @@ function NewProjectForm() {
         <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2D333F]">
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-emerald-500" />
+              <Shield className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
               <h2 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
                 4. 3rd-Party Service Accounts & Credential Vault
               </h2>
@@ -595,7 +595,7 @@ function NewProjectForm() {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <Key className="w-4 h-4 text-amber-500" />
+                      <Key className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                       <span className="text-xs font-bold text-neutral-900 dark:text-white">
                         {cred.serviceName}
                       </span>
@@ -609,7 +609,7 @@ function NewProjectForm() {
                     <button
                       type="button"
                       onClick={() => handleRemoveCredential(idx)}
-                      className="p-1 text-neutral-400 hover:text-rose-500 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                      className="p-1 text-neutral-400 hover:text-neutral-700 dark:text-neutral-300 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

@@ -119,7 +119,7 @@ export default function SettingsPage() {
         </div>
 
         {savedSuccess && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold animate-in fade-in">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 text-xs font-semibold animate-in fade-in">
             <Check className="w-4 h-4" />
             <span>Settings saved successfully</span>
           </div>
@@ -173,7 +173,7 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                    Agency Legal Name <span className="text-rose-500">*</span>
+                    Agency Legal Name <span className="text-neutral-700 dark:text-neutral-300">*</span>
                   </label>
                   <input
                     type="text"
@@ -247,7 +247,7 @@ export default function SettingsPage() {
             <div className="p-6 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-5">
               <div className="border-b border-neutral-200 dark:border-[#2D333F] pb-3">
                 <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-emerald-500" />
+                  <DollarSign className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                   <span>Platform Currency & Numbering System</span>
                 </h2>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">

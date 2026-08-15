@@ -58,7 +58,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                     className={cn(
                       'px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wider',
                       client.status === 'active'
-                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                        ? 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border border-emerald-500/20'
                         : 'bg-neutral-500/10 text-neutral-400 border border-neutral-500/20'
                     )}
                   >
@@ -116,13 +116,13 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                     </div>
                     <div>
                       <div className="text-[10px] text-neutral-500">Total Paid</div>
-                      <div className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                      <div className="text-sm font-extrabold text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 mt-0.5">
                         {formatCurrency(client?.financialSummary?.totalPaid || 0, client?.currency)}
                       </div>
                     </div>
                     <div>
                       <div className="text-[10px] text-neutral-500">Outstanding</div>
-                      <div className="text-sm font-extrabold text-amber-600 dark:text-amber-400 mt-0.5">
+                      <div className="text-sm font-extrabold text-neutral-700 dark:text-neutral-300 dark:text-amber-400 mt-0.5">
                         {formatCurrency(client?.financialSummary?.outstanding || 0, client?.currency)}
                       </div>
                     </div>
@@ -210,7 +210,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                 {/* Linked Invoices */}
                 <div className="space-y-3">
                   <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <Receipt className="w-4 h-4 text-emerald-500" />
+                    <Receipt className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                     <span>Invoices ({client?.invoices?.length || 0})</span>
                   </h3>
 
@@ -237,7 +237,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
                             <div className="font-bold text-neutral-900 dark:text-white">
                               {formatCurrency(inv.totalAmount, inv.currency)}
                             </div>
-                            <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 capitalize">
+                            <span className="text-[10px] font-semibold text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 capitalize">
                               {inv.status}
                             </span>
                           </div>
@@ -254,7 +254,7 @@ export function ClientDrawer({ clientId, onClose, onEdit }: ClientDrawerProps) {
           <div className="p-4 border-t border-neutral-200/80 dark:border-neutral-800/80 flex items-center justify-between bg-neutral-50/50 dark:bg-neutral-900/50">
             <button
               onClick={handleDelete}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-neutral-700 dark:text-neutral-300 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Delete Client</span>

@@ -62,14 +62,14 @@ const COLUMNS: ColumnConfig[] = [
     id: 'review',
     title: 'Review / QA',
     dotColor: 'bg-purple-500',
-    badgeBg: 'bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400',
+    badgeBg: 'bg-purple-100 dark:bg-purple-950 text-neutral-700 dark:text-neutral-300 dark:text-purple-400',
     borderAccent: 'border-purple-500/20',
   },
   {
     id: 'done',
     title: 'Done',
     dotColor: 'bg-emerald-500',
-    badgeBg: 'bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400',
+    badgeBg: 'bg-emerald-100 dark:bg-emerald-950 text-neutral-700 dark:text-neutral-300 dark:text-emerald-400',
     borderAccent: 'border-emerald-500/20',
   },
 ];
@@ -77,8 +77,8 @@ const COLUMNS: ColumnConfig[] = [
 const priorityBadges: Record<string, string> = {
   low: 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400',
   medium: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
-  high: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-semibold',
-  critical: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 font-bold animate-pulse',
+  high: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border border-amber-500/20 font-semibold',
+  critical: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border border-rose-500/20 font-bold animate-pulse',
 };
 
 export function KanbanBoard({
@@ -300,7 +300,7 @@ export function KanbanBoard({
                                                deleteTaskMutation.mutate(task._id);
                                              }
                                            }}
-                                           className="p-1 text-neutral-400 hover:text-rose-500 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                                           className="p-1 text-neutral-400 hover:text-neutral-700 dark:text-neutral-300 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40"
                                            title="Delete Task"
                                          >
                                            <Trash2 className="w-3 h-3" />
@@ -342,9 +342,9 @@ export function KanbanBoard({
                                             className={cn(
                                               'flex items-center gap-1 font-medium',
                                               deadline.isOverdue
-                                                ? 'text-rose-500 font-bold'
+                                                ? 'text-neutral-700 dark:text-neutral-300 font-bold'
                                                 : deadline.isUrgent
-                                                ? 'text-amber-500 font-semibold'
+                                                ? 'text-neutral-700 dark:text-neutral-300 font-semibold'
                                                 : 'text-neutral-500'
                                             )}
                                           >

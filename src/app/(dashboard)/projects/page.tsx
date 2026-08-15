@@ -40,10 +40,10 @@ export default function ProjectsPage() {
   const projects = projectsData?.items || [];
 
   const statusColors: Record<string, string> = {
-    discovery: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+    discovery: 'bg-amber-500/10 text-neutral-700 dark:text-neutral-300 border-amber-500/20',
     in_progress: 'bg-neutral-100 dark:bg-[#252B37] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-[#2D333F]',
-    review: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
-    completed: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+    review: 'bg-purple-500/10 text-neutral-700 dark:text-neutral-300 border-purple-500/20',
+    completed: 'bg-emerald-500/10 text-neutral-700 dark:text-neutral-300 border-emerald-500/20',
     on_hold: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
   };
 

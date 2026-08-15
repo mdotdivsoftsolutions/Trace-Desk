@@ -48,7 +48,7 @@ export default function InvoiceDetailPage({
   if (!invoice) {
     return (
       <div className="p-12 text-center space-y-4">
-        <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
+        <AlertCircle className="w-10 h-10 text-neutral-700 dark:text-neutral-300 mx-auto" />
         <h2 className="text-lg font-bold">Invoice Not Found</h2>
         <Link href="/invoices" className="text-xs font-semibold text-neutral-900 dark:text-white hover:underline">
           ← Back to Invoices
@@ -76,9 +76,9 @@ export default function InvoiceDetailPage({
   const statusColors: Record<string, string> = {
     draft: 'bg-neutral-500/10 text-neutral-500 border-neutral-500/20',
     sent: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-    partially_paid: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
-    paid: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-    overdue: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
+    partially_paid: 'bg-amber-500/10 text-neutral-700 dark:text-neutral-300 border-amber-500/20',
+    paid: 'bg-emerald-500/10 text-neutral-700 dark:text-neutral-300 border-emerald-500/20',
+    overdue: 'bg-rose-500/10 text-neutral-700 dark:text-neutral-300 border-rose-500/20',
     cancelled: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
   };
 
@@ -278,7 +278,7 @@ export default function InvoiceDetailPage({
             {invoice.discountAmount !== undefined && invoice.discountAmount > 0 && (
               <div className="flex justify-between py-1 text-neutral-600 dark:text-neutral-400">
                 <span>Discount:</span>
-                <span className="font-semibold text-rose-500">
+                <span className="font-semibold text-neutral-700 dark:text-neutral-300">
                   -{formatCurrency(invoice.discountAmount, invoice.currency)}
                 </span>
               </div>
@@ -289,12 +289,12 @@ export default function InvoiceDetailPage({
               <span>{formatCurrency(invoice.totalAmount, invoice.currency)}</span>
             </div>
 
-            <div className="flex justify-between py-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+            <div className="flex justify-between py-1 text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 font-semibold">
               <span>Amount Paid:</span>
               <span>{formatCurrency(invoice.paidAmount || invoice.amountPaid || 0, invoice.currency)}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 text-sm font-extrabold text-amber-600 dark:text-amber-400">
+            <div className="flex justify-between py-1.5 text-sm font-extrabold text-neutral-700 dark:text-neutral-300 dark:text-amber-400">
               <span>Balance Due:</span>
               <span>{formatCurrency(invoice.balanceDue, invoice.currency)}</span>
             </div>
@@ -305,7 +305,7 @@ export default function InvoiceDetailPage({
         {payments && payments.length > 0 && (
           <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
             <h3 className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider print:text-black flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
               <span>Settlement Audit History</span>
             </h3>
 
@@ -323,7 +323,7 @@ export default function InvoiceDetailPage({
                       <div className="text-[10px] text-neutral-500">Ref: {p.transactionReference}</div>
                     )}
                   </div>
-                  <div className="font-extrabold text-emerald-600 dark:text-emerald-400">
+                  <div className="font-extrabold text-neutral-700 dark:text-neutral-300 dark:text-emerald-400">
                     +{formatCurrency(p.amount, invoice.currency)}
                   </div>
                 </div>

@@ -46,9 +46,9 @@ export default function InvoicesPage() {
   const statusColors: Record<string, string> = {
     draft: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
     sent: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
-    partially_paid: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
-    paid: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
-    overdue: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
+    partially_paid: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-amber-500/20',
+    paid: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-emerald-500/20',
+    overdue: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-rose-500/20',
     cancelled: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
   };
 
@@ -94,14 +94,14 @@ export default function InvoicesPage() {
 
         {/* Collected Revenue */}
         <div className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center font-bold">
             <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider block">
               Collected
             </span>
-            <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+            <span className="text-lg font-bold text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 font-mono">
               {formatCurrency(totalPaid, 'INR')}
             </span>
           </div>
@@ -109,14 +109,14 @@ export default function InvoicesPage() {
 
         {/* Pending Receivables */}
         <div className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center font-bold">
             <Clock className="w-5 h-5" />
           </div>
           <div>
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider block">
               Outstanding
             </span>
-            <span className="text-lg font-bold text-amber-600 dark:text-amber-400 font-mono">
+            <span className="text-lg font-bold text-neutral-700 dark:text-neutral-300 dark:text-amber-400 font-mono">
               {formatCurrency(pendingReceivables, 'INR')}
             </span>
           </div>
@@ -124,14 +124,14 @@ export default function InvoicesPage() {
 
         {/* Overdue Count */}
         <div className="p-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold">
+          <div className="w-10 h-10 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center font-bold">
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div>
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider block">
               Overdue
             </span>
-            <span className="text-lg font-bold text-rose-600 dark:text-rose-400 font-mono">
+            <span className="text-lg font-bold text-neutral-700 dark:text-neutral-300 dark:text-rose-400 font-mono">
               {overdueCount} {overdueCount === 1 ? 'Invoice' : 'Invoices'}
             </span>
           </div>
@@ -274,8 +274,8 @@ export default function InvoicesPage() {
                           className={cn(
                             'font-bold',
                             inv.balanceDue > 0
-                              ? 'text-amber-600 dark:text-amber-400'
-                              : 'text-emerald-600 dark:text-emerald-400'
+                              ? 'text-neutral-700 dark:text-neutral-300 dark:text-amber-400'
+                              : 'text-neutral-700 dark:text-neutral-300 dark:text-emerald-400'
                           )}
                         >
                           {formatCurrency(inv.balanceDue, inv.currency)}
@@ -300,7 +300,7 @@ export default function InvoicesPage() {
                           {inv.balanceDue > 0 && inv.status !== 'cancelled' && (
                             <button
                               onClick={() => setSelectedPaymentInvoice(inv)}
-                              className="p-1.5 rounded-md text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors"
+                              className="p-1.5 rounded-md text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors"
                               title="Record Payment"
                             >
                               <CreditCard className="w-4 h-4" />

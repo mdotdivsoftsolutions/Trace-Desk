@@ -76,7 +76,7 @@ export default function ClientDetailPage({
   if (!client) {
     return (
       <div className="p-12 text-center space-y-4 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F]">
-        <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
+        <AlertCircle className="w-10 h-10 text-neutral-700 dark:text-neutral-300 mx-auto" />
         <h2 className="font-heading text-lg font-bold text-neutral-900 dark:text-white">
           Client Account Not Found
         </h2>
@@ -106,10 +106,10 @@ export default function ClientDetailPage({
   };
 
   const invoiceStatusStyles: Record<string, string> = {
-    paid: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
-    partially_paid: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+    paid: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-emerald-500/20',
+    partially_paid: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-amber-500/20',
     sent: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
-    overdue: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20 font-bold',
+    overdue: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-rose-500/20 font-bold',
     draft: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
     cancelled: 'bg-neutral-500/10 text-neutral-500 border-neutral-500/20 line-through',
   };
@@ -141,7 +141,7 @@ export default function ClientDetailPage({
                 className={cn(
                   'px-2.5 py-0.5 text-xs font-bold rounded-md uppercase tracking-wider border',
                   client.status === 'active'
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                    ? 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border-emerald-500/20'
                     : 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20'
                 )}
               >
@@ -215,7 +215,7 @@ export default function ClientDetailPage({
 
             <button
               onClick={handleDeleteClient}
-              className="p-2 rounded-md border border-rose-200 dark:border-rose-900/50 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+              className="p-2 rounded-md border border-rose-200 dark:border-rose-900/50 text-neutral-700 dark:text-neutral-300 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
               title="Delete Client"
             >
               <Trash2 className="w-4 h-4" />
@@ -245,14 +245,14 @@ export default function ClientDetailPage({
         {/* Total Collected */}
         <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-emerald-500 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider">
               Collected Payments
             </span>
-            <div className="w-8 h-8 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+          <div className="text-2xl font-extrabold text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 font-mono">
             {formatCurrency(client.financialSummary?.totalPaid || 0, client.currency)}
           </div>
           <p className="text-[11px] text-neutral-400">Settled milestones & hourly</p>
@@ -261,14 +261,14 @@ export default function ClientDetailPage({
         {/* Outstanding Receivables */}
         <div className="p-5 rounded-lg bg-white dark:bg-[#1C2029] border border-neutral-200 dark:border-[#2D333F] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-amber-500 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider">
               Outstanding Balance
             </span>
-            <div className="w-8 h-8 rounded-md bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-amber-600 dark:text-amber-400 font-mono">
+          <div className="text-2xl font-extrabold text-neutral-700 dark:text-neutral-300 dark:text-amber-400 font-mono">
             {formatCurrency(client.financialSummary?.outstanding || 0, client.currency)}
           </div>
           <p className="text-[11px] text-neutral-400">Pending receivables</p>
@@ -280,7 +280,7 @@ export default function ClientDetailPage({
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Active Projects
             </span>
-            <div className="w-8 h-8 rounded-md bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-purple-50 dark:bg-purple-950/60 text-neutral-700 dark:text-neutral-300 dark:text-purple-400 flex items-center justify-center">
               <FolderKanban className="w-4 h-4" />
             </div>
           </div>
@@ -419,7 +419,7 @@ export default function ClientDetailPage({
                   <div className="pt-3 border-t border-neutral-100 dark:border-[#2D333F] flex items-center justify-between">
                     {proj.targetDeadline ? (
                       <span className="text-[11px] text-neutral-400 flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-amber-500" />
+                        <Calendar className="w-3 h-3 text-neutral-700 dark:text-neutral-300" />
                         <span>Due {formatDate(proj.targetDeadline)}</span>
                       </span>
                     ) : (
@@ -514,7 +514,7 @@ export default function ClientDetailPage({
                         <td className="px-5 py-3.5 font-bold font-mono text-neutral-900 dark:text-white">
                           {formatCurrency(inv.totalAmount, inv.currency)}
                         </td>
-                        <td className="px-5 py-3.5 font-bold font-mono text-amber-600 dark:text-amber-400">
+                        <td className="px-5 py-3.5 font-bold font-mono text-neutral-700 dark:text-neutral-300 dark:text-amber-400">
                           {formatCurrency(inv.balanceDue, inv.currency)}
                         </td>
                         <td className="px-5 py-3.5">
@@ -532,7 +532,7 @@ export default function ClientDetailPage({
                             {inv.balanceDue > 0 && (
                               <button
                                 onClick={() => setSelectedPaymentInvoice(inv)}
-                                className="flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-[11px] font-bold transition-colors"
+                                className="flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/40 text-neutral-700 dark:text-neutral-300 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-[11px] font-bold transition-colors"
                                 title="Log Payment"
                               >
                                 <CreditCard className="w-3 h-3" />

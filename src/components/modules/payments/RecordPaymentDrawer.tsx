@@ -89,7 +89,7 @@ export function RecordPaymentDrawer({
         {/* Header */}
         <div className="p-5 border-b border-neutral-200 dark:border-[#2D333F] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#111318]/50">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+              <div className="w-9 h-9 rounded-lg bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] flex items-center justify-center font-bold">
                 <CreditCard className="w-4 h-4" />
               </div>
               <div>
@@ -115,7 +115,7 @@ export function RecordPaymentDrawer({
           {/* Form Scrollable Body */}
           <form id="payment-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
             {error && (
-              <div className="p-3 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold">
+              <div className="p-3 rounded-md bg-rose-500/10 border border-rose-500/20 text-neutral-700 dark:text-neutral-300 dark:text-rose-400 text-xs font-semibold">
                 {error}
               </div>
             )}
@@ -134,7 +134,7 @@ export function RecordPaymentDrawer({
                 <span className="text-[10px] uppercase font-bold text-neutral-400 block tracking-wider">
                   Remaining Balance
                 </span>
-                <span className="text-sm font-bold text-amber-600 dark:text-amber-400 font-mono">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300 dark:text-amber-400 font-mono">
                   {formatCurrency(invoice.balanceDue, invoice.currency)}
                 </span>
               </div>
@@ -144,7 +144,7 @@ export function RecordPaymentDrawer({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                  Payment Amount ({invoice.currency}) <span className="text-rose-500">*</span>
+                  Payment Amount ({invoice.currency}) <span className="text-neutral-700 dark:text-neutral-300">*</span>
                 </label>
                 <button
                   type="button"

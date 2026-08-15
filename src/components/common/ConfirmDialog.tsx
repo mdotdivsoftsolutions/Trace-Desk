@@ -40,13 +40,13 @@ export function ConfirmDialog({
   const variantConfig = {
     danger: {
       icon: AlertTriangle,
-      iconContainer: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20',
+      iconContainer: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border border-rose-500/20',
       confirmButton:
         'bg-rose-600 hover:bg-rose-700 active:scale-95 text-white shadow-md shadow-rose-600/25 focus:ring-rose-500',
     },
     warning: {
       icon: AlertCircle,
-      iconContainer: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
+      iconContainer: 'bg-neutral-100 dark:bg-[#334155] text-neutral-900 dark:text-white border border-neutral-200 dark:border-[#334155] border border-amber-500/20',
       confirmButton:
         'bg-amber-600 hover:bg-amber-700 active:scale-95 text-white shadow-md shadow-amber-600/25 focus:ring-amber-500',
     },

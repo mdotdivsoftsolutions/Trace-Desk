@@ -183,7 +183,7 @@ export default function NewInvoicePage() {
       </div>
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold">
+        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-neutral-700 dark:text-neutral-300 dark:text-rose-400 text-xs font-semibold">
           {error}
         </div>
       )}
@@ -218,7 +218,7 @@ export default function NewInvoicePage() {
 
             <div>
               <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Client <span className="text-rose-500">*</span>
+                Client <span className="text-neutral-700 dark:text-neutral-300">*</span>
               </label>
               <select
                 required
@@ -405,7 +405,7 @@ export default function NewInvoicePage() {
                     type="button"
                     onClick={() => handleRemoveItem(index)}
                     disabled={items.length === 1}
-                    className="p-1.5 rounded-lg text-neutral-400 hover:text-rose-500 disabled:opacity-30 transition-colors"
+                    className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 dark:text-neutral-300 disabled:opacity-30 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -494,7 +494,7 @@ export default function NewInvoicePage() {
                     className="w-20 px-2 py-0.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white text-right"
                   />
                 </div>
-                <span className="font-semibold text-rose-500">
+                <span className="font-semibold text-neutral-700 dark:text-neutral-300">
                   -{formatCurrency(discount, currency)}
                 </span>
               </div>
