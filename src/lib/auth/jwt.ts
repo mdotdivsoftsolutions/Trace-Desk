@@ -6,6 +6,7 @@ export interface AuthTokenPayload {
   email: string;
   name: string;
   role: UserRole;
+  tokenType?: 'access' | 'refresh';
   [key: string]: any;
 }
 
@@ -13,10 +14,21 @@ const JWT_SECRET = process.env.JWT_SECRET || 'm_div_softsolutions_trace_desk_sec
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
 /**
- * Sign an authentication token with 7-day expiration.
+ * Sign a short-lived Access Token (15 minutes).
  */
-export async function signAuthToken(payload: AuthTokenPayload): Promise<string> {
-  return new SignJWT({ ...payload })
+export async function signAccessToken(payload: Omit<AuthTokenPayload, 'tokenType'>): Promise<string> {
+  return new SignJWT({ ...payload, tokenType: 'access' })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('15m')
+    .sign(encodedSecret);
+}
+
+/**
+ * Sign a long-lived Refresh Token (7 days).
+ */
+export async function signRefreshToken(payload: Omit<AuthTokenPayload, 'tokenType'>): Promise<string> {
+  return new SignJWT({ ...payload, tokenType: 'refresh' })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
@@ -24,7 +36,7 @@ export async function signAuthToken(payload: AuthTokenPayload): Promise<string> 
 }
 
 /**
- * Verify and decode an authentication token.
+ * Verify and decode any token.
  */
 export async function verifyAuthToken(token: string): Promise<AuthTokenPayload | null> {
   try {

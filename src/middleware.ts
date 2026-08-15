@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const AUTH_COOKIE_NAME = 'trace_desk_auth_token';
+const ACCESS_COOKIE_NAME = 'trace_desk_access_token';
+const REFRESH_COOKIE_NAME = 'trace_desk_refresh_token';
 const JWT_SECRET = process.env.JWT_SECRET || 'm_div_softsolutions_trace_desk_secure_jwt_secret_key_2026_super_admin';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
@@ -21,16 +22,29 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for auth token in cookies
-  const token = req.cookies.get(AUTH_COOKIE_NAME)?.value;
+  // Check access token first
+  const accessToken = req.cookies.get(ACCESS_COOKIE_NAME)?.value;
   let isAuthenticated = false;
 
-  if (token) {
+  if (accessToken) {
     try {
-      await jwtVerify(token, encodedSecret);
+      await jwtVerify(accessToken, encodedSecret);
       isAuthenticated = true;
     } catch (e) {
       isAuthenticated = false;
+    }
+  }
+
+  // If access token is absent or expired, check refresh token
+  if (!isAuthenticated) {
+    const refreshToken = req.cookies.get(REFRESH_COOKIE_NAME)?.value;
+    if (refreshToken) {
+      try {
+        await jwtVerify(refreshToken, encodedSecret);
+        isAuthenticated = true;
+      } catch (e) {
+        isAuthenticated = false;
+      }
     }
   }
 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
-import { signAuthToken } from '@/lib/auth/jwt';
-import { setAuthCookie } from '@/lib/auth/session';
+import { signAccessToken, signRefreshToken } from '@/lib/auth/jwt';
+import { setAuthCookies } from '@/lib/auth/session';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -63,13 +63,16 @@ export async function POST(req: NextRequest) {
     user.lastLoginAt = new Date();
     await user.save();
 
-    // Sign JWT
-    const token = await signAuthToken({
+    const userPayload = {
       userId: user._id.toString(),
       email: user.email,
       name: user.name,
       role: user.role,
-    });
+    };
+
+    // Sign dual tokens
+    const accessToken = await signAccessToken(userPayload);
+    const refreshToken = await signRefreshToken(userPayload);
 
     const response = NextResponse.json({
       success: true,
@@ -86,8 +89,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Attach secure cookie
-    return setAuthCookie(response, token);
+    // Attach dual cookies
+    return setAuthCookies(response, accessToken, refreshToken);
   } catch (error: any) {
     console.error('[API /api/auth/login Error]:', error);
     return NextResponse.json(
