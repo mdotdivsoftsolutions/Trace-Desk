@@ -113,11 +113,10 @@ export function TaskFormDrawer({
         }}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        {/* Slide-over Drawer Panel */}
-        <div className="w-screen max-w-md sm:max-w-lg bg-white dark:bg-[#131A2A] border-l border-neutral-200 dark:border-[#232B3D] shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-          {/* Header */}
-          <div className="p-5 border-b border-neutral-200 dark:border-[#232B3D] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#0B0F19]/50">
+      {/* Slide-over Drawer Panel */}
+      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#131A2A] border-l border-neutral-200 dark:border-[#232B3D] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300">
+        {/* Header */}
+        <div className="p-5 border-b border-neutral-200 dark:border-[#232B3D] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#0B0F19]/50">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
                 {isEditing ? <Edit2 className="w-4 h-4" /> : <CheckSquare className="w-4 h-4" />}
@@ -319,8 +318,7 @@ export function TaskFormDrawer({
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
 export default TaskFormDrawer;
