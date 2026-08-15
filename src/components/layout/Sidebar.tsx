@@ -61,13 +61,13 @@ export function Sidebar({
 
       <aside
         className={cn(
-          'fixed lg:sticky top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-neutral-200 dark:border-[#232B3D] bg-white/95 dark:bg-[#131A2A]/95 backdrop-blur-xl transition-all duration-300 ease-in-out',
+          'fixed lg:sticky top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-neutral-200 dark:border-[#2A2A2A] bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-xl transition-all duration-300 ease-in-out',
           isCollapsed ? 'w-20' : 'w-64',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         {/* Sidebar Header with M.Div Softsolutions branding */}
-        <div className="p-4 flex items-center justify-between border-b border-neutral-200/80 dark:border-[#232B3D]/80">
+        <div className="p-4 flex items-center justify-between border-b border-neutral-200/80 dark:border-[#2A2A2A]/80">
           <Link href="/" className="flex items-center gap-3 overflow-hidden group">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
               <Layers className="w-5 h-5" />
@@ -132,8 +132,8 @@ export function Sidebar({
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-neutral-200/80 dark:border-[#232B3D]/80">
-          <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-200/60 dark:border-[#232B3D]/60 flex items-center gap-2.5">
+        <div className="p-3 border-t border-neutral-200/80 dark:border-[#2A2A2A]/80">
+          <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-200/60 dark:border-[#2A2A2A]/60 flex items-center gap-2.5">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">

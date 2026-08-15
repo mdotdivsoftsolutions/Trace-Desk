@@ -8,14 +8,14 @@
   --color-brand-dark: #6366F1;
   --color-brand: #4F46E5;
 
-  --color-bg-light: #F8FAFC;
-  --color-bg-dark: #0B0F19;
+  --color-bg-light: #FFFFFF;
+  --color-bg-dark: #0A0A0A;
 
   --color-surface-light: #FFFFFF;
-  --color-surface-dark: #131A2A;
+  --color-surface-dark: #1A1A1A;
 
-  --color-border-light: #E2E8F0;
-  --color-border-dark: #232B3D;
+  --color-border-light: #E5E7EB;
+  --color-border-dark: #2A2A2A;
 
   --color-success: #16A34A;
   --color-warning: #D97706;
@@ -33,22 +33,65 @@
 
 @layer base {
   :root {
-    --background: #F8FAFC;
-    --surface: #FFFFFF;
-    --border: #E2E8F0;
-    --foreground: #0F172A;
-    --brand: #4F46E5;
+    /* ☀️ Light Theme (White main + Near-black text + Gray support) */
+    --background: #FFFFFF;
+    --background-subtle: #F9FAFB; /* Page canvas behind cards */
+    --card: #FFFFFF;
+    --card-foreground: #111827;
+    --popover: #FFFFFF;
+    --popover-foreground: #111827;
+    --border: #E5E7EB;
+    --input: #E5E7EB;
+
+    --foreground: #111827;        /* Near-black text */
+    --muted: #F9FAFB;
+    --muted-foreground: #6B7280; /* Gray secondary support */
+    --placeholder: #9CA3AF;
+
+    --primary: #4F46E5;          /* Brand Indigo */
+    --primary-foreground: #FFFFFF;
+    --secondary: #F3F4F6;
+    --secondary-foreground: #111827;
+
+    --success: #16A34A;
+    --warning: #D97706;
+    --destructive: #DC2626;
+    --destructive-foreground: #FFFFFF;
+    
+    --radius: 0.5rem; /* 8px max (rounded-lg) */
   }
 
-  .dark {
-    --background: #0B0F19;
-    --surface: #131A2A;
-    --border: #232B3D;
-    --foreground: #F8FAFC;
-    --brand: #6366F1;
+  .dark,
+  [data-theme="dark"] {
+    /* 🌑 Dark Theme (Special black #0A0A0A + Gray text + Near-white) */
+    --background: #0A0A0A;        /* Special black page background */
+    --background-subtle: #141414; /* Elevated container background */
+    --card: #1A1A1A;              /* Card / Surface */
+    --card-foreground: #F5F5F5;   /* Near-white primary text */
+    --popover: #1A1A1A;
+    --popover-foreground: #F5F5F5;
+    --border: #2A2A2A;
+    --input: #2A2A2A;
+
+    --foreground: #F5F5F5;        /* Near-white */
+    --muted: #141414;
+    --muted-foreground: #A1A1AA; /* Gray support text */
+    --placeholder: #71717A;
+
+    --primary: #6366F1;          /* Indigo-500 high contrast */
+    --primary-foreground: #FFFFFF;
+    --secondary: #242424;
+    --secondary-foreground: #F5F5F5;
+
+    --success: #22C55E;
+    --warning: #F59E0B;
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
   }
 
   body {
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     font-feature-settings: 'tnum' on, 'cv05' on, 'cv11' on;
     font-variant-numeric: tabular-nums;

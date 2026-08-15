@@ -71,7 +71,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm flex flex-col md:flex-row items-center gap-3">
+      <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex flex-col md:flex-row items-center gap-3">
         {/* Search */}
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
@@ -83,7 +83,7 @@ export default function ProjectsPage() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -97,7 +97,7 @@ export default function ProjectsPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="all">All Statuses</option>
               <option value="discovery">Discovery</option>
@@ -116,7 +116,7 @@ export default function ProjectsPage() {
                 setClientFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="all">All Clients</option>
               {clients?.map((client) => (
@@ -131,12 +131,12 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       {isLoading ? (
-        <div className="p-12 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] text-center space-y-3">
+        <div className="p-12 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-3">
           <div className="inline-block w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           <p className="text-xs text-neutral-500">Loading project registry...</p>
         </div>
       ) : projects.length === 0 ? (
-        <div className="p-12 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] text-center space-y-4">
+        <div className="p-12 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-4">
           <div className="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center mx-auto">
             <FolderKanban className="w-6 h-6" />
           </div>
@@ -166,7 +166,7 @@ export default function ProjectsPage() {
               return (
                 <div
                   key={project._id}
-                  className="p-5 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm hover:border-indigo-500/40 transition-all flex flex-col justify-between group"
+                  className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm hover:border-indigo-500/40 transition-all flex flex-col justify-between group"
                 >
                   <div className="space-y-3.5">
                     {/* Header: Client & Status */}
@@ -218,7 +218,7 @@ export default function ProjectsPage() {
                     </div>
 
                     {/* Meta: Budget & Target Date */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-[#232B3D] text-xs">
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-[#2A2A2A] text-xs">
                       <div>
                         <span className="text-[10px] text-neutral-400 block uppercase font-bold tracking-wider">
                           Budget
@@ -261,7 +261,7 @@ export default function ProjectsPage() {
                   </div>
 
                   {/* Footer Action Links */}
-                  <div className="mt-5 pt-3 border-t border-neutral-100 dark:border-[#232B3D] flex items-center justify-between gap-2">
+                  <div className="mt-5 pt-3 border-t border-neutral-100 dark:border-[#2A2A2A] flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       {project.repoUrl && (
                         <a
@@ -310,7 +310,7 @@ export default function ProjectsPage() {
           </div>
 
           {/* Backend Pagination Bar */}
-          <div className="rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] overflow-hidden">
+          <div className="rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] overflow-hidden">
             <Pagination
               pagination={projectsData?.pagination}
               onPageChange={(newPage) => setPage(newPage)}

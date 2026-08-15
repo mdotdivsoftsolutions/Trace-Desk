@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const agencyName = settings?.agencyName || 'M.Div Softsolutions';
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0B0F19] text-neutral-900 dark:text-neutral-100 antialiased font-sans">
+    <div className="min-h-screen flex bg-[#F9FAFB] dark:bg-[#0A0A0A] text-neutral-900 dark:text-neutral-100 antialiased font-sans">
       {/* Sidebar Component */}
       <Sidebar
         isCollapsed={isCollapsed}
@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header Bar */}
-        <header className="sticky top-0 z-30 h-16 border-b border-neutral-200 dark:border-[#232B3D] bg-white/95 dark:bg-[#131A2A]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-30 h-16 border-b border-neutral-200 dark:border-[#2A2A2A] bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileOpen(true)}
@@ -70,7 +70,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className="fixed inset-0 z-40"
                     onClick={() => setIsQuickAddOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <Link
                       href="/projects/new"
                       onClick={() => setIsQuickAddOpen(false)}

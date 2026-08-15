@@ -127,7 +127,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-1.5 border-b border-neutral-200 dark:border-[#232B3D] pb-1 overflow-x-auto">
+      <div className="flex items-center gap-1.5 border-b border-neutral-200 dark:border-[#2A2A2A] pb-1 overflow-x-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -140,7 +140,7 @@ export default function SettingsPage() {
                 'flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap',
                 isActive
                   ? 'bg-indigo-600 text-white shadow-sm font-bold'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-[#131A2A]'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-[#1A1A1A]'
               )}
             >
               <Icon className="w-4 h-4" />
@@ -151,7 +151,7 @@ export default function SettingsPage() {
       </div>
 
       {isLoading ? (
-        <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] space-y-4 animate-pulse">
+        <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] space-y-4 animate-pulse">
           <div className="h-6 w-1/3 bg-neutral-200 dark:bg-neutral-800 rounded-md" />
           <div className="h-24 bg-neutral-200 dark:bg-neutral-800 rounded-md" />
         </div>
@@ -159,8 +159,8 @@ export default function SettingsPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Tab 1: Agency Profile */}
           {activeTab === 'profile' && (
-            <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-5">
-              <div className="border-b border-neutral-200 dark:border-[#232B3D] pb-3">
+            <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-5">
+              <div className="border-b border-neutral-200 dark:border-[#2A2A2A] pb-3">
                 <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-indigo-500" />
                   <span>Agency Profile & Identification</span>
@@ -181,7 +181,7 @@ export default function SettingsPage() {
                     value={formData.agencyName}
                     onChange={(e) => setFormData({ ...formData, agencyName: e.target.value })}
                     placeholder="M.Div Softsolutions"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                     value={formData.gstinOrTaxId || ''}
                     onChange={(e) => setFormData({ ...formData, gstinOrTaxId: e.target.value })}
                     placeholder="e.g. 29AAAAA0000A1Z5"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />
                 </div>
               </div>
@@ -209,7 +209,7 @@ export default function SettingsPage() {
                     value={formData.agencyEmail || ''}
                     onChange={(e) => setFormData({ ...formData, agencyEmail: e.target.value })}
                     placeholder="contact@mdivsoft.com"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
@@ -222,7 +222,7 @@ export default function SettingsPage() {
                     value={formData.agencyPhone || ''}
                     onChange={(e) => setFormData({ ...formData, agencyPhone: e.target.value })}
                     placeholder="+91 98765 43210"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
@@ -236,7 +236,7 @@ export default function SettingsPage() {
                   value={formData.agencyAddress || ''}
                   onChange={(e) => setFormData({ ...formData, agencyAddress: e.target.value })}
                   placeholder="Street Address, Tech Park, City, State, PIN, Country"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
@@ -244,8 +244,8 @@ export default function SettingsPage() {
 
           {/* Tab 2: Currency & Finance */}
           {activeTab === 'currency' && (
-            <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-5">
-              <div className="border-b border-neutral-200 dark:border-[#232B3D] pb-3">
+            <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-5">
+              <div className="border-b border-neutral-200 dark:border-[#2A2A2A] pb-3">
                 <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                   <DollarSign className="w-4 h-4 text-emerald-500" />
                   <span>Platform Currency & Numbering System</span>
@@ -263,7 +263,7 @@ export default function SettingsPage() {
                   <select
                     value={formData.defaultCurrency}
                     onChange={(e) => handleCurrencyChange(e.target.value as any)}
-                    className="w-full px-3.5 py-2.5 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2.5 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="INR">INR (₹) - Indian Rupee (Lakhs & Crores)</option>
                     <option value="USD">USD ($) - United States Dollar</option>
@@ -283,12 +283,12 @@ export default function SettingsPage() {
                     value={formData.currencySymbol}
                     onChange={(e) => setFormData({ ...formData, currencySymbol: e.target.value })}
                     placeholder="₹"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
-              <div className="p-4 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-200 dark:border-[#232B3D] text-xs space-y-1">
+              <div className="p-4 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-200 dark:border-[#2A2A2A] text-xs space-y-1">
                 <span className="font-bold text-neutral-800 dark:text-neutral-200">
                   Current Display Example:
                 </span>
@@ -301,8 +301,8 @@ export default function SettingsPage() {
 
           {/* Tab 3: Bank & UPI Details */}
           {activeTab === 'bank' && (
-            <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-5">
-              <div className="border-b border-neutral-200 dark:border-[#232B3D] pb-3">
+            <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-5">
+              <div className="border-b border-neutral-200 dark:border-[#2A2A2A] pb-3">
                 <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                   <Landmark className="w-4 h-4 text-indigo-500" />
                   <span>Remittance & Bank Wire Details</span>
@@ -327,7 +327,7 @@ export default function SettingsPage() {
                       })
                     }
                     placeholder="e.g. HDFC Bank / ICICI Bank"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
@@ -345,7 +345,7 @@ export default function SettingsPage() {
                       })
                     }
                     placeholder="50200000000000"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />
                 </div>
               </div>
@@ -365,7 +365,7 @@ export default function SettingsPage() {
                       })
                     }
                     placeholder="HDFC0001234"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />
                 </div>
 
@@ -383,7 +383,7 @@ export default function SettingsPage() {
                       })
                     }
                     placeholder="mdiv@hdfcbank"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
@@ -401,7 +401,7 @@ export default function SettingsPage() {
                       })
                     }
                     placeholder="HDFCINBB"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />
                 </div>
               </div>
@@ -410,8 +410,8 @@ export default function SettingsPage() {
 
           {/* Tab 4: Invoice Config */}
           {activeTab === 'invoice' && (
-            <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-5">
-              <div className="border-b border-neutral-200 dark:border-[#232B3D] pb-3">
+            <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-5">
+              <div className="border-b border-neutral-200 dark:border-[#2A2A2A] pb-3">
                 <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                   <FileText className="w-4 h-4 text-indigo-500" />
                   <span>Invoice Generation & Tax Parameters</span>
@@ -432,7 +432,7 @@ export default function SettingsPage() {
                     value={formData.invoicePrefix}
                     onChange={(e) => setFormData({ ...formData, invoicePrefix: e.target.value })}
                     placeholder="MDIV-"
-                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                    className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />
                   <span className="text-[10px] text-neutral-400 mt-1 block">
                     Generated invoices will appear as: <span className="font-mono text-neutral-700 dark:text-neutral-300">{formData.invoicePrefix}2026-0001</span>
@@ -453,7 +453,7 @@ export default function SettingsPage() {
                       value={formData.defaultTaxRate}
                       onChange={(e) => setFormData({ ...formData, defaultTaxRate: parseFloat(e.target.value) || 0 })}
                       placeholder="18"
-                      className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-8"
+                      className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-8"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-neutral-400">
                       %

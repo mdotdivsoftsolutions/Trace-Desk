@@ -75,7 +75,7 @@ export default function ClientDetailPage({
 
   if (!client) {
     return (
-      <div className="p-12 text-center space-y-4 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D]">
+      <div className="p-12 text-center space-y-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A]">
         <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
         <h2 className="font-heading text-lg font-bold text-neutral-900 dark:text-white">
           Client Account Not Found
@@ -130,7 +130,7 @@ export default function ClientDetailPage({
       </div>
 
       {/* Top Header & Profile Banner */}
-      <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-6">
+      <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
@@ -189,7 +189,7 @@ export default function ClientDetailPage({
               )}
 
               <span>•</span>
-              <span className="px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#0B0F19] text-neutral-700 dark:text-neutral-300 font-mono font-bold text-[11px] border border-neutral-200 dark:border-[#232B3D]">
+              <span className="px-2 py-0.5 rounded bg-neutral-100 dark:bg-[#0A0A0A] text-neutral-700 dark:text-neutral-300 font-mono font-bold text-[11px] border border-neutral-200 dark:border-[#2A2A2A]">
                 Currency: {client.currency}
               </span>
             </div>
@@ -199,7 +199,7 @@ export default function ClientDetailPage({
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => setIsEditDrawerOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#131A2A] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold text-xs transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1A1A1A] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold text-xs transition-colors shadow-sm"
             >
               <Edit2 className="w-3.5 h-3.5 text-indigo-500" />
               <span>Edit Profile</span>
@@ -227,7 +227,7 @@ export default function ClientDetailPage({
       {/* 4 Financial & Scope KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Invoiced */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Total Billed
@@ -243,7 +243,7 @@ export default function ClientDetailPage({
         </div>
 
         {/* Total Collected */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-emerald-500 uppercase tracking-wider">
               Collected Payments
@@ -259,7 +259,7 @@ export default function ClientDetailPage({
         </div>
 
         {/* Outstanding Receivables */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-amber-500 uppercase tracking-wider">
               Outstanding Balance
@@ -275,7 +275,7 @@ export default function ClientDetailPage({
         </div>
 
         {/* Active Workspaces */}
-        <div className="p-5 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-1">
+        <div className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Active Projects
@@ -292,7 +292,7 @@ export default function ClientDetailPage({
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-[#232B3D] pb-1">
+      <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-[#2A2A2A] pb-1">
         <button
           onClick={() => setActiveTab('projects')}
           className={cn(
@@ -355,7 +355,7 @@ export default function ClientDetailPage({
           </div>
 
           {(!client.projects || client.projects.length === 0) ? (
-            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#232B3D] text-center space-y-3 bg-white/50 dark:bg-[#131A2A]/50">
+            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2A2A2A] text-center space-y-3 bg-white/50 dark:bg-[#1A1A1A]/50">
               <FolderKanban className="w-8 h-8 text-indigo-500 mx-auto" />
               <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                 No active projects for this client
@@ -376,7 +376,7 @@ export default function ClientDetailPage({
               {client.projects.map((proj: any) => (
                 <div
                   key={proj._id}
-                  className="p-5 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm hover:border-indigo-500/40 transition-all flex flex-col justify-between space-y-4"
+                  className="p-5 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm hover:border-indigo-500/40 transition-all flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
@@ -406,7 +406,7 @@ export default function ClientDetailPage({
                           {proj.progressPercentage || 0}%
                         </span>
                       </div>
-                      <div className="w-full bg-neutral-100 dark:bg-[#0B0F19] h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-neutral-100 dark:bg-[#0A0A0A] h-2 rounded-full overflow-hidden">
                         <div
                           className="bg-gradient-to-r from-indigo-500 to-emerald-500 h-full rounded-full transition-all duration-300"
                           style={{ width: `${proj.progressPercentage || 0}%` }}
@@ -416,7 +416,7 @@ export default function ClientDetailPage({
                   </div>
 
                   {/* Footer Open Workspace Button */}
-                  <div className="pt-3 border-t border-neutral-100 dark:border-[#232B3D] flex items-center justify-between">
+                  <div className="pt-3 border-t border-neutral-100 dark:border-[#2A2A2A] flex items-center justify-between">
                     {proj.targetDeadline ? (
                       <span className="text-[11px] text-neutral-400 flex items-center gap-1">
                         <Calendar className="w-3 h-3 text-amber-500" />
@@ -463,7 +463,7 @@ export default function ClientDetailPage({
           </div>
 
           {invoices.length === 0 ? (
-            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#232B3D] text-center space-y-3 bg-white/50 dark:bg-[#131A2A]/50">
+            <div className="p-12 rounded-lg border border-dashed border-neutral-300 dark:border-[#2A2A2A] text-center space-y-3 bg-white/50 dark:bg-[#1A1A1A]/50">
               <Receipt className="w-8 h-8 text-indigo-500 mx-auto" />
               <h4 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                 No invoices recorded for this client
@@ -480,10 +480,10 @@ export default function ClientDetailPage({
               </Link>
             </div>
           ) : (
-            <div className="rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm overflow-hidden">
+            <div className="rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-neutral-50 dark:bg-[#0B0F19] border-b border-neutral-200 dark:border-[#232B3D] text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">
+                  <thead className="bg-neutral-50 dark:bg-[#0A0A0A] border-b border-neutral-200 dark:border-[#2A2A2A] text-neutral-400 font-semibold uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="px-5 py-3">Invoice #</th>
                       <th className="px-5 py-3">Issue Date</th>
@@ -494,11 +494,11 @@ export default function ClientDetailPage({
                       <th className="px-5 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-100 dark:divide-[#232B3D]/70 font-medium">
+                  <tbody className="divide-y divide-neutral-100 dark:divide-[#2A2A2A]/70 font-medium">
                     {invoices.map((inv) => (
                       <tr
                         key={inv._id}
-                        className="hover:bg-neutral-50/60 dark:hover:bg-[#0B0F19]/40 transition-colors"
+                        className="hover:bg-neutral-50/60 dark:hover:bg-[#0A0A0A]/40 transition-colors"
                       >
                         <td className="px-5 py-3.5 font-mono font-bold text-indigo-600 dark:text-indigo-400">
                           <Link href={`/invoices/${inv._id}`} className="hover:underline">
@@ -562,8 +562,8 @@ export default function ClientDetailPage({
       {activeTab === 'notes' && (
         <div className="space-y-6">
           {/* Notes Card */}
-          <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-3">
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#232B3D]">
+          <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-3">
+            <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-indigo-500" />
                 <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider">
@@ -591,8 +591,8 @@ export default function ClientDetailPage({
           </div>
 
           {/* Profile Metadata */}
-          <div className="p-6 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm space-y-4">
-            <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider pb-3 border-b border-neutral-200 dark:border-[#232B3D]">
+          <div className="p-6 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm space-y-4">
+            <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider pb-3 border-b border-neutral-200 dark:border-[#2A2A2A]">
               Account Profile Details
             </h3>
 

@@ -78,7 +78,7 @@ export default function InvoicesPage() {
       {/* KPI Cards Banner */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Billed */}
-        <div className="p-4 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm flex items-center gap-3.5">
+        <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex items-center gap-3.5">
           <div className="w-10 h-10 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
             <FileSpreadsheet className="w-5 h-5" />
           </div>
@@ -93,7 +93,7 @@ export default function InvoicesPage() {
         </div>
 
         {/* Collected Revenue */}
-        <div className="p-4 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm flex items-center gap-3.5">
+        <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex items-center gap-3.5">
           <div className="w-10 h-10 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
             <CheckCircle2 className="w-5 h-5" />
           </div>
@@ -108,7 +108,7 @@ export default function InvoicesPage() {
         </div>
 
         {/* Pending Receivables */}
-        <div className="p-4 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm flex items-center gap-3.5">
+        <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex items-center gap-3.5">
           <div className="w-10 h-10 rounded-md bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
             <Clock className="w-5 h-5" />
           </div>
@@ -123,7 +123,7 @@ export default function InvoicesPage() {
         </div>
 
         {/* Overdue Alerts */}
-        <div className="p-4 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm flex items-center gap-3.5">
+        <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex items-center gap-3.5">
           <div className="w-10 h-10 rounded-md bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold">
             <AlertTriangle className="w-5 h-5" />
           </div>
@@ -139,7 +139,7 @@ export default function InvoicesPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm flex flex-col md:flex-row items-center gap-3">
+      <div className="p-4 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm flex flex-col md:flex-row items-center gap-3">
         {/* Search Input */}
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
@@ -151,7 +151,7 @@ export default function InvoicesPage() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-4 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -163,7 +163,7 @@ export default function InvoicesPage() {
               setStatusFilter(e.target.value);
               setPage(1);
             }}
-            className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="all">All Statuses</option>
             <option value="draft">Draft</option>
@@ -178,12 +178,12 @@ export default function InvoicesPage() {
 
       {/* Invoices Table */}
       {isLoading ? (
-        <div className="p-8 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] text-center space-y-3">
+        <div className="p-8 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-3">
           <div className="inline-block w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           <p className="text-xs text-neutral-500">Loading invoice ledger...</p>
         </div>
       ) : invoices.length === 0 ? (
-        <div className="p-12 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] text-center space-y-4">
+        <div className="p-12 rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] text-center space-y-4">
           <div className="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center mx-auto">
             <Receipt className="w-6 h-6" />
           </div>
@@ -206,10 +206,10 @@ export default function InvoicesPage() {
           </Link>
         </div>
       ) : (
-        <div className="rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-sm overflow-hidden">
+        <div className="rounded-lg bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-[#2A2A2A] shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-neutral-50 dark:bg-[#0B0F19] text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-[#232B3D]">
+              <thead className="bg-neutral-50 dark:bg-[#0A0A0A] text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-[#2A2A2A]">
                 <tr>
                   <th className="px-5 py-3.5 font-bold uppercase tracking-wider">Invoice #</th>
                   <th className="px-5 py-3.5 font-bold uppercase tracking-wider">Client & Project</th>
@@ -220,7 +220,7 @@ export default function InvoicesPage() {
                   <th className="px-5 py-3.5 font-bold uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-200 dark:divide-[#232B3D] font-medium">
+              <tbody className="divide-y divide-neutral-200 dark:divide-[#2A2A2A] font-medium">
                 {invoices.map((inv) => {
                   const client = inv.clientId as any;
                   const project = inv.projectId as any;

@@ -36,7 +36,7 @@ export function Pagination({ pagination, onPageChange, className }: PaginationPr
   return (
     <div
       className={cn(
-        'flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-neutral-200 dark:border-[#232B3D] text-xs',
+        'flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-neutral-200 dark:border-[#2A2A2A] text-xs',
         className
       )}
     >
@@ -51,7 +51,7 @@ export function Pagination({ pagination, onPageChange, className }: PaginationPr
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={!pagination.hasPrevPage}
-          className="flex items-center justify-center p-1.5 rounded-md border border-neutral-200 dark:border-[#232B3D] text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#131A2A] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center justify-center p-1.5 rounded-md border border-neutral-200 dark:border-[#2A2A2A] text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#1A1A1A] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           title="Previous Page"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -62,7 +62,7 @@ export function Pagination({ pagination, onPageChange, className }: PaginationPr
           <>
             <button
               onClick={() => onPageChange(1)}
-              className="px-2.5 py-1 rounded-md text-xs font-semibold text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#131A2A]"
+              className="px-2.5 py-1 rounded-md text-xs font-semibold text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#1A1A1A]"
             >
               1
             </button>
@@ -81,7 +81,7 @@ export function Pagination({ pagination, onPageChange, className }: PaginationPr
                 'min-w-[28px] h-7 px-2 rounded-md text-xs font-semibold transition-all',
                 isCurrent
                   ? 'bg-indigo-600 text-white font-bold shadow-sm'
-                  : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#131A2A]'
+                  : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#1A1A1A]'
               )}
             >
               {p}
@@ -95,7 +95,7 @@ export function Pagination({ pagination, onPageChange, className }: PaginationPr
             {endPage < totalPages - 1 && <span className="px-1 text-neutral-400">...</span>}
             <button
               onClick={() => onPageChange(totalPages)}
-              className="px-2.5 py-1 rounded-md text-xs font-semibold text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#131A2A]"
+              className="px-2.5 py-1 rounded-md text-xs font-semibold text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#1A1A1A]"
             >
               {totalPages}
             </button>
@@ -106,7 +106,7 @@ export function Pagination({ pagination, onPageChange, className }: PaginationPr
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={!pagination.hasNextPage}
-          className="flex items-center justify-center p-1.5 rounded-md border border-neutral-200 dark:border-[#232B3D] text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#131A2A] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center justify-center p-1.5 rounded-md border border-neutral-200 dark:border-[#2A2A2A] text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-[#1A1A1A] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           title="Next Page"
         >
           <ChevronRight className="w-4 h-4" />

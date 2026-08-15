@@ -36,7 +36,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-full flex flex-col bg-[#F8FAFC] text-slate-900 dark:bg-[#0B0F19] dark:text-slate-100 font-sans antialiased selection:bg-indigo-600 selection:text-white"
+        className="min-h-full flex flex-col bg-[#F9FAFB] text-slate-900 dark:bg-[#0A0A0A] dark:text-slate-100 font-sans antialiased selection:bg-indigo-600 selection:text-white"
         suppressHydrationWarning
       >
         <ThemeProvider

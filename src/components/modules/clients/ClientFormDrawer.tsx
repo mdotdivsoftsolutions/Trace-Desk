@@ -92,9 +92,9 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
       />
 
       {/* Slide-over Drawer Panel */}
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#131A2A] border-l border-neutral-200 dark:border-[#232B3D] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300">
+      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#1A1A1A] border-l border-neutral-200 dark:border-[#2A2A2A] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300">
         {/* Header */}
-        <div className="p-5 border-b border-neutral-200 dark:border-[#232B3D] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#0B0F19]/50">
+        <div className="p-5 border-b border-neutral-200 dark:border-[#2A2A2A] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#0A0A0A]/50">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
                 {isEditing ? <Edit2 className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
@@ -140,7 +140,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g. Alex Morgan"
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
@@ -154,7 +154,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
                 value={formData.companyName || ''}
                 onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                 placeholder="e.g. Apex Global Corp"
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
@@ -170,7 +170,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="alex@apex.com"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
@@ -183,7 +183,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
                   value={formData.phone || ''}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="+91 98765 43210"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
@@ -199,7 +199,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
                   value={formData.country || ''}
                   onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                   placeholder="e.g. India / United States"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
@@ -210,7 +210,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
                 <select
                   value={formData.currency}
                   onChange={(e) => setFormData({ ...formData, currency: e.target.value as any })}
-                  className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="INR">INR (₹ - Indian Rupee)</option>
                   <option value="USD">USD ($ - US Dollar)</option>
@@ -229,7 +229,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0A0A0A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="active">Active Client</option>
                 <option value="inactive">Inactive / Archived</option>
@@ -251,12 +251,12 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
           </form>
 
           {/* Sticky Bottom Action Bar */}
-          <div className="p-4 border-t border-neutral-200 dark:border-[#232B3D] flex items-center justify-end gap-2.5 bg-neutral-50 dark:bg-[#0B0F19]">
+          <div className="p-4 border-t border-neutral-200 dark:border-[#2A2A2A] flex items-center justify-end gap-2.5 bg-neutral-50 dark:bg-[#0A0A0A]">
             <button
               type="button"
               disabled={isLoading}
               onClick={onClose}
-              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#131A2A] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1A1A1A] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
