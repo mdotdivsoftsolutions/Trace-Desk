@@ -9,9 +9,11 @@ export async function GET(req: NextRequest) {
     const clientId = searchParams.get('clientId') || undefined;
     const status = searchParams.get('status') || undefined;
     const search = searchParams.get('search') || undefined;
+    const page = searchParams.get('page') ? parseInt(searchParams.get('page')!) : undefined;
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
 
-    const projects = await ProjectService.getProjects({ clientId, status, search });
-    return apiSuccess(projects, 'Projects fetched successfully');
+    const result = await ProjectService.getProjects({ clientId, status, search, page, limit });
+    return apiSuccess(result, 'Projects fetched successfully');
   } catch (error) {
     return handleApiError(error);
   }

@@ -2,17 +2,24 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client';
 import { queryKeys } from './query-keys';
 import { CreateClientInput, UpdateClientInput } from '@/lib/validations';
-import { ClientType } from '@/types';
+import { ClientType, PaginatedResponse } from '@/types';
 
-export function useClients(filters?: { status?: string; search?: string }) {
+export function useClients(filters?: {
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}) {
   return useQuery({
     queryKey: queryKeys.clients.list(filters),
     queryFn: async () => {
       const params = new URLSearchParams();
       if (filters?.status) params.append('status', filters.status);
       if (filters?.search) params.append('search', filters.search);
+      if (filters?.page) params.append('page', filters.page.toString());
+      if (filters?.limit) params.append('limit', filters.limit.toString());
       const queryStr = params.toString() ? `?${params.toString()}` : '';
-      return apiClient.get<ClientType[]>(`/clients${queryStr}`);
+      return apiClient.get<PaginatedResponse<ClientType>>(`/clients${queryStr}`);
     },
   });
 }

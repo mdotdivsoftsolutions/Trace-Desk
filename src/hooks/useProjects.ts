@@ -2,9 +2,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client';
 import { queryKeys } from './query-keys';
 import { CreateProjectInput, UpdateProjectInput } from '@/lib/validations';
-import { ProjectType } from '@/types';
+import { ProjectType, PaginatedResponse } from '@/types';
 
-export function useProjects(filters?: { clientId?: string; status?: string; search?: string }) {
+export function useProjects(filters?: {
+  clientId?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}) {
   return useQuery({
     queryKey: queryKeys.projects.list(filters),
     queryFn: async () => {
@@ -12,8 +18,10 @@ export function useProjects(filters?: { clientId?: string; status?: string; sear
       if (filters?.clientId) params.append('clientId', filters.clientId);
       if (filters?.status) params.append('status', filters.status);
       if (filters?.search) params.append('search', filters.search);
+      if (filters?.page) params.append('page', filters.page.toString());
+      if (filters?.limit) params.append('limit', filters.limit.toString());
       const queryStr = params.toString() ? `?${params.toString()}` : '';
-      return apiClient.get<ProjectType[]>(`/projects${queryStr}`);
+      return apiClient.get<PaginatedResponse<ProjectType>>(`/projects${queryStr}`);
     },
   });
 }

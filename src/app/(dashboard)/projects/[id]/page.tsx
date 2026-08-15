@@ -55,7 +55,8 @@ export default function ProjectWorkspacePage({
 
   const { data: project, isLoading: isProjectLoading } = useProject(projectId);
   const { data: tasks, isLoading: isTasksLoading } = useTasks(projectId);
-  const { data: invoices, isLoading: isInvoicesLoading } = useInvoices({ projectId });
+  const { data: invoicesData, isLoading: isInvoicesLoading } = useInvoices({ projectId, limit: 100 });
+  const invoices = invoicesData?.items || [];
 
 
   if (isProjectLoading) {

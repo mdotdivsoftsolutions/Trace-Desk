@@ -2,12 +2,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client';
 import { queryKeys } from './query-keys';
 import { CreateInvoiceInput, UpdateInvoiceInput, CreatePaymentInput } from '@/lib/validations';
-import { InvoiceType, PaymentType } from '@/types';
+import { InvoiceType, PaymentType, PaginatedResponse } from '@/types';
 
 export function useInvoices(filters?: {
   clientId?: string;
   projectId?: string;
   status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
 }) {
   return useQuery({
     queryKey: queryKeys.invoices.list(filters),
@@ -16,8 +19,11 @@ export function useInvoices(filters?: {
       if (filters?.clientId) params.append('clientId', filters.clientId);
       if (filters?.projectId) params.append('projectId', filters.projectId);
       if (filters?.status) params.append('status', filters.status);
+      if (filters?.search) params.append('search', filters.search);
+      if (filters?.page) params.append('page', filters.page.toString());
+      if (filters?.limit) params.append('limit', filters.limit.toString());
       const queryStr = params.toString() ? `?${params.toString()}` : '';
-      return apiClient.get<InvoiceType[]>(`/invoices${queryStr}`);
+      return apiClient.get<PaginatedResponse<InvoiceType>>(`/invoices${queryStr}`);
     },
   });
 }

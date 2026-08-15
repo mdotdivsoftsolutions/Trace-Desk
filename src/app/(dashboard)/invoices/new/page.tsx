@@ -27,8 +27,10 @@ export default function NewInvoicePage() {
   const router = useRouter();
   const createInvoiceMutation = useCreateInvoice();
 
-  const { data: clients } = useClients({ status: 'active' });
-  const { data: projects } = useProjects();
+  const { data: clientsData } = useClients({ status: 'active', limit: 100 });
+  const clients = clientsData?.items || [];
+  const { data: projectsData } = useProjects({ limit: 100 });
+  const projects = projectsData?.items || [];
 
   const [selectedProjectId, setSelectedProjectId] = useState<string>('');
   const [selectedClientId, setSelectedClientId] = useState<string>('');
@@ -161,7 +163,7 @@ export default function NewInvoicePage() {
   const isLoading = createInvoiceMutation.isPending;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500 pb-12">
+    <div className="w-full space-y-6 animate-in fade-in duration-500 pb-12">
       {/* Header & Back */}
       <div className="flex items-center justify-between">
         <div className="space-y-1">

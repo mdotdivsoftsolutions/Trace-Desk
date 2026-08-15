@@ -22,7 +22,8 @@ export function ProjectFormModal({
   const isEditing = !!project;
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
-  const { data: clients } = useClients({ status: 'active' });
+  const { data: clientsData } = useClients({ status: 'active', limit: 100 });
+  const clients = clientsData?.items || [];
 
   const initialClientId =
     typeof project?.clientId === 'object'

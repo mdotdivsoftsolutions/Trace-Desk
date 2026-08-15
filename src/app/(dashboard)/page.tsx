@@ -23,11 +23,12 @@ import { formatCurrency, formatDate, formatRelativeDeadline, cn } from '@/lib/ut
 
 export default function DashboardPage() {
   const { data: metrics, isLoading: isMetricsLoading } = useDashboardMetrics();
-  const { data: projects, isLoading: isProjectsLoading } = useProjects();
+  const { data: projectsData, isLoading: isProjectsLoading } = useProjects({ limit: 50 });
+  const projects = projectsData?.items || [];
 
-  const activeProjects = projects?.filter((p) =>
+  const activeProjects = projects.filter((p) =>
     ['discovery', 'in_progress', 'review'].includes(p.status)
-  ) || [];
+  );
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

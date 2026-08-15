@@ -1,5 +1,19 @@
 export type CurrencyCode = 'USD' | 'EUR' | 'INR' | 'AED' | 'GBP';
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  pagination: PaginationMeta;
+}
+
 export interface ClientType {
   _id: string;
   name: string;

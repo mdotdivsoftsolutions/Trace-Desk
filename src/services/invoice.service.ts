@@ -97,24 +97,69 @@ export class InvoiceService {
   }
 
   /**
-   * Retrieves invoices with client and project information.
+   * Retrieves invoices with client and project information and pagination.
    */
   static async getInvoices(filter: {
     clientId?: string;
     projectId?: string;
     status?: string;
-  }): Promise<IInvoice[]> {
+    search?: string;
+    page?: number;
+    limit?: number;
+  } = {}): Promise<{
+    items: IInvoice[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPrevPage: boolean;
+    };
+  }> {
     await dbConnect();
     const query: any = {};
 
-    if (filter.clientId) query.clientId = new mongoose.Types.ObjectId(filter.clientId);
-    if (filter.projectId) query.projectId = new mongoose.Types.ObjectId(filter.projectId);
-    if (filter.status) query.status = filter.status;
+    if (filter.clientId && filter.clientId !== 'all') {
+      query.clientId = new mongoose.Types.ObjectId(filter.clientId);
+    }
+    if (filter.projectId && filter.projectId !== 'all') {
+      query.projectId = new mongoose.Types.ObjectId(filter.projectId);
+    }
+    if (filter.status && filter.status !== 'all') {
+      query.status = filter.status;
+    }
+    if (filter.search) {
+      query.invoiceNumber = { $regex: filter.search, $options: 'i' };
+    }
 
-    return Invoice.find(query)
-      .populate('clientId', 'name companyName email currency')
-      .populate('projectId', 'title')
-      .sort({ createdAt: -1 });
+    const page = Math.max(1, Number(filter.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(filter.limit) || 10));
+    const skip = (page - 1) * limit;
+
+    const [total, items] = await Promise.all([
+      Invoice.countDocuments(query),
+      Invoice.find(query)
+        .populate('clientId', 'name companyName email currency')
+        .populate('projectId', 'title')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+    ]);
+
+    const totalPages = Math.ceil(total / limit) || 1;
+
+    return {
+      items,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+    };
   }
 
   /**

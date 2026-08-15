@@ -9,9 +9,12 @@ export async function GET(req: NextRequest) {
     const clientId = searchParams.get('clientId') || undefined;
     const projectId = searchParams.get('projectId') || undefined;
     const status = searchParams.get('status') || undefined;
+    const search = searchParams.get('search') || undefined;
+    const page = searchParams.get('page') ? parseInt(searchParams.get('page')!) : undefined;
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
 
-    const invoices = await InvoiceService.getInvoices({ clientId, projectId, status });
-    return apiSuccess(invoices, 'Invoices fetched successfully');
+    const result = await InvoiceService.getInvoices({ clientId, projectId, status, search, page, limit });
+    return apiSuccess(result, 'Invoices fetched successfully');
   } catch (error) {
     return handleApiError(error);
   }

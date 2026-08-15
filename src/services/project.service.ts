@@ -3,6 +3,18 @@ import dbConnect from '@/lib/db';
 import { Project, Milestone, Task, Invoice, IProject } from '@/models';
 import { CreateProjectInput, UpdateProjectInput } from '@/lib/validations/project.schema';
 
+export interface PaginatedProjectsResult {
+  items: IProject[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
 export class ProjectService {
   static async createProject(data: CreateProjectInput): Promise<IProject> {
     await dbConnect();
@@ -13,19 +25,23 @@ export class ProjectService {
     return Project.create(projectData);
   }
 
-  static async getProjects(filter: {
-    clientId?: string;
-    status?: string;
-    search?: string;
-  } = {}): Promise<IProject[]> {
+  static async getProjects(
+    filter: {
+      clientId?: string;
+      status?: string;
+      search?: string;
+      page?: number;
+      limit?: number;
+    } = {}
+  ): Promise<PaginatedProjectsResult> {
     await dbConnect();
     const query: any = {};
 
-    if (filter.clientId) {
+    if (filter.clientId && filter.clientId !== 'all') {
       query.clientId = new mongoose.Types.ObjectId(filter.clientId);
     }
 
-    if (filter.status) {
+    if (filter.status && filter.status !== 'all') {
       query.status = filter.status;
     }
 
@@ -36,9 +52,32 @@ export class ProjectService {
       ];
     }
 
-    return Project.find(query)
-      .populate('clientId', 'name companyName email currency')
-      .sort({ createdAt: -1 });
+    const page = Math.max(1, Number(filter.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(filter.limit) || 12));
+    const skip = (page - 1) * limit;
+
+    const [total, items] = await Promise.all([
+      Project.countDocuments(query),
+      Project.find(query)
+        .populate('clientId', 'name companyName email currency')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+    ]);
+
+    const totalPages = Math.ceil(total / limit) || 1;
+
+    return {
+      items,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+    };
   }
 
   static async getProjectById(id: string): Promise<any> {

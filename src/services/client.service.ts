@@ -3,17 +3,38 @@ import dbConnect from '@/lib/db';
 import { Client, Project, Invoice, IClient } from '@/models';
 import { CreateClientInput, UpdateClientInput } from '@/lib/validations/client.schema';
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface PaginatedClientsResult {
+  items: IClient[];
+  pagination: PaginationMeta;
+}
+
 export class ClientService {
   static async createClient(data: CreateClientInput): Promise<IClient> {
     await dbConnect();
     return Client.create(data);
   }
 
-  static async getClients(filter: { status?: string; search?: string } = {}): Promise<IClient[]> {
+  static async getClients(
+    filter: {
+      status?: string;
+      search?: string;
+      page?: number;
+      limit?: number;
+    } = {}
+  ): Promise<PaginatedClientsResult> {
     await dbConnect();
     const query: any = {};
 
-    if (filter.status) {
+    if (filter.status && filter.status !== 'all') {
       query.status = filter.status;
     }
 
@@ -25,7 +46,28 @@ export class ClientService {
       ];
     }
 
-    return Client.find(query).sort({ createdAt: -1 });
+    const page = Math.max(1, Number(filter.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(filter.limit) || 10));
+    const skip = (page - 1) * limit;
+
+    const [total, items] = await Promise.all([
+      Client.countDocuments(query),
+      Client.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    ]);
+
+    const totalPages = Math.ceil(total / limit) || 1;
+
+    return {
+      items,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+    };
   }
 
   static async getClientById(id: string): Promise<any> {
