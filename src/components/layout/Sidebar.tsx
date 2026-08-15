@@ -67,7 +67,7 @@ export function Sidebar({
         )}
       >
         {/* Sidebar Header with M.Div Softsolutions branding */}
-        <div className="p-4 flex items-center justify-between border-b border-neutral-200/80 dark:border-[#2A2A2A]/80">
+        <div className="h-16 px-4 flex items-center justify-between border-b border-neutral-200 dark:border-[#2A2A2A]">
           <Link href="/" className="flex items-center gap-3 overflow-hidden group">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
               <Layers className="w-5 h-5" />
