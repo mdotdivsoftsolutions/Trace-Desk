@@ -2,7 +2,7 @@ export const queryKeys = {
   clients: {
     all: ['clients'] as const,
     lists: () => [...queryKeys.clients.all, 'list'] as const,
-    list: (filters?: { status?: string; search?: string; page?: number; limit?: number }) =>
+    list: (filters?: { status?: string; search?: string; startDate?: string; endDate?: string; page?: number; limit?: number }) =>
       [...queryKeys.clients.lists(), filters || {}] as const,
     details: () => [...queryKeys.clients.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.clients.details(), id] as const,
@@ -10,7 +10,7 @@ export const queryKeys = {
   projects: {
     all: ['projects'] as const,
     lists: () => [...queryKeys.projects.all, 'list'] as const,
-    list: (filters?: { clientId?: string; status?: string; search?: string; page?: number; limit?: number }) =>
+    list: (filters?: { clientId?: string; status?: string; search?: string; startDate?: string; endDate?: string; page?: number; limit?: number }) =>
       [...queryKeys.projects.lists(), filters || {}] as const,
     details: () => [...queryKeys.projects.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.projects.details(), id] as const,
@@ -31,7 +31,7 @@ export const queryKeys = {
   invoices: {
     all: ['invoices'] as const,
     lists: () => [...queryKeys.invoices.all, 'list'] as const,
-    list: (filters?: { clientId?: string; projectId?: string; status?: string; search?: string; page?: number; limit?: number }) =>
+    list: (filters?: { clientId?: string; projectId?: string; status?: string; search?: string; startDate?: string; endDate?: string; page?: number; limit?: number }) =>
       [...queryKeys.invoices.lists(), filters || {}] as const,
     details: () => [...queryKeys.invoices.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.invoices.details(), id] as const,

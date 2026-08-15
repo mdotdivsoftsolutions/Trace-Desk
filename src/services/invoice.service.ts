@@ -186,6 +186,8 @@ export class InvoiceService {
     projectId?: string;
     status?: string;
     search?: string;
+    startDate?: string;
+    endDate?: string;
     page?: number;
     limit?: number;
   } = {}): Promise<{
@@ -210,6 +212,18 @@ export class InvoiceService {
     }
     if (filter.status && filter.status !== 'all') {
       query.status = filter.status;
+    }
+    if (filter.startDate || filter.endDate) {
+      const dateCond: Record<string, unknown> = {};
+      if (filter.startDate) {
+        dateCond.$gte = new Date(filter.startDate);
+      }
+      if (filter.endDate) {
+        const end = new Date(filter.endDate);
+        end.setHours(23, 59, 59, 999);
+        dateCond.$lte = end;
+      }
+      query.issueDate = dateCond;
     }
     if (filter.search && filter.search.trim()) {
       const searchRegex = new RegExp(

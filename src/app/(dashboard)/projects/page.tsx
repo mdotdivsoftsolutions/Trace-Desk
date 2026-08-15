@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FolderKanban, Plus } from 'lucide-react';
 import { useProjects } from '@/hooks/useProjects';
 import { useDebounce } from '@/hooks/useDebounce';
+import { DatePreset } from '@/components/common/DateRangeFilter';
 import { ProjectFilterBar } from '@/components/modules/projects/list/ProjectFilterBar';
 import { ProjectGridCard } from '@/components/modules/projects/list/ProjectGridCard';
 import { ProjectCardSkeleton } from '@/components/common/skeletons/ProjectCardSkeleton';
@@ -14,18 +15,30 @@ export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [startDate, setStartDate] = useState<string | undefined>(undefined);
+  const [endDate, setEndDate] = useState<string | undefined>(undefined);
+  const [datePreset, setDatePreset] = useState<DatePreset>('all');
   const [page, setPage] = useState(1);
   const limit = 12;
 
   const { data, isLoading, isFetching } = useProjects({
     search: debouncedSearch || undefined,
     status: statusFilter === 'all' ? undefined : statusFilter,
+    startDate,
+    endDate,
     page,
     limit,
   });
 
   const projects = data?.items || [];
   const isGridLoading = isLoading || isFetching || search !== debouncedSearch;
+
+  const handleDateChange = ({ startDate: start, endDate: end, preset }: { startDate?: string; endDate?: string; preset: DatePreset }) => {
+    setStartDate(start);
+    setEndDate(end);
+    setDatePreset(preset);
+    setPage(1);
+  };
 
   return (
     <div className="space-y-6">
@@ -34,6 +47,10 @@ export default function ProjectsPage() {
         onSearchChange={(val) => { setSearch(val); setPage(1); }}
         statusFilter={statusFilter}
         onStatusChange={(val) => { setStatusFilter(val); setPage(1); }}
+        startDate={startDate}
+        endDate={endDate}
+        datePreset={datePreset}
+        onDateChange={handleDateChange}
       />
 
       {isGridLoading ? (

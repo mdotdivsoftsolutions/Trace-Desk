@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useInvoices } from '@/hooks/useInvoices';
 import { useDebounce } from '@/hooks/useDebounce';
 import { InvoiceType } from '@/types';
+import { DatePreset } from '@/components/common/DateRangeFilter';
 import { InvoiceKpiCards } from '@/components/modules/invoices/list/InvoiceKpiCards';
 import { InvoiceFilterBar } from '@/components/modules/invoices/list/InvoiceFilterBar';
 import { InvoiceTable } from '@/components/modules/invoices/list/InvoiceTable';
@@ -14,6 +15,9 @@ export default function InvoicesPage() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [startDate, setStartDate] = useState<string | undefined>(undefined);
+  const [endDate, setEndDate] = useState<string | undefined>(undefined);
+  const [datePreset, setDatePreset] = useState<DatePreset>('all');
   const [page, setPage] = useState(1);
   const limit = 10;
 
@@ -22,6 +26,8 @@ export default function InvoicesPage() {
   const { data, isLoading, isFetching } = useInvoices({
     search: debouncedSearch || undefined,
     status: statusFilter === 'all' ? undefined : statusFilter,
+    startDate,
+    endDate,
     page,
     limit,
   });
@@ -34,6 +40,13 @@ export default function InvoicesPage() {
 
   const isTableLoading = isLoading || isFetching || search !== debouncedSearch;
 
+  const handleDateChange = ({ startDate: start, endDate: end, preset }: { startDate?: string; endDate?: string; preset: DatePreset }) => {
+    setStartDate(start);
+    setEndDate(end);
+    setDatePreset(preset);
+    setPage(1);
+  };
+
   return (
     <div className="space-y-6">
       <InvoiceFilterBar
@@ -41,6 +54,10 @@ export default function InvoicesPage() {
         onSearchChange={(val) => { setSearch(val); setPage(1); }}
         statusFilter={statusFilter}
         onStatusChange={(val) => { setStatusFilter(val); setPage(1); }}
+        startDate={startDate}
+        endDate={endDate}
+        datePreset={datePreset}
+        onDateChange={handleDateChange}
       />
 
       <InvoiceKpiCards

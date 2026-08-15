@@ -1,12 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { Search, Plus } from 'lucide-react';
+import { DateRangeFilter, DatePreset } from '@/components/common/DateRangeFilter';
 
 interface InvoiceFilterBarProps {
   search: string;
   onSearchChange: (value: string) => void;
   statusFilter: string;
   onStatusChange: (value: string) => void;
+  startDate?: string;
+  endDate?: string;
+  datePreset?: DatePreset;
+  onDateChange: (range: { startDate?: string; endDate?: string; preset: DatePreset }) => void;
 }
 
 export function InvoiceFilterBar({
@@ -14,6 +19,10 @@ export function InvoiceFilterBar({
   onSearchChange,
   statusFilter,
   onStatusChange,
+  startDate,
+  endDate,
+  datePreset,
+  onDateChange,
 }: InvoiceFilterBarProps) {
   return (
     <div className="space-y-4">
@@ -36,7 +45,7 @@ export function InvoiceFilterBar({
         </Link>
       </div>
 
-      <div className="p-4 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm flex flex-col sm:flex-row items-center gap-3">
+      <div className="p-4 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center gap-3">
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input
@@ -48,20 +57,29 @@ export function InvoiceFilterBar({
           />
         </div>
 
-        <div className="w-full sm:w-48">
-          <select
-            value={statusFilter}
-            onChange={(e) => onStatusChange(e.target.value)}
-            className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-          >
-            <option value="all">All Statuses</option>
-            <option value="draft">Draft</option>
-            <option value="sent">Sent</option>
-            <option value="partially_paid">Partially Paid</option>
-            <option value="paid">Paid</option>
-            <option value="overdue">Overdue</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+          <div className="w-full sm:w-44">
+            <select
+              value={statusFilter}
+              onChange={(e) => onStatusChange(e.target.value)}
+              className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+            >
+              <option value="all">All Statuses</option>
+              <option value="draft">Draft</option>
+              <option value="sent">Sent</option>
+              <option value="partially_paid">Partially Paid</option>
+              <option value="paid">Paid</option>
+              <option value="overdue">Overdue</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <DateRangeFilter
+            startDate={startDate}
+            endDate={endDate}
+            preset={datePreset}
+            onChange={onDateChange}
+          />
         </div>
       </div>
     </div>

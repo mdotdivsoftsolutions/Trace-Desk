@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
-import { Client, Project, Invoice, IClient } from '@/models';
+import { Client, Project, Invoice, IClient, IProject, IInvoice } from '@/models';
 import { CreateClientInput, UpdateClientInput } from '@/lib/validations/client.schema';
 
 export interface PaginationMeta {
@@ -17,6 +17,18 @@ export interface PaginatedClientsResult {
   pagination: PaginationMeta;
 }
 
+export interface ClientFinancialSummary {
+  totalBilled: number;
+  totalPaid: number;
+  outstanding: number;
+}
+
+export interface ClientWithDetails extends Record<string, unknown> {
+  projects: IProject[];
+  invoices: IInvoice[];
+  financialSummary: ClientFinancialSummary;
+}
+
 export class ClientService {
   static async createClient(data: CreateClientInput): Promise<IClient> {
     await dbConnect();
@@ -27,15 +39,30 @@ export class ClientService {
     filter: {
       status?: string;
       search?: string;
+      startDate?: string;
+      endDate?: string;
       page?: number;
       limit?: number;
     } = {}
   ): Promise<PaginatedClientsResult> {
     await dbConnect();
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (filter.status && filter.status !== 'all') {
       query.status = filter.status;
+    }
+
+    if (filter.startDate || filter.endDate) {
+      const dateCond: Record<string, unknown> = {};
+      if (filter.startDate) {
+        dateCond.$gte = new Date(filter.startDate);
+      }
+      if (filter.endDate) {
+        const end = new Date(filter.endDate);
+        end.setHours(23, 59, 59, 999);
+        dateCond.$lte = end;
+      }
+      query.createdAt = dateCond;
     }
 
     if (filter.search) {
@@ -70,7 +97,7 @@ export class ClientService {
     };
   }
 
-  static async getClientById(id: string): Promise<any> {
+  static async getClientById(id: string): Promise<ClientWithDetails | null> {
     await dbConnect();
     const client = await Client.findById(id);
     if (!client) return null;

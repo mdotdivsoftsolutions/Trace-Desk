@@ -9,6 +9,8 @@ export function useInvoices(filters?: {
   projectId?: string;
   status?: string;
   search?: string;
+  startDate?: string;
+  endDate?: string;
   page?: number;
   limit?: number;
 }) {
@@ -20,6 +22,8 @@ export function useInvoices(filters?: {
       if (filters?.projectId) params.append('projectId', filters.projectId);
       if (filters?.status) params.append('status', filters.status);
       if (filters?.search) params.append('search', filters.search);
+      if (filters?.startDate) params.append('startDate', filters.startDate);
+      if (filters?.endDate) params.append('endDate', filters.endDate);
       if (filters?.page) params.append('page', filters.page.toString());
       if (filters?.limit) params.append('limit', filters.limit.toString());
       const queryStr = params.toString() ? `?${params.toString()}` : '';

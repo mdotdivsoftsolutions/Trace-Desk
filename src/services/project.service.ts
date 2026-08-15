@@ -30,6 +30,8 @@ export class ProjectService {
       clientId?: string;
       status?: string;
       search?: string;
+      startDate?: string;
+      endDate?: string;
       page?: number;
       limit?: number;
     } = {}
@@ -43,6 +45,19 @@ export class ProjectService {
 
     if (filter.status && filter.status !== 'all') {
       query.status = filter.status;
+    }
+
+    if (filter.startDate || filter.endDate) {
+      const dateCond: Record<string, unknown> = {};
+      if (filter.startDate) {
+        dateCond.$gte = new Date(filter.startDate);
+      }
+      if (filter.endDate) {
+        const end = new Date(filter.endDate);
+        end.setHours(23, 59, 59, 999);
+        dateCond.$lte = end;
+      }
+      query.createdAt = dateCond;
     }
 
     if (filter.search && filter.search.trim()) {

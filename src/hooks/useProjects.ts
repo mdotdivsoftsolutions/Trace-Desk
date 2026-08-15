@@ -8,6 +8,8 @@ export function useProjects(filters?: {
   clientId?: string;
   status?: string;
   search?: string;
+  startDate?: string;
+  endDate?: string;
   page?: number;
   limit?: number;
 }) {
@@ -18,6 +20,8 @@ export function useProjects(filters?: {
       if (filters?.clientId) params.append('clientId', filters.clientId);
       if (filters?.status) params.append('status', filters.status);
       if (filters?.search) params.append('search', filters.search);
+      if (filters?.startDate) params.append('startDate', filters.startDate);
+      if (filters?.endDate) params.append('endDate', filters.endDate);
       if (filters?.page) params.append('page', filters.page.toString());
       if (filters?.limit) params.append('limit', filters.limit.toString());
       const queryStr = params.toString() ? `?${params.toString()}` : '';

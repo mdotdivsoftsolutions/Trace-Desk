@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useClients, useDeleteClient } from '@/hooks/useClients';
 import { useDebounce } from '@/hooks/useDebounce';
 import { ClientType } from '@/types';
+import { DatePreset } from '@/components/common/DateRangeFilter';
 import { ClientStatsHeader } from '@/components/modules/clients/list/ClientStatsHeader';
 import { ClientSearchFilter } from '@/components/modules/clients/list/ClientSearchFilter';
 import { ClientTable } from '@/components/modules/clients/list/ClientTable';
@@ -15,6 +16,9 @@ export default function ClientsPage() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [startDate, setStartDate] = useState<string | undefined>(undefined);
+  const [endDate, setEndDate] = useState<string | undefined>(undefined);
+  const [datePreset, setDatePreset] = useState<DatePreset>('all');
   const [page, setPage] = useState(1);
   const limit = 10;
 
@@ -25,6 +29,8 @@ export default function ClientsPage() {
   const { data, isLoading, isFetching } = useClients({
     search: debouncedSearch || undefined,
     status: statusFilter === 'all' ? undefined : statusFilter,
+    startDate,
+    endDate,
     page,
     limit,
   });
@@ -39,6 +45,13 @@ export default function ClientsPage() {
 
   const isTableLoading = isLoading || isFetching || search !== debouncedSearch;
 
+  const handleDateChange = ({ startDate: start, endDate: end, preset }: { startDate?: string; endDate?: string; preset: DatePreset }) => {
+    setStartDate(start);
+    setEndDate(end);
+    setDatePreset(preset);
+    setPage(1);
+  };
+
   return (
     <div className="space-y-6">
       <ClientStatsHeader
@@ -51,6 +64,10 @@ export default function ClientsPage() {
         onSearchChange={(val) => { setSearch(val); setPage(1); }}
         statusFilter={statusFilter}
         onStatusChange={(val) => { setStatusFilter(val); setPage(1); }}
+        startDate={startDate}
+        endDate={endDate}
+        datePreset={datePreset}
+        onDateChange={handleDateChange}
       />
 
       <ClientTable
