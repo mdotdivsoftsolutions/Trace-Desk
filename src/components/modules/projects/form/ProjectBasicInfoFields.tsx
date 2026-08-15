@@ -1,4 +1,5 @@
 import React from 'react';
+import { Pin } from 'lucide-react';
 import { Client } from '@/types';
 
 interface ProjectBasicInfoFieldsProps {
@@ -11,8 +12,10 @@ interface ProjectBasicInfoFieldsProps {
   onStatusChange: (val: string) => void;
   targetDeadline: string;
   onDeadlineChange: (val: string) => void;
-  description: string;
-  onDescriptionChange: (val: string) => void;
+  description?: string;
+  onDescriptionChange?: (val: string) => void;
+  isPinned?: boolean;
+  onIsPinnedChange?: (val: boolean) => void;
 }
 
 export function ProjectBasicInfoFields({
@@ -25,8 +28,8 @@ export function ProjectBasicInfoFields({
   onStatusChange,
   targetDeadline,
   onDeadlineChange,
-  description,
-  onDescriptionChange,
+  isPinned = false,
+  onIsPinnedChange,
 }: ProjectBasicInfoFieldsProps) {
   return (
     <div className="space-y-4">
@@ -89,6 +92,22 @@ export function ProjectBasicInfoFields({
         </div>
       </div>
 
+      {onIsPinnedChange && (
+        <div className="flex items-center gap-2 pt-1">
+          <label className="flex items-center gap-2 text-xs font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={isPinned}
+              onChange={(e) => onIsPinnedChange(e.target.checked)}
+              className="w-4 h-4 rounded border-neutral-300 dark:border-neutral-700 text-amber-600 focus:ring-amber-500 rounded-sm"
+            />
+            <span className="flex items-center gap-1.5 font-semibold">
+              <Pin className="w-3.5 h-3.5 text-amber-500" />
+              <span>Pin this project to the top of listings</span>
+            </span>
+          </label>
+        </div>
+      )}
     </div>
   );
 }

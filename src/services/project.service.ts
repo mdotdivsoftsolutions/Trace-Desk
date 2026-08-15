@@ -94,16 +94,17 @@ export class ProjectService {
       Project.countDocuments(query),
       Project.find(query)
         .populate('clientId', 'name companyName email currency')
-        .sort({ createdAt: -1 })
+        .sort({ isPinned: -1, createdAt: -1 })
         .skip(skip)
-        .limit(limit),
+        .limit(limit)
+        .lean(),
     ]);
 
     const projectIds = rawProjects.map((p) => p._id);
     const milestones = await Milestone.find({
       projectId: { $in: projectIds },
       status: { $ne: 'cancelled' },
-    });
+    }).lean();
 
     const milestonesByProject = new Map<string, typeof milestones>();
     for (const m of milestones) {
@@ -115,7 +116,7 @@ export class ProjectService {
     }
 
     const items = rawProjects.map((project) => {
-      const pObj = project.toObject();
+      const pObj = { ...project, isPinned: Boolean(project.isPinned) };
       const pMilestones = milestonesByProject.get(project._id.toString()) || [];
 
       if (pMilestones.length > 0) {
@@ -221,7 +222,21 @@ export class ProjectService {
     if (data.clientId) {
       updateData.clientId = new mongoose.Types.ObjectId(data.clientId);
     }
-    return Project.findByIdAndUpdate(id, updateData, { new: true });
+    return Project.findByIdAndUpdate(id, { $set: updateData }, { new: true, strict: false });
+  }
+
+  static async togglePin(id: string): Promise<IProject | null> {
+    await dbConnect();
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    const project = (await Project.findById(id).lean()) as (IProject & { isPinned?: boolean }) | null;
+    if (!project) return null;
+    const newPinned = !Boolean(project.isPinned);
+    const updated = await Project.findByIdAndUpdate(
+      id,
+      { $set: { isPinned: newPinned } },
+      { new: true, strict: false }
+    );
+    return updated;
   }
 
   static async deleteProject(id: string): Promise<boolean> {

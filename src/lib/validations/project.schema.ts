@@ -37,6 +37,7 @@ export const createProjectSchema = z.object({
   integrationNotes: z.string().optional(),
   techStack: z.array(z.string()).default([]),
   progressPercentage: z.number().min(0).max(100).default(0),
+  isPinned: z.boolean().optional().default(false),
   startDate: z.coerce.date().optional(),
   targetDeadline: z.coerce.date().optional(),
 });

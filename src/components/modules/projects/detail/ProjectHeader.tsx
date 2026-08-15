@@ -14,10 +14,12 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Pin,
 } from 'lucide-react';
 import { ProjectWithClient, Milestone } from '@/types';
 import { cn, formatCurrency } from '@/lib/utils';
 import SafeHTML from '@/components/common/SafeHTML';
+import { useTogglePinProject } from '@/hooks/useProjects';
 
 interface ProjectHeaderProps {
   project: ProjectWithClient;
@@ -78,6 +80,7 @@ export function ProjectHeader({
   }
 
   const effectiveBudget = totalMilestoneBudget > 0 ? totalMilestoneBudget : (project.totalBudget || 0);
+  const togglePinMutation = useTogglePinProject();
 
   return (
     <div className="space-y-4">
@@ -89,7 +92,10 @@ export function ProjectHeader({
         <span>Back to Projects Workspace</span>
       </Link>
 
-      <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-4">
+      <div className={cn(
+        'p-6 rounded-lg bg-white dark:bg-[#1E293B] border shadow-sm space-y-4 transition-all',
+        project.isPinned ? 'border-amber-500/40 ring-1 ring-amber-500/20' : 'border-neutral-200 dark:border-[#334155]'
+      )}>
         {/* Top bar: Title, status, budget, deadline, actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
@@ -97,6 +103,12 @@ export function ProjectHeader({
               <h1 className="font-heading text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
                 {project.title}
               </h1>
+              {project.isPinned && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 uppercase tracking-wider">
+                  <Pin className="w-3 h-3 fill-amber-500 rotate-45" />
+                  <span>Pinned</span>
+                </span>
+              )}
               <span
                 className={cn(
                   'px-2.5 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider',
@@ -141,6 +153,21 @@ export function ProjectHeader({
 
           {/* Action buttons */}
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => togglePinMutation.mutate(project._id)}
+              disabled={togglePinMutation.isPending}
+              className={cn(
+                'flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold border transition-colors cursor-pointer',
+                project.isPinned
+                  ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30 hover:bg-amber-500/25'
+                  : 'bg-neutral-100 dark:bg-[#0F172A] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-[#334155] hover:bg-neutral-200 dark:hover:bg-neutral-800'
+              )}
+              title={project.isPinned ? 'Unpin project' : 'Pin project to top'}
+            >
+              <Pin className={cn('w-3.5 h-3.5', project.isPinned ? 'fill-amber-500 rotate-45' : '')} />
+              <span>{project.isPinned ? 'Pinned' : 'Pin Project'}</span>
+            </button>
             <Link
               href={`/projects/${project._id}/kanban`}
               className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] transition-colors"

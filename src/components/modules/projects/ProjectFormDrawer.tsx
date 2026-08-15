@@ -58,6 +58,7 @@ function getInitialFormData(project?: ProjectType | null, preselectedClientId?: 
       clientId,
       description: project.description || '',
       status: project.status || 'in_progress',
+      isPinned: !!project.isPinned,
       targetDeadline: project.targetDeadline ? new Date(project.targetDeadline).toISOString().split('T')[0] : '',
       techStack: project.techStack || [],
       links: initialLinks,
@@ -71,6 +72,7 @@ function getInitialFormData(project?: ProjectType | null, preselectedClientId?: 
     clientId: preselectedClientId || '',
     description: '',
     status: 'in_progress' as ProjectType['status'],
+    isPinned: false,
     targetDeadline: '',
     techStack: ['Next.js', 'TypeScript'],
     links: [] as LinkDraft[],
@@ -97,6 +99,7 @@ function ProjectFormDrawerContent({ onClose, project, preselectedClientId }: Pro
   const [clientId, setClientId] = useState(initial.clientId);
   const [description, setDescription] = useState(initial.description);
   const [status, setStatus] = useState<ProjectType['status']>(initial.status);
+  const [isPinned, setIsPinned] = useState(initial.isPinned);
   const [targetDeadline, setTargetDeadline] = useState(initial.targetDeadline);
   const [techStack, setTechStack] = useState<string[]>(initial.techStack);
   const [techInput, setTechInput] = useState('');
@@ -131,6 +134,7 @@ function ProjectFormDrawerContent({ onClose, project, preselectedClientId }: Pro
           clientId,
           description: description || undefined,
           status,
+          isPinned,
           targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined,
           techStack,
           links,
@@ -145,6 +149,7 @@ function ProjectFormDrawerContent({ onClose, project, preselectedClientId }: Pro
         clientId,
         description: description || undefined,
         status,
+        isPinned,
         budgetType: 'fixed' as const,
         currency: 'INR',
         links,
@@ -206,6 +211,8 @@ function ProjectFormDrawerContent({ onClose, project, preselectedClientId }: Pro
               onDeadlineChange={setTargetDeadline}
               description={description}
               onDescriptionChange={setDescription}
+              isPinned={isPinned}
+              onIsPinnedChange={setIsPinned}
             />
 
             <hr className="border-neutral-200 dark:border-[#334155]" />

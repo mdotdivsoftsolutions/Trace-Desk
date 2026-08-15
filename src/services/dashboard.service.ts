@@ -180,7 +180,7 @@ export class DashboardService {
 
     const rawRecentProjects = await Project.find({})
       .populate('clientId', 'name companyName')
-      .sort({ updatedAt: -1 })
+      .sort({ isPinned: -1, updatedAt: -1 })
       .limit(5)
       .lean();
 

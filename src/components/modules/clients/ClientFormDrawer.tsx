@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
 import { useCreateClient, useUpdateClient } from '@/hooks/useClients';
 import { Client, CurrencyCode } from '@/types';
@@ -12,27 +12,25 @@ interface ClientFormDrawerProps {
   client?: Client | null;
 }
 
-export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerProps) {
+interface ClientFormDrawerContentProps {
+  onClose: () => void;
+  client?: Client | null;
+}
+
+function ClientFormDrawerContent({ onClose, client }: ClientFormDrawerContentProps) {
   const [form, setForm] = useState({
-    name: '', email: '', companyName: '', phone: '', country: 'India',
-    currency: 'INR' as CurrencyCode, status: 'active' as 'active' | 'inactive', notes: '',
+    name: client?.name || '',
+    email: client?.email || '',
+    companyName: client?.companyName || client?.company || '',
+    phone: client?.phone || '',
+    country: client?.country || 'India',
+    currency: (client?.currency as CurrencyCode) || 'INR',
+    status: (client?.status as 'active' | 'inactive') || 'active',
+    notes: client?.notes || '',
   });
+
   const createClientMutation = useCreateClient();
   const updateClientMutation = useUpdateClient();
-
-  useEffect(() => {
-    if (client) {
-      setForm({
-        name: client.name, email: client.email, companyName: client.companyName || client.company || '',
-        phone: client.phone || '', country: client.country || 'India',
-        currency: (client.currency as CurrencyCode) || 'INR', status: client.status, notes: client.notes || '',
-      });
-    } else {
-      setForm({ name: '', email: '', companyName: '', phone: '', country: 'India', currency: 'INR', status: 'active', notes: '' });
-    }
-  }, [client, isOpen]);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,32 +57,39 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="block text-xs font-semibold">Client Name *</label>
-                <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+                <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400" />
               </div>
               <div className="space-y-1">
                 <label className="block text-xs font-semibold">Email Address *</label>
-                <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+                <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400" />
               </div>
               <div className="space-y-1">
                 <label className="block text-xs font-semibold">Company Name</label>
-                <input type="text" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+                <input type="text" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400" />
               </div>
               <div className="space-y-1">
                 <label className="block text-xs font-semibold">Phone Number</label>
-                <input type="text" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+                <input type="text" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400" />
               </div>
               <div className="space-y-1">
                 <label className="block text-xs font-semibold">Country</label>
-                <input type="text" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+                <input type="text" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400" />
               </div>
               <div className="space-y-1">
                 <label className="block text-xs font-semibold">Currency</label>
-                <select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value as CurrencyCode })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs">
+                <select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value as CurrencyCode })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400">
                   <option value="INR">INR (₹ Indian Rupee)</option>
                   <option value="USD">USD ($ US Dollar)</option>
                   <option value="EUR">EUR (€ Euro)</option>
                   <option value="GBP">GBP (£ Pound)</option>
                   <option value="AED">AED (د.إ Dirham)</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold">Account Status</label>
+                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as 'active' | 'inactive' })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400">
+                  <option value="active">Active Client</option>
+                  <option value="inactive">Inactive / Deactivated</option>
                 </select>
               </div>
             </div>
@@ -98,7 +103,7 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
             </div>
             <div className="pt-4 border-t border-neutral-200 dark:border-[#334155] flex justify-end gap-2">
               <button type="button" onClick={onClose} className="px-3.5 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-xs font-semibold">Cancel</button>
-              <button type="submit" disabled={isPending} className="flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50">
+              <button type="submit" disabled={isPending} className="flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50 cursor-pointer">
                 {isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                 <span>{client ? 'Save Profile' : 'Create Client'}</span>
               </button>
@@ -107,6 +112,18 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
         </div>
       </div>
     </div>
+  );
+}
+
+export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerProps) {
+  if (!isOpen) return null;
+
+  return (
+    <ClientFormDrawerContent
+      key={client?._id || 'new-client'}
+      onClose={onClose}
+      client={client}
+    />
   );
 }
 

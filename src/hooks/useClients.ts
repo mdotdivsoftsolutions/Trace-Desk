@@ -2,7 +2,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client';
 import { queryKeys } from './query-keys';
 import { CreateClientInput, UpdateClientInput } from '@/lib/validations';
-import { ClientType, PaginatedResponse } from '@/types';
+import { ClientType, PaginatedResponse, ProjectType, InvoiceType } from '@/types';
+
+export interface ClientFinancialSummary {
+  totalBilled: number;
+  totalPaid: number;
+  outstanding: number;
+}
 
 export function useClients(filters?: {
   status?: string;
@@ -33,7 +39,7 @@ export function useClient(id: string | undefined | null) {
     queryKey: queryKeys.clients.detail(id || ''),
     queryFn: async () => {
       if (!id) return null;
-      return apiClient.get<ClientType & { projects: any[]; invoices: any[]; financialSummary: any }>(
+      return apiClient.get<ClientType & { projects: ProjectType[]; invoices: InvoiceType[]; financialSummary: ClientFinancialSummary }>(
         `/clients/${id}`
       );
     },
@@ -68,13 +74,61 @@ export function useUpdateClient() {
   });
 }
 
+export function useToggleClientStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => apiClient.patch<ClientType>(`/clients/${id}`, { action: 'toggleStatus' }),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.clients.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.clients.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
+    },
+  });
+}
+
+export function useDeactivateClient() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => apiClient.patch<ClientType>(`/clients/${id}`, { action: 'deactivate' }),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.clients.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.clients.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
+    },
+  });
+}
+
+export function useReactivateClient() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => apiClient.patch<ClientType>(`/clients/${id}`, { action: 'reactivate' }),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.clients.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.clients.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
+    },
+  });
+}
+
 export function useDeleteClient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => apiClient.delete<{ id: string }>(`/clients/${id}`),
-    onSuccess: () => {
+    mutationFn: (param: { id: string; soft?: boolean } | string) => {
+      const clientId = typeof param === 'string' ? param : param.id;
+      const isSoft = typeof param === 'string' ? false : (param.soft ?? true);
+      return apiClient.delete<{ id: string }>(`/clients/${clientId}${isSoft ? '?soft=true' : ''}`);
+    },
+    onSuccess: (_data, variables) => {
+      const id = typeof variables === 'string' ? variables : variables.id;
       queryClient.invalidateQueries({ queryKey: queryKeys.clients.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.clients.detail(id) });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },

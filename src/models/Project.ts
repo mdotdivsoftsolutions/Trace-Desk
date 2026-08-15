@@ -33,6 +33,7 @@ export interface IProject extends Document {
   integrationNotes?: string;
   techStack?: string[];
   progressPercentage: number;
+  isPinned?: boolean;
   startDate?: Date;
   targetDeadline?: Date;
   createdAt: Date;
@@ -91,6 +92,7 @@ const ProjectSchema: Schema = new Schema(
     integrationNotes: { type: String },
     techStack: [{ type: String }],
     progressPercentage: { type: Number, default: 0, min: 0, max: 100 },
+    isPinned: { type: Boolean, default: false },
     startDate: { type: Date },
     targetDeadline: { type: Date },
   },
@@ -102,6 +104,11 @@ const ProjectSchema: Schema = new Schema(
 // Indexes
 ProjectSchema.index({ clientId: 1 });
 ProjectSchema.index({ status: 1 });
+ProjectSchema.index({ isPinned: -1, createdAt: -1 });
+
+if (mongoose.models.Project && !mongoose.models.Project.schema.path('isPinned')) {
+  delete (mongoose.models as Record<string, unknown>).Project;
+}
 
 const Project: Model<IProject> =
   mongoose.models.Project || mongoose.model<IProject>('Project', ProjectSchema);

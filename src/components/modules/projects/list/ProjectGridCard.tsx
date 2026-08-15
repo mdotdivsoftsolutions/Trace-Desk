@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, User, ArrowRight, GitBranch, ExternalLink } from 'lucide-react';
+import { User, ArrowRight, GitBranch, ExternalLink, Pin } from 'lucide-react';
 import { ProjectWithClient } from '@/types';
-import { formatCurrency, formatDate } from '@/lib/formatters';
+import { formatCurrency } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
+import { useTogglePinProject } from '@/hooks/useProjects';
 
 interface ProjectGridCardProps {
   project: ProjectWithClient;
@@ -19,18 +20,56 @@ const statusBadgeStyles: Record<string, string> = {
 };
 
 export function ProjectGridCard({ project }: ProjectGridCardProps) {
-  const clientName = typeof project.clientId === 'object' ? (project.clientId as any)?.name : 'Client';
+  const clientName =
+    typeof project.clientId === 'object' && project.clientId !== null && 'name' in project.clientId
+      ? (project.clientId as { name: string }).name
+      : 'Client';
+  const togglePinMutation = useTogglePinProject();
+
+  const handleTogglePin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    togglePinMutation.mutate(project._id);
+  };
 
   return (
-    <div className="p-5 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all flex flex-col justify-between space-y-4 group">
+    <div
+      className={cn(
+        'p-5 rounded-lg bg-white dark:bg-[#1E293B] border shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all flex flex-col justify-between space-y-4 group relative',
+        project.isPinned
+          ? 'border-amber-500/40 dark:border-amber-500/40 ring-1 ring-amber-500/20 dark:ring-amber-500/20'
+          : 'border-neutral-200 dark:border-[#334155]'
+      )}
+    >
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-2">
-          <Link href={`/projects/${project._id}`} className="font-heading font-bold text-base text-neutral-900 dark:text-white group-hover:underline block">
-            {project.title}
-          </Link>
-          <span className={cn('px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider flex-shrink-0', statusBadgeStyles[project.status] || 'bg-neutral-500/10 text-neutral-400')}>
-            {project.status.replace('_', ' ')}
-          </span>
+          <div className="flex-1 min-w-0 pr-2">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Link href={`/projects/${project._id}`} className="font-heading font-bold text-base text-neutral-900 dark:text-white group-hover:underline block truncate">
+                {project.title}
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button
+              type="button"
+              onClick={handleTogglePin}
+              disabled={togglePinMutation.isPending}
+              className={cn(
+                'relative z-10 p-1.5 rounded-md text-xs transition-all flex items-center justify-center cursor-pointer',
+                project.isPinned
+                  ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 hover:bg-amber-500/30 border border-amber-500/40 shadow-xs'
+                  : 'text-neutral-400 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-amber-500/10'
+              )}
+              title={project.isPinned ? 'Unpin project' : 'Pin project to top'}
+              aria-label={project.isPinned ? 'Unpin project' : 'Pin project to top'}
+            >
+              <Pin className={cn('w-3.5 h-3.5 transition-transform', project.isPinned ? 'fill-amber-500 text-amber-500 rotate-45' : 'hover:scale-110')} />
+            </button>
+            <span className={cn('px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider flex-shrink-0', statusBadgeStyles[project.status] || 'bg-neutral-500/10 text-neutral-400')}>
+              {project.status.replace('_', ' ')}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400">

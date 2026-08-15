@@ -2,7 +2,7 @@
 
 import React, { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { useClient, useDeleteClient } from '@/hooks/useClients';
+import { useClient, useDeleteClient, useDeactivateClient, useReactivateClient } from '@/hooks/useClients';
 import { useProjects } from '@/hooks/useProjects';
 import { useInvoices } from '@/hooks/useInvoices';
 import { ProjectType, InvoiceType } from '@/types';
@@ -25,11 +25,16 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   const [activeTab, setActiveTab] = useState<ClientTab>('projects');
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isNewProjectDrawerOpen, setIsNewProjectDrawerOpen] = useState(false);
+  const [isDeactivateDialogOpen, setIsDeactivateDialogOpen] = useState(false);
+  const [isReactivateDialogOpen, setIsReactivateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const { data: client, isLoading } = useClient(id);
   const { data: projectsData } = useProjects({ clientId: id });
   const { data: invoicesData } = useInvoices({ clientId: id });
+
+  const deactivateMutation = useDeactivateClient();
+  const reactivateMutation = useReactivateClient();
   const deleteClientMutation = useDeleteClient();
 
   if (isLoading) {
@@ -63,6 +68,8 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
         client={client}
         onEdit={() => setIsEditDrawerOpen(true)}
         onAddProject={() => setIsNewProjectDrawerOpen(true)}
+        onDeactivate={() => setIsDeactivateDialogOpen(true)}
+        onReactivate={() => setIsReactivateDialogOpen(true)}
         onDelete={() => setIsDeleteDialogOpen(true)}
       />
       <ClientFinancialKpis
@@ -92,14 +99,49 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
 
       <ClientFormDrawer isOpen={isEditDrawerOpen} onClose={() => setIsEditDrawerOpen(false)} client={client} />
       <ProjectFormDrawer isOpen={isNewProjectDrawerOpen} onClose={() => setIsNewProjectDrawerOpen(false)} preselectedClientId={id} />
+
+      {/* Deactivate Dialog */}
+      <ConfirmDialog
+        isOpen={isDeactivateDialogOpen}
+        title="Deactivate Client Account"
+        description={`Are you sure you want to deactivate "${client.name}"? All existing projects, invoices, and financial records will be preserved safely.`}
+        confirmText="Deactivate Client"
+        variant="warning"
+        isLoading={deactivateMutation.isPending}
+        onConfirm={async () => {
+          await deactivateMutation.mutateAsync(id);
+          setIsDeactivateDialogOpen(false);
+        }}
+        onCancel={() => setIsDeactivateDialogOpen(false)}
+      />
+
+      {/* Reactivate Dialog */}
+      <ConfirmDialog
+        isOpen={isReactivateDialogOpen}
+        title="Reactivate Client Account"
+        description={`Reactivate "${client.name}" as an active client account in your agency directory?`}
+        confirmText="Reactivate Client"
+        variant="info"
+        isLoading={reactivateMutation.isPending}
+        onConfirm={async () => {
+          await reactivateMutation.mutateAsync(id);
+          setIsReactivateDialogOpen(false);
+        }}
+        onCancel={() => setIsReactivateDialogOpen(false)}
+      />
+
+      {/* Permanent Delete Dialog */}
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}
-        title="Delete Client Account"
-        description={`Are you sure you want to delete ${client.name}? All linked records will be affected.`}
-        confirmText="Delete Client"
+        title="Permanently Delete Client Account"
+        description={`Are you sure you want to permanently delete "${client.name}"? This action cannot be undone and will permanently remove this record.`}
+        confirmText="Delete Permanently"
         variant="danger"
         isLoading={deleteClientMutation.isPending}
-        onConfirm={async () => { await deleteClientMutation.mutateAsync(id); router.push('/clients'); }}
+        onConfirm={async () => {
+          await deleteClientMutation.mutateAsync({ id, soft: false });
+          router.push('/clients');
+        }}
         onCancel={() => setIsDeleteDialogOpen(false)}
       />
     </div>

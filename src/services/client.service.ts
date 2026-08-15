@@ -126,6 +126,28 @@ export class ClientService {
     return Client.findByIdAndUpdate(id, data, { new: true });
   }
 
+  static async toggleClientStatus(id: string): Promise<IClient | null> {
+    await dbConnect();
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    const client = await Client.findById(id);
+    if (!client) return null;
+    client.status = client.status === 'active' ? 'inactive' : 'active';
+    await client.save();
+    return client;
+  }
+
+  static async deactivateClient(id: string): Promise<IClient | null> {
+    await dbConnect();
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    return Client.findByIdAndUpdate(id, { status: 'inactive' }, { new: true });
+  }
+
+  static async reactivateClient(id: string): Promise<IClient | null> {
+    await dbConnect();
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    return Client.findByIdAndUpdate(id, { status: 'active' }, { new: true });
+  }
+
   static async deleteClient(id: string): Promise<boolean> {
     await dbConnect();
     const res = await Client.findByIdAndDelete(id);

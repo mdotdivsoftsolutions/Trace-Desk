@@ -68,6 +68,7 @@ export interface ProjectType {
   integrationNotes?: string;
   techStack?: string[];
   progressPercentage: number;
+  isPinned?: boolean;
   startDate?: string;
   targetDeadline?: string | Date;
   milestones?: MilestoneType[];
@@ -196,7 +197,7 @@ export interface DashboardMetrics {
     overdueReceivables: number;
     pendingInvoicesCount?: number;
     readyToInvoiceAmount?: number;
-    readyToInvoiceMilestones?: any[];
+    readyToInvoiceMilestones?: MilestoneType[];
     currency: string;
   };
   projects: {
@@ -207,16 +208,16 @@ export interface DashboardMetrics {
   };
   tasks: {
     totalOpenTasks: number;
-    overdueTasks: any[];
-    upcomingTasks48h: any[];
+    overdueTasks: TaskType[];
+    upcomingTasks48h: TaskType[];
   };
   milestones?: {
-    unbilledMilestones: any[];
+    unbilledMilestones: MilestoneType[];
     unbilledTotalAmount: number;
   };
   recentActivities?: {
-    recentPayments: any[];
-    recentProjects: any[];
+    recentPayments: PaymentType[];
+    recentProjects: ProjectType[];
   };
 }
 

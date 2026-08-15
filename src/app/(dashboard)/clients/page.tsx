@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useClients, useDeleteClient } from '@/hooks/useClients';
+import { useClients, useDeleteClient, useDeactivateClient, useReactivateClient } from '@/hooks/useClients';
 import { useDebounce } from '@/hooks/useDebounce';
 import { ClientType } from '@/types';
 import { DatePreset } from '@/components/common/DateRangeFilter';
@@ -24,6 +24,8 @@ export default function ClientsPage() {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<ClientType | null>(null);
+  const [deactivatingClient, setDeactivatingClient] = useState<ClientType | null>(null);
+  const [reactivatingClient, setReactivatingClient] = useState<ClientType | null>(null);
   const [deletingClient, setDeletingClient] = useState<ClientType | null>(null);
 
   const { data, isLoading, isFetching } = useClients({
@@ -35,11 +37,25 @@ export default function ClientsPage() {
     limit,
   });
 
+  const deactivateMutation = useDeactivateClient();
+  const reactivateMutation = useReactivateClient();
   const deleteClientMutation = useDeleteClient();
+
+  const handleConfirmDeactivate = async () => {
+    if (!deactivatingClient) return;
+    await deactivateMutation.mutateAsync(deactivatingClient._id);
+    setDeactivatingClient(null);
+  };
+
+  const handleConfirmReactivate = async () => {
+    if (!reactivatingClient) return;
+    await reactivateMutation.mutateAsync(reactivatingClient._id);
+    setReactivatingClient(null);
+  };
 
   const handleConfirmDelete = async () => {
     if (!deletingClient) return;
-    await deleteClientMutation.mutateAsync(deletingClient._id);
+    await deleteClientMutation.mutateAsync({ id: deletingClient._id, soft: false });
     setDeletingClient(null);
   };
 
@@ -74,6 +90,8 @@ export default function ClientsPage() {
         clients={data?.items || []}
         isLoading={isTableLoading}
         onEdit={(client) => { setEditingClient(client); setIsDrawerOpen(true); }}
+        onDeactivate={(client) => setDeactivatingClient(client)}
+        onReactivate={(client) => setReactivatingClient(client)}
         onDelete={(client) => setDeletingClient(client)}
         onAddNew={() => { setEditingClient(null); setIsDrawerOpen(true); }}
       />
@@ -91,11 +109,36 @@ export default function ClientsPage() {
         client={editingClient}
       />
 
+      {/* Deactivate (Soft-Delete) Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={!!deactivatingClient}
+        title="Deactivate Client Account"
+        description={`Are you sure you want to deactivate "${deactivatingClient?.name}"? All associated historical projects, invoices, and payment records will remain safely preserved in your workspace.`}
+        confirmText="Deactivate Client"
+        variant="warning"
+        isLoading={deactivateMutation.isPending}
+        onConfirm={handleConfirmDeactivate}
+        onCancel={() => setDeactivatingClient(null)}
+      />
+
+      {/* Reactivate Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={!!reactivatingClient}
+        title="Reactivate Client Account"
+        description={`Reactivate "${reactivatingClient?.name}" as an active client account?`}
+        confirmText="Reactivate Client"
+        variant="info"
+        isLoading={reactivateMutation.isPending}
+        onConfirm={handleConfirmReactivate}
+        onCancel={() => setReactivatingClient(null)}
+      />
+
+      {/* Permanent Delete Dialog */}
       <ConfirmDialog
         isOpen={!!deletingClient}
-        title="Delete Client Account"
-        description={`Are you sure you want to delete "${deletingClient?.name}"? All associated historical data will be removed.`}
-        confirmText="Delete Client"
+        title="Permanently Delete Client"
+        description={`Are you sure you want to permanently delete "${deletingClient?.name}"? This action cannot be undone.`}
+        confirmText="Delete Permanently"
         variant="danger"
         isLoading={deleteClientMutation.isPending}
         onConfirm={handleConfirmDelete}

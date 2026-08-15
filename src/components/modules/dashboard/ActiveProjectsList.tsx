@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { FolderKanban, ChevronRight, Layers, Plus } from 'lucide-react';
+import { FolderKanban, ChevronRight, Layers, Plus, Pin } from 'lucide-react';
 import { formatDate } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 import { ProjectWithClient } from '@/types';
@@ -57,15 +57,30 @@ export function ActiveProjectsList({ projects, isLoading }: ActiveProjectsListPr
       ) : (
         <div className="space-y-3">
           {projects.map((project) => {
-            const clientName = typeof project.clientId === 'object' ? (project.clientId as any)?.name : 'Client';
+            const clientName =
+              typeof project.clientId === 'object' && project.clientId !== null && 'name' in project.clientId
+                ? (project.clientId as { name: string }).name
+                : 'Client';
             return (
-              <div key={project._id} className="p-4 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group">
+              <div
+                key={project._id}
+                className={cn(
+                  'p-4 rounded-lg bg-white dark:bg-[#1E293B] border shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group',
+                  project.isPinned ? 'border-amber-500/40 ring-1 ring-amber-500/20' : 'border-neutral-200 dark:border-[#334155]'
+                )}
+              >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <Link href={`/projects/${project._id}`} className="font-heading font-bold text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors text-sm">
                         {project.title}
                       </Link>
+                      {project.isPinned && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 uppercase tracking-wider">
+                          <Pin className="w-2.5 h-2.5 fill-amber-500 rotate-45" />
+                          <span>Pinned</span>
+                        </span>
+                      )}
                       <span className={cn('px-2 py-0.5 text-[10px] font-bold rounded border uppercase tracking-wider', statusColors[project.status] || 'bg-neutral-500/10 text-neutral-400')}>
                         {project.status.replace('_', ' ')}
                       </span>

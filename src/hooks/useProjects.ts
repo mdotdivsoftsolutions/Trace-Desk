@@ -2,7 +2,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client';
 import { queryKeys } from './query-keys';
 import { CreateProjectInput, UpdateProjectInput } from '@/lib/validations';
-import { ProjectType, PaginatedResponse } from '@/types';
+import { ProjectType, PaginatedResponse, MilestoneType, TaskType, InvoiceType } from '@/types';
+
+export interface ProjectStatsSummary {
+  totalTasks: number;
+  completedTasks: number;
+  completionPercentage: number;
+}
 
 export function useProjects(filters?: {
   clientId?: string;
@@ -35,9 +41,14 @@ export function useProject(id: string | undefined | null) {
     queryKey: queryKeys.projects.detail(id || ''),
     queryFn: async () => {
       if (!id) return null;
-      return apiClient.get<ProjectType & { milestones: any[]; tasks: any[]; invoices: any[]; stats: any }>(
-        `/projects/${id}`
-      );
+      return apiClient.get<
+        ProjectType & {
+          milestones: MilestoneType[];
+          tasks: TaskType[];
+          invoices: InvoiceType[];
+          stats: ProjectStatsSummary;
+        }
+      >(`/projects/${id}`);
     },
     enabled: !!id,
   });
@@ -67,6 +78,19 @@ export function useUpdateProject() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(variables.id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
+    },
+  });
+}
+
+export function useTogglePinProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => apiClient.patch<ProjectType>(`/projects/${id}`, { action: 'togglePin' }),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(id) });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });

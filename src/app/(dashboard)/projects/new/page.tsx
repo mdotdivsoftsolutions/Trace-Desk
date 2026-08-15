@@ -25,6 +25,7 @@ export default function NewProjectPage() {
   const [clientId, setClientId] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<ProjectType['status']>('in_progress');
+  const [isPinned, setIsPinned] = useState(false);
   const [targetDeadline, setTargetDeadline] = useState('');
   const [techStack, setTechStack] = useState<string[]>(['Next.js', 'TypeScript', 'Tailwind']);
   const [techInput, setTechInput] = useState('');
@@ -56,6 +57,7 @@ export default function NewProjectPage() {
       clientId,
       description: description || undefined,
       status,
+      isPinned,
       budgetType: 'fixed' as const,
       currency: 'INR',
       links,
@@ -122,6 +124,8 @@ export default function NewProjectPage() {
           onDeadlineChange={setTargetDeadline}
           description={description}
           onDescriptionChange={setDescription}
+          isPinned={isPinned}
+          onIsPinnedChange={setIsPinned}
         />
 
         {/* Rich-text description */}

@@ -41,6 +41,34 @@ export async function PUT(
   }
 }
 
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const body = await req.json().catch(() => ({}));
+
+    if (body.action === 'togglePin') {
+      const updated = await ProjectService.togglePin(id);
+      if (!updated) {
+        return apiError('Project not found', 404);
+      }
+      return apiSuccess(updated, `Project ${updated.isPinned ? 'pinned' : 'unpinned'} successfully`);
+    }
+
+    const validatedData = updateProjectSchema.parse(body);
+    const updated = await ProjectService.updateProject(id, validatedData);
+    if (!updated) {
+      return apiError('Project not found', 404);
+    }
+
+    return apiSuccess(updated, 'Project updated successfully');
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
