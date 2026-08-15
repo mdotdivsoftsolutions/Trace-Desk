@@ -22,8 +22,8 @@ export default function LoginPage() {
       await login({ email, password });
       router.push('/');
     } catch (err) {
-      const error = err as { response?: { data?: { message?: string } }; message?: string };
-      setFormError(error.response?.data?.message || error.message || 'Login failed. Please verify your credentials.');
+      const error = err as { response?: { data?: { error?: string; message?: string } }; message?: string };
+      setFormError(error.response?.data?.error || error.response?.data?.message || error.message || 'Login failed. Please verify your credentials.');
     }
   };
 
