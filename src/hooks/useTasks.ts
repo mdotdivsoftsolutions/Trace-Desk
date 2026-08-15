@@ -1,17 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client';
 import { queryKeys } from './query-keys';
-import { CreateTaskInput, UpdateTaskInput } from '@/lib/validations';
-import { TaskType } from '@/types';
+import { TaskType, TaskStatus } from '@/types';
 
 export function useTasks(
   projectId: string | undefined | null,
   filters?: { milestoneId?: string; status?: string; priority?: string }
 ) {
   return useQuery({
-    queryKey: projectId
-      ? queryKeys.tasks.byProject(projectId, filters)
-      : queryKeys.tasks.lists(),
+    queryKey: projectId ? queryKeys.tasks.byProject(projectId, filters) : queryKeys.tasks.lists(),
     queryFn: async () => {
       if (!projectId) return [];
       const params = new URLSearchParams();
@@ -36,86 +33,48 @@ export function useTask(id: string | undefined | null) {
   });
 }
 
-export function useCreateTask(projectId: string) {
+export function useCreateTask(defaultProjectId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateTaskInput) =>
-      apiClient.post<TaskType>(`/projects/${projectId}/tasks`, data),
-    onSuccess: () => {
+    mutationFn: ({ projectId, ...data }: { projectId?: string; [key: string]: any }) => {
+      const pid = projectId || defaultProjectId;
+      return apiClient.post<TaskType>(`/projects/${pid}/tasks`, data);
+    },
+    onSuccess: (_data, variables) => {
+      const pid = variables.projectId || defaultProjectId;
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+      if (pid) queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(pid) });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });
 }
 
-export function useUpdateTask(projectId?: string) {
+export function useUpdateTask(defaultProjectId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateTaskInput }) =>
+    mutationFn: ({ id, projectId, data }: { id: string; projectId?: string; data: any }) =>
       apiClient.patch<TaskType>(`/tasks/${id}`, data),
     onSuccess: (_data, variables) => {
+      const pid = variables.projectId || defaultProjectId;
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.detail(variables.id) });
-      if (projectId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
-      }
+      if (pid) queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(pid) });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });
 }
 
-/**
- * Optimistic Task Status Transition Hook for Kanban drag-and-drop.
- * Immediately updates the UI cache and rolls back if the network request fails.
- */
 export function useUpdateTaskStatus(projectId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      status,
-    }: {
-      id: string;
-      status: 'todo' | 'in_progress' | 'review' | 'done';
-    }) => apiClient.patch<TaskType>(`/tasks/${id}`, { status }),
-
-    onMutate: async ({ id, status }) => {
-      // Cancel outgoing refetches so they don't overwrite optimistic update
-      await queryClient.cancelQueries({ queryKey: queryKeys.tasks.all });
-
-      // Snapshot previous cache state
-      const targetQueryKey = projectId
-        ? queryKeys.tasks.byProject(projectId)
-        : queryKeys.tasks.lists();
-
-      const previousTasks = queryClient.getQueryData<TaskType[]>(targetQueryKey);
-
-      // Optimistically update task status in any active task list cache
-      queryClient.setQueriesData<TaskType[]>({ queryKey: queryKeys.tasks.all }, (old) => {
-        if (!old) return [];
-        return old.map((t) => (t._id === id ? { ...t, status } : t));
-      });
-
-      return { previousTasks, targetQueryKey };
-    },
-
-    onError: (_err, _variables, context) => {
-      // Rollback to previous state if mutation fails
-      if (context?.previousTasks && context.targetQueryKey) {
-        queryClient.setQueryData(context.targetQueryKey, context.previousTasks);
-      }
-    },
-
-    onSettled: () => {
-      // Invalidate queries to guarantee server sync and progress recalculation
+    mutationFn: ({ id, status }: { id: string; status: TaskStatus; projectId?: string }) =>
+      apiClient.patch<TaskType>(`/tasks/${id}`, { status }),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
-      if (projectId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
-      }
+      if (projectId) queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });
@@ -128,9 +87,7 @@ export function useDeleteTask(projectId?: string) {
     mutationFn: (id: string) => apiClient.delete<{ id: string }>(`/tasks/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
-      if (projectId) {
-        queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
-      }
+      if (projectId) queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });

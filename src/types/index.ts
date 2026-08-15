@@ -18,14 +18,17 @@ export interface ClientType {
   _id: string;
   name: string;
   companyName?: string;
+  company?: string;
   email: string;
   phone?: string;
+  address?: string;
+  taxId?: string;
   country?: string;
-  currency: CurrencyCode;
+  currency?: CurrencyCode;
   notes?: string;
   status: 'active' | 'inactive';
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ProjectLink {
@@ -37,9 +40,13 @@ export interface ProjectLink {
 
 export interface ProjectCredential {
   _id?: string;
-  serviceName: string;
+  serviceName?: string;
+  title?: string;
   accountId?: string;
+  username?: string;
   accessKeyOrUrl?: string;
+  password?: string;
+  url?: string;
   environment?: string;
   notes?: string;
 }
@@ -49,11 +56,12 @@ export interface ProjectType {
   clientId: string | ClientType;
   title: string;
   description?: string;
-  status: 'discovery' | 'in_progress' | 'review' | 'completed' | 'on_hold';
-  budgetType: 'fixed' | 'hourly';
+  status: 'discovery' | 'in_progress' | 'review' | 'completed' | 'on_hold' | 'cancelled';
+  budgetType?: 'fixed' | 'hourly';
   totalBudget?: number;
-  currency: string;
+  currency?: string;
   repoUrl?: string;
+  githubRepo?: string;
   liveUrl?: string;
   links?: ProjectLink[];
   credentials?: ProjectCredential[];
@@ -61,10 +69,10 @@ export interface ProjectType {
   techStack?: string[];
   progressPercentage: number;
   startDate?: string;
-  targetDeadline?: string;
+  targetDeadline?: string | Date;
   milestones?: MilestoneType[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface MilestoneType {
@@ -73,11 +81,13 @@ export interface MilestoneType {
   title: string;
   description?: string;
   allocatedAmount?: number;
-  order: number;
-  status: 'pending' | 'in_progress' | 'completed' | 'invoiced';
-  dueDate?: string;
-  createdAt: string;
-  updatedAt: string;
+  amount: number;
+  order?: number;
+  status: 'pending' | 'in_progress' | 'completed' | 'invoiced' | 'cancelled';
+  dueDate?: string | Date;
+  invoiceId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface TaskType {
@@ -86,20 +96,21 @@ export interface TaskType {
   milestoneId?: string | MilestoneType;
   title: string;
   description?: string;
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: 'low' | 'medium' | 'high' | 'critical' | 'urgent';
   status: 'todo' | 'in_progress' | 'review' | 'done';
   estimatedHours?: number;
-  loggedHours: number;
-  dueDate?: string;
-  createdAt: string;
-  updatedAt: string;
+  loggedHours?: number;
+  dueDate?: string | Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface InvoiceItemType {
   description: string;
   milestoneId?: string;
   quantity: number;
-  unitPrice: number;
+  unitPrice?: number;
+  rate: number;
   amount: number;
 }
 
@@ -110,40 +121,42 @@ export interface InvoiceType {
   projectId?: string | ProjectType;
   items: InvoiceItemType[];
   subtotal: number;
-  taxRate?: number;
-  taxAmount?: number;
+  taxRate: number;
+  taxAmount: number;
   discountAmount?: number;
-  discount?: number;
+  discount: number;
   totalAmount: number;
-  paidAmount: number;
+  paidAmount?: number;
   amountPaid?: number;
   balanceDue: number;
-  currency: string;
+  currency?: string;
   status: 'draft' | 'sent' | 'partially_paid' | 'paid' | 'overdue' | 'cancelled';
-  issueDate: string;
-  dueDate: string;
+  issueDate: string | Date;
+  dueDate: string | Date;
   paymentTerms?: string;
   notes?: string;
   payments?: PaymentType[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface PaymentType {
   _id: string;
   invoiceId: string | InvoiceType;
-  clientId: string | ClientType;
+  clientId?: string | ClientType;
   amount: number;
-  paymentMethod: 'bank_transfer' | 'stripe' | 'upi' | 'paypal' | 'wire' | 'cash';
+  paymentMethod: 'bank_transfer' | 'stripe' | 'upi' | 'paypal' | 'wire' | 'cash' | 'credit_card' | 'other';
   transactionReference?: string;
-  paymentDate: string;
+  referenceNumber?: string;
+  paymentDate: string | Date;
   notes?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface BankDetailsType {
   bankName?: string;
+  accountName?: string;
   accountNumber?: string;
   ifscCode?: string;
   upiId?: string;
@@ -156,12 +169,61 @@ export interface SettingsType {
   agencyEmail?: string;
   agencyPhone?: string;
   agencyAddress?: string;
+  taxNumber?: string;
   gstinOrTaxId?: string;
   defaultCurrency: CurrencyCode;
-  currencySymbol: string;
-  bankDetails?: BankDetailsType;
-  invoicePrefix: string;
+  currencySymbol?: string;
+  hourlyRate?: number;
   defaultTaxRate: number;
+  paymentTermsDays?: number;
+  invoicePrefix: string;
+  nextInvoiceNumber?: number;
+  invoiceNotes?: string;
+  bankDetails?: BankDetailsType;
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface DashboardMetrics {
+  financials: {
+    totalRevenue: number;
+    pendingReceivables: number;
+    overdueReceivables: number;
+    pendingInvoicesCount?: number;
+    readyToInvoiceAmount?: number;
+    readyToInvoiceMilestones?: any[];
+    currency: string;
+  };
+  projects: {
+    activeCount: number;
+    totalCount: number;
+    averageCompletionRate: number;
+    statusBreakdown?: Record<string, number>;
+  };
+  tasks: {
+    totalOpenTasks: number;
+    overdueTasks: any[];
+    upcomingTasks48h: any[];
+  };
+  milestones?: {
+    unbilledMilestones: any[];
+    unbilledTotalAmount: number;
+  };
+  recentActivities?: {
+    recentPayments: any[];
+    recentProjects: any[];
+  };
+}
+
+export type Client = ClientType;
+export type Project = ProjectType;
+export type ProjectWithClient = ProjectType;
+export type Milestone = MilestoneType;
+export type Task = TaskType;
+export type Invoice = InvoiceType;
+export type Payment = PaymentType;
+export type Settings = SettingsType;
+export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done';
+export type TaskPriority = 'low' | 'medium' | 'high' | 'critical' | 'urgent';
+export type MilestoneStatus = 'pending' | 'in_progress' | 'completed' | 'invoiced' | 'cancelled';
+export type PaymentMethod = 'bank_transfer' | 'stripe' | 'upi' | 'paypal' | 'wire' | 'cash' | 'credit_card' | 'other';

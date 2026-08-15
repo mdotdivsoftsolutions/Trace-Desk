@@ -1,287 +1,90 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Milestone, Edit2, Check, Loader2 } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import apiClient from '@/lib/api-client';
-import { queryKeys } from '@/hooks';
-import { CreateMilestoneInput } from '@/lib/validations';
-import { MilestoneType } from '@/types';
+import { X, Save, Loader2 } from 'lucide-react';
+import { Milestone, MilestoneStatus } from '@/types';
+import { useCreateMilestone, useUpdateMilestone } from '@/hooks';
 
 interface MilestoneFormDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   projectId: string;
-  milestone?: MilestoneType | null;
-  currency?: string;
+  milestone?: Milestone | null;
 }
 
-export function MilestoneFormDrawer({
-  isOpen,
-  onClose,
-  projectId,
-  milestone,
-  currency = 'INR',
-}: MilestoneFormDrawerProps) {
-  const isEditing = !!milestone;
-  const queryClient = useQueryClient();
-
-  const [formData, setFormData] = useState<CreateMilestoneInput>({
-    projectId,
-    title: '',
-    description: '',
-    allocatedAmount: 0,
-    order: 0,
-    status: 'pending',
-    dueDate: undefined,
-  });
-
-  const [error, setError] = useState<string | null>(null);
+export function MilestoneFormDrawer({ isOpen, onClose, projectId, milestone }: MilestoneFormDrawerProps) {
+  const [form, setForm] = useState({ title: '', description: '', amount: 0, status: 'pending' as MilestoneStatus, dueDate: '' });
+  const createMilestoneMutation = useCreateMilestone();
+  const updateMilestoneMutation = useUpdateMilestone();
 
   useEffect(() => {
     if (milestone) {
-      setFormData({
-        projectId,
-        title: milestone.title || '',
-        description: milestone.description || '',
-        allocatedAmount: milestone.allocatedAmount || 0,
-        order: milestone.order || 0,
-        status: milestone.status || 'pending',
-        dueDate: milestone.dueDate ? new Date(milestone.dueDate) : undefined,
-      });
+      setForm({ title: milestone.title, description: milestone.description || '', amount: milestone.amount, status: milestone.status, dueDate: milestone.dueDate ? new Date(milestone.dueDate).toISOString().split('T')[0] : '' });
     } else {
-      setFormData({
-        projectId,
-        title: '',
-        description: '',
-        allocatedAmount: 0,
-        order: 0,
-        status: 'pending',
-        dueDate: undefined,
-      });
+      setForm({ title: '', description: '', amount: 0, status: 'pending', dueDate: '' });
     }
-    setError(null);
-  }, [milestone, projectId, isOpen]);
-
-  const createMutation = useMutation({
-    mutationFn: (data: CreateMilestoneInput) =>
-      apiClient.post<MilestoneType>(`/projects/${projectId}/milestones`, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateMilestoneInput> }) =>
-      apiClient.put<MilestoneType>(`/milestones/${id}`, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.milestones.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
-    },
-  });
+  }, [milestone, isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    try {
-      if (isEditing && milestone) {
-        await updateMutation.mutateAsync({
-          id: milestone._id,
-          data: formData,
-        });
-      } else {
-        await createMutation.mutateAsync(formData);
-      }
-      onClose();
-    } catch (err: any) {
-      setError(err.message || 'Failed to save milestone');
+    const payload = { title: form.title, description: form.description || undefined, amount: form.amount, status: form.status, dueDate: form.dueDate ? new Date(form.dueDate) : undefined };
+    if (milestone) {
+      await updateMilestoneMutation.mutateAsync({ id: milestone._id, projectId, data: payload });
+    } else {
+      await createMilestoneMutation.mutateAsync({ projectId, ...payload });
     }
+    onClose();
   };
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isPending = createMilestoneMutation.isPending || updateMilestoneMutation.isPending;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden" role="dialog" aria-modal="true">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
-        onClick={() => {
-          if (!isLoading) onClose();
-        }}
-      />
-
-      {/* Slide-over Drawer Panel */}
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#1C2029] border-l border-neutral-200 dark:border-[#2D333F] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300">
-        {/* Header */}
-        <div className="p-5 border-b border-neutral-200 dark:border-[#2D333F] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#111318]/50">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] flex items-center justify-center font-bold">
-                {isEditing ? <Edit2 className="w-4 h-4" /> : <Milestone className="w-4 h-4" />}
-              </div>
-              <div>
-                <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white">
-                  {isEditing ? 'Edit Delivery Milestone' : 'Add Project Milestone'}
-                </h2>
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                  {isEditing
-                    ? 'Update delivery scope and allocated milestone payout'
-                    : 'Break project scope into billable delivery phases'}
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={isLoading}
-              className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+        <div className="w-screen max-w-md bg-white dark:bg-[#1E293B] border-l border-neutral-200 dark:border-[#334155] shadow-2xl flex flex-col">
+          <div className="h-16 px-6 border-b border-neutral-200 dark:border-[#334155] flex items-center justify-between">
+            <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white">{milestone ? 'Edit Milestone Phase' : 'Add Milestone Phase'}</h2>
+            <button onClick={onClose} className="p-1 rounded text-neutral-400 hover:text-neutral-900 dark:hover:text-white"><X className="w-5 h-5" /></button>
           </div>
-
-          {/* Form Scrollable Body */}
-          <form id="milestone-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
-            {error && (
-              <div className="p-3 rounded-md bg-rose-500/10 border border-rose-500/20 text-neutral-700 dark:text-neutral-300 dark:text-rose-400 text-xs font-semibold">
-                {error}
-              </div>
-            )}
-
-            {/* Title */}
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Milestone Title <span className="text-neutral-700 dark:text-neutral-300">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="e.g. Phase 1: Architecture & Auth Setup"
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-              />
+          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold">Phase Title *</label>
+              <input type="text" required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
             </div>
-
-            {/* Description */}
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Phase Deliverables & Scope
-              </label>
-              <textarea
-                rows={3}
-                value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="List key requirements for this milestone to be marked complete..."
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-              />
-            </div>
-
-            {/* Allocated Amount & Order */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Allocated Amount ({currency}) <span className="text-neutral-700 dark:text-neutral-300">*</span>
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  required
-                  value={formData.allocatedAmount || ''}
-                  onChange={(e) =>
-                    setFormData({ ...formData, allocatedAmount: parseFloat(e.target.value) || 0 })
-                  }
-                  placeholder="0.00"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 font-mono"
-                />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold">Amount (₹) *</label>
+                <input type="number" required min="0" value={form.amount || ''} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-mono" />
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Phase Sequence Order
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                  placeholder="0"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                />
-              </div>
-            </div>
-
-            {/* Status & Due Date */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Milestone Status
-                </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="in_progress">In Progress</option>
-                  <option value="completed">Completed (Ready to Invoice)</option>
-                  <option value="invoiced">Invoiced</option>
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold">Status</label>
+                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as MilestoneStatus })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs">
+                  <option value="pending">Pending</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option>
                 </select>
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Target Due Date
-                </label>
-                <input
-                  type="date"
-                  value={formData.dueDate ? new Date(formData.dueDate).toISOString().split('T')[0] : ''}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      dueDate: e.target.value ? new Date(e.target.value) : undefined,
-                    })
-                  }
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                />
-              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold">Target Delivery Date</label>
+              <input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold">Scope of Deliverable</label>
+              <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+            </div>
+            <div className="pt-4 border-t border-neutral-200 dark:border-[#334155] flex justify-end gap-2">
+              <button type="button" onClick={onClose} className="px-3.5 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-xs font-semibold">Cancel</button>
+              <button type="submit" disabled={isPending} className="flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold disabled:opacity-50">
+                {isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}<span>{milestone ? 'Save Milestone' : 'Create Milestone'}</span>
+              </button>
             </div>
           </form>
-
-          {/* Sticky Bottom Action Bar */}
-          <div className="p-4 border-t border-neutral-200 dark:border-[#2D333F] flex items-center justify-end gap-2.5 bg-neutral-50 dark:bg-[#111318]">
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={onClose}
-              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1C2029] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              form="milestone-form"
-              disabled={isLoading}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-sm transition-all disabled:opacity-50"
-            >
-              {isLoading ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Check className="w-3.5 h-3.5" />
-              )}
-              <span>{isEditing ? 'Save Changes' : 'Add Milestone'}</span>
-            </button>
-          </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
 export default MilestoneFormDrawer;

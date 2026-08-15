@@ -1,282 +1,108 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, UserPlus, Edit2, Check, Loader2 } from 'lucide-react';
-import { useCreateClient, useUpdateClient } from '@/hooks';
-import { CreateClientInput } from '@/lib/validations';
-import { RichTextEditor } from '@/components/common/RichTextEditor';
-import { ClientType } from '@/types';
+import { X, Save, Loader2 } from 'lucide-react';
+import { useCreateClient, useUpdateClient } from '@/hooks/useClients';
+import { Client, CurrencyCode } from '@/types';
 
 interface ClientFormDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  client?: ClientType | null;
+  client?: Client | null;
 }
 
 export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerProps) {
-  const isEditing = !!client;
+  const [form, setForm] = useState({
+    name: '', email: '', companyName: '', phone: '', country: 'India',
+    currency: 'INR' as CurrencyCode, status: 'active' as 'active' | 'inactive', notes: '',
+  });
   const createClientMutation = useCreateClient();
   const updateClientMutation = useUpdateClient();
 
-  const [formData, setFormData] = useState<CreateClientInput>({
-    name: '',
-    companyName: '',
-    email: '',
-    phone: '',
-    country: '',
-    currency: 'INR',
-    notes: '',
-    status: 'active',
-  });
-
-  const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     if (client) {
-      setFormData({
-        name: client.name || '',
-        companyName: client.companyName || '',
-        email: client.email || '',
-        phone: client.phone || '',
-        country: client.country || '',
-        currency: client.currency || 'INR',
-        notes: client.notes || '',
-        status: client.status || 'active',
+      setForm({
+        name: client.name, email: client.email, companyName: client.companyName || client.company || '',
+        phone: client.phone || '', country: client.country || 'India',
+        currency: (client.currency as CurrencyCode) || 'INR', status: client.status, notes: client.notes || '',
       });
     } else {
-      setFormData({
-        name: '',
-        companyName: '',
-        email: '',
-        phone: '',
-        country: '',
-        currency: 'INR',
-        notes: '',
-        status: 'active',
-      });
+      setForm({ name: '', email: '', companyName: '', phone: '', country: 'India', currency: 'INR', status: 'active', notes: '' });
     }
-    setError(null);
   }, [client, isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    try {
-      if (isEditing && client) {
-        await updateClientMutation.mutateAsync({
-          id: client._id,
-          data: formData,
-        });
-      } else {
-        await createClientMutation.mutateAsync(formData);
-      }
-      onClose();
-    } catch (err: any) {
-      setError(err.message || 'Failed to save client profile');
+    if (client) {
+      await updateClientMutation.mutateAsync({ id: client._id, data: form });
+    } else {
+      await createClientMutation.mutateAsync(form);
     }
+    onClose();
   };
 
-  const isLoading = createClientMutation.isPending || updateClientMutation.isPending;
+  const isPending = createClientMutation.isPending || updateClientMutation.isPending;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden" role="dialog" aria-modal="true">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
-        onClick={() => {
-          if (!isLoading) onClose();
-        }}
-      />
-
-      {/* Slide-over Drawer Panel */}
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#1C2029] border-l border-neutral-200 dark:border-[#2D333F] shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300">
-        {/* Header */}
-        <div className="p-5 border-b border-neutral-200 dark:border-[#2D333F] flex items-center justify-between gap-3 bg-neutral-50/50 dark:bg-[#111318]/50">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-neutral-100 dark:bg-[#252B37] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#2D333F] flex items-center justify-center font-bold">
-                {isEditing ? <Edit2 className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
-              </div>
-              <div>
-                <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white">
-                  {isEditing ? 'Edit Client Account' : 'New Client Account'}
-                </h2>
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                  {isEditing
-                    ? 'Update contact info, currency, and account status'
-                    : 'Add a new client to start tracking workspaces and billings'}
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={isLoading}
-              className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+        <div className="w-screen max-w-lg bg-white dark:bg-[#1E293B] border-l border-neutral-200 dark:border-[#334155] shadow-2xl flex flex-col">
+          <div className="h-16 px-6 border-b border-neutral-200 dark:border-[#334155] flex items-center justify-between">
+            <h2 className="font-heading text-base font-bold text-neutral-900 dark:text-white">{client ? 'Edit Client Profile' : 'Add New Client'}</h2>
+            <button onClick={onClose} className="p-1 rounded text-neutral-400 hover:text-neutral-900 dark:hover:text-white"><X className="w-5 h-5" /></button>
           </div>
-
-          {/* Form Scrollable Body */}
-          <form id="client-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
-            {error && (
-              <div className="p-3 rounded-md bg-rose-500/10 border border-rose-500/20 text-neutral-700 dark:text-neutral-300 dark:text-rose-400 text-xs font-semibold">
-                {error}
-              </div>
-            )}
-
-            {/* Name */}
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Contact / Representative Name <span className="text-neutral-700 dark:text-neutral-300">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g. Alex Morgan"
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-              />
-            </div>
-
-            {/* Company */}
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Company / Organization Name
-              </label>
-              <input
-                type="text"
-                value={formData.companyName || ''}
-                onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                placeholder="e.g. Apex Global Corp"
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-              />
-            </div>
-
-            {/* Email & Phone */}
+          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Email Address <span className="text-neutral-700 dark:text-neutral-300">*</span>
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="alex@apex.com"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                />
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold">Client Name *</label>
+                <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  value={formData.phone || ''}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+91 98765 43210"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                />
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold">Email Address *</label>
+                <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
               </div>
-            </div>
-
-            {/* Country & Currency */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Country / Region
-                </label>
-                <input
-                  type="text"
-                  value={formData.country || ''}
-                  onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                  placeholder="e.g. India / United States"
-                  className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                />
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold">Company Name</label>
+                <input type="text" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                  Default Billing Currency
-                </label>
-                <select
-                  value={formData.currency}
-                  onChange={(e) => setFormData({ ...formData, currency: e.target.value as any })}
-                  className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                >
-                  <option value="INR">INR (₹ - Indian Rupee)</option>
-                  <option value="USD">USD ($ - US Dollar)</option>
-                  <option value="EUR">EUR (€ - Euro)</option>
-                  <option value="AED">AED (AED - Dirham)</option>
-                  <option value="GBP">GBP (£ - British Pound)</option>
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold">Phone Number</label>
+                <input type="text" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold">Country</label>
+                <input type="text" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold">Currency</label>
+                <select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value as CurrencyCode })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs">
+                  <option value="INR">INR (₹ Indian Rupee)</option>
+                  <option value="USD">USD ($ US Dollar)</option>
+                  <option value="EUR">EUR (€ Euro)</option>
+                  <option value="GBP">GBP (£ Pound)</option>
+                  <option value="AED">AED (د.إ Dirham)</option>
                 </select>
               </div>
             </div>
-
-            {/* Status */}
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Account Status
-              </label>
-              <select
-                value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#111318] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-              >
-                <option value="active">Active Client</option>
-                <option value="inactive">Inactive / Archived</option>
-              </select>
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold">Account Notes</label>
+              <textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
             </div>
-
-            {/* Internal Account Notes (Rich Text) */}
-            <div>
-              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                Internal Account Notes
-              </label>
-              <RichTextEditor
-                value={formData.notes || ''}
-                onChange={(html) => setFormData({ ...formData, notes: html })}
-                placeholder="Key stakeholders, communication preferences, VAT numbers, payment terms..."
-                minHeight="120px"
-              />
+            <div className="pt-4 border-t border-neutral-200 dark:border-[#334155] flex justify-end gap-2">
+              <button type="button" onClick={onClose} className="px-3.5 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-xs font-semibold">Cancel</button>
+              <button type="submit" disabled={isPending} className="flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50">
+                {isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                <span>{client ? 'Save Profile' : 'Create Client'}</span>
+              </button>
             </div>
           </form>
-
-          {/* Sticky Bottom Action Bar */}
-          <div className="p-4 border-t border-neutral-200 dark:border-[#2D333F] flex items-center justify-end gap-2.5 bg-neutral-50 dark:bg-[#111318]">
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={onClose}
-              className="px-4 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-[#1C2029] text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors disabled:opacity-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              form="client-form"
-              disabled={isLoading}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 active:scale-95 font-bold text-xs shadow-sm transition-all disabled:opacity-50"
-            >
-              {isLoading ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Check className="w-3.5 h-3.5" />
-              )}
-              <span>{isEditing ? 'Save Changes' : 'Create Account'}</span>
-            </button>
-          </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
 export default ClientFormDrawer;

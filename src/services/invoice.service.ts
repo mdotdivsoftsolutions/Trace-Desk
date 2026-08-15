@@ -314,6 +314,7 @@ export class InvoiceService {
       projectId,
       items,
       taxRate: options.taxRate || 0,
+      discount: 0,
       discountAmount: 0,
       currency: (project as any)?.projectId?.currency || 'USD',
       status: 'draft',

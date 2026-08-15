@@ -39,8 +39,20 @@ export function useAuth() {
         return null;
       }
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
     retry: false,
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      const res = await axios.post('/api/auth/login', credentials);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      if (data?.data?.user) {
+        queryClient.setQueryData(['authUser'], data.data.user);
+      }
+    },
   });
 
   const logoutMutation = useMutation({
@@ -60,6 +72,9 @@ export function useAuth() {
     isAuthenticated: !!user,
     isSuperAdmin: user?.role === 'super_admin',
     isAdmin: user?.role === 'admin' || user?.role === 'super_admin',
+    login: loginMutation.mutateAsync,
+    isLoggingIn: loginMutation.isPending,
+    loginError: loginMutation.error,
     logout: logoutMutation.mutate,
     isLoggingOut: logoutMutation.isPending,
     refetch,
