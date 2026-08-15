@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { FolderPlus, ArrowLeft, Loader2 } from 'lucide-react';
 import { useClients } from '@/hooks/useClients';
 import { useCreateProject } from '@/hooks/useProjects';
+import { useCreateMilestone } from '@/hooks/useMilestones';
 import { ProjectBasicInfoFields } from '@/components/modules/projects/form/ProjectBasicInfoFields';
 import { ProjectTechStackFields } from '@/components/modules/projects/form/ProjectTechStackFields';
 import { ProjectLinksInputs, LinkDraft } from '@/components/modules/projects/form/ProjectLinksInputs';
@@ -17,6 +18,7 @@ export default function NewProjectPage() {
   const router = useRouter();
   const { data: clientsData, isLoading: isClientsLoading } = useClients({ limit: 100 });
   const createProjectMutation = useCreateProject();
+  const createMilestoneMutation = useCreateMilestone();
 
   const [title, setTitle] = useState('');
   const [clientId, setClientId] = useState('');
@@ -61,7 +63,21 @@ export default function NewProjectPage() {
       credentials: formattedCredentials,
     });
 
-    router.push(`/projects/${newProj._id}`);
+    if (milestones.length > 0) {
+      await Promise.all(
+        milestones.map((m) =>
+          createMilestoneMutation.mutateAsync({
+            projectId: newProj._id,
+            title: m.title,
+            allocatedAmount: Number(m.amount) || 0,
+            status: 'pending',
+            order: 0,
+          })
+        )
+      );
+    }
+
+    router.push(/projects/ + newProj._id);
   };
 
   return (
@@ -146,3 +162,4 @@ export default function NewProjectPage() {
     </form>
   );
 }
+

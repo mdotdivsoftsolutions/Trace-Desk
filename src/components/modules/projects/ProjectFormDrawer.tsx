@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
 import { useClients } from '@/hooks/useClients';
 import { useCreateProject, useUpdateProject } from '@/hooks/useProjects';
+import { useCreateMilestone } from '@/hooks/useMilestones';
 import { ProjectType } from '@/types';
 import { ProjectBasicInfoFields } from './form/ProjectBasicInfoFields';
 import { ProjectTechStackFields } from './form/ProjectTechStackFields';
@@ -52,18 +53,35 @@ export function ProjectFormDrawer({ isOpen, onClose, project, preselectedClientI
 
   if (!isOpen) return null;
 
+  const createMilestoneMutation = useCreateMilestone();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const totalBudget = milestones.reduce((sum, m) => sum + (Number(m.amount) || 0), 0);
     if (project) {
       await updateProjectMutation.mutateAsync({ id: project._id, data: { title, clientId, description, status: status as any, targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined, techStack } });
     } else {
-      await createProjectMutation.mutateAsync({ title, clientId, description, status: status as any, budgetType: 'fixed' as const, currency: 'INR', links: [], credentials: [], progressPercentage: 0, targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined, techStack, totalBudget });
+      const newProj = await createProjectMutation.mutateAsync({ title, clientId, description, status: status as any, budgetType: 'fixed' as const, currency: 'INR', links: [], credentials: [], progressPercentage: 0, targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined, techStack, totalBudget });
+      
+      // Create milestones if any exist
+      if (milestones.length > 0) {
+        await Promise.all(
+          milestones.map((m) =>
+            createMilestoneMutation.mutateAsync({
+              projectId: newProj._id,
+              title: m.title,
+              allocatedAmount: Number(m.amount) || 0,
+              status: 'pending',
+              order: 0,
+            })
+          )
+        );
+      }
     }
     onClose();
   };
 
-  const isPending = createProjectMutation.isPending || updateProjectMutation.isPending;
+  const isPending = createProjectMutation.isPending || updateProjectMutation.isPending || createMilestoneMutation.isPending;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -98,3 +116,4 @@ export function ProjectFormDrawer({ isOpen, onClose, project, preselectedClientI
 }
 
 export default ProjectFormDrawer;
+

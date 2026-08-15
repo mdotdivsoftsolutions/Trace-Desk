@@ -8,6 +8,7 @@ import { useClients } from '@/hooks/useClients';
 import { useProjects } from '@/hooks/useProjects';
 import { useSettings } from '@/hooks/useSettings';
 import { useCreateInvoice } from '@/hooks/useInvoices';
+import { useMilestones } from '@/hooks/useMilestones';
 import { InvoiceLineItemsEditor, InvoiceItemDraft } from '@/components/modules/invoices/form/InvoiceLineItemsEditor';
 import { InvoiceSummaryCard } from '@/components/modules/invoices/form/InvoiceSummaryCard';
 import { RichTextEditor } from '@/components/common/RichTextEditor';
@@ -18,6 +19,7 @@ function InvoiceFormContent() {
   const searchParams = useSearchParams();
   const preselectedProjectId = searchParams.get('projectId') || '';
   const preselectedClientId = searchParams.get('clientId') || '';
+  const preselectedMilestoneId = searchParams.get('milestoneId') || '';
 
   const { data: clientsData } = useClients({ limit: 100 });
   const { data: projectsData } = useProjects({ limit: 100 });
@@ -26,17 +28,34 @@ function InvoiceFormContent() {
 
   const [clientId, setClientId] = useState(preselectedClientId);
   const [projectId, setProjectId] = useState(preselectedProjectId);
+  const { data: milestonesData } = useMilestones(projectId);
+
   const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0]);
   const [dueDate, setDueDate] = useState('');
   const [taxRate, setTaxRate] = useState(18);
   const [discount, setDiscount] = useState(0);
   const [notes, setNotes] = useState('');
-  const [items, setItems] = useState<InvoiceItemDraft[]>([{ description: '', quantity: 1, rate: 0, amount: 0 }]);
+  const [items, setItems] = useState<any[]>([{ description: '', quantity: 1, rate: 0, amount: 0, milestoneId: '' }]);
 
   useEffect(() => {
     if (settings?.defaultTaxRate !== undefined) setTaxRate(settings.defaultTaxRate);
     if (settings?.invoiceNotes) setNotes(settings.invoiceNotes);
   }, [settings]);
+
+  useEffect(() => {
+    if (preselectedMilestoneId && milestonesData) {
+      const milestone = milestonesData.find((m: any) => m._id === preselectedMilestoneId);
+      if (milestone && items.length === 1 && items[0].description === '' && items[0].rate === 0) {
+        setItems([{
+          description: 'Milestone: ' + milestone.title,
+          quantity: 1,
+          rate: milestone.allocatedAmount || 0,
+          amount: milestone.allocatedAmount || 0,
+          milestoneId: milestone._id,
+        }]);
+      }
+    }
+  }, [preselectedMilestoneId, milestonesData]);
 
   const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
   const taxAmount = (subtotal * taxRate) / 100;
@@ -48,8 +67,8 @@ function InvoiceFormContent() {
       description: it.description,
       quantity: it.quantity,
       unitPrice: it.rate,
-      rate: it.rate,
       amount: it.quantity * it.rate,
+      milestoneId: it.milestoneId || undefined,
     }));
 
     const created = await createInvoiceMutation.mutateAsync({
@@ -65,7 +84,7 @@ function InvoiceFormContent() {
       dueDate: dueDate ? new Date(dueDate) : new Date(Date.now() + 14 * 86400000),
       notes: notes || undefined,
     });
-    router.push(`/invoices/${created._id}`);
+    router.push(/invoices/ + created._id);
   };
 
   return (
@@ -155,3 +174,5 @@ export default function NewInvoicePage() {
     </Suspense>
   );
 }
+
+

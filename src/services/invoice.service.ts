@@ -102,7 +102,20 @@ export class InvoiceService {
       status: data.status || 'draft',
     };
 
-    return Invoice.create(invoiceData);
+    const invoice = await Invoice.create(invoiceData);
+
+    const milestoneIds = calculations.items
+      .map((it: any) => it.milestoneId)
+      .filter(Boolean);
+
+    if (milestoneIds.length > 0) {
+      await Milestone.updateMany(
+        { _id: { $in: milestoneIds } },
+        { status: 'invoiced' }
+      );
+    }
+
+    return invoice;
   }
 
   /**
@@ -343,5 +356,6 @@ export class InvoiceService {
 }
 
 export default InvoiceService;
+
 
 

@@ -40,7 +40,35 @@ const MilestoneSchema: Schema = new Schema(
 MilestoneSchema.index({ projectId: 1, order: 1 });
 MilestoneSchema.index({ status: 1 });
 
-const Milestone: Model<IMilestone> =
-  mongoose.models.Milestone || mongoose.model<IMilestone>('Milestone', MilestoneSchema);
+MilestoneSchema.statics.recalculateProjectBudget = async function (projectId: mongoose.Types.ObjectId) {
+  const result = await this.aggregate([
+    { $match: { projectId: new mongoose.Types.ObjectId(projectId) } },
+    { $group: { _id: '$projectId', totalBudget: { $sum: '$allocatedAmount' } } }
+  ]);
+  
+  const totalBudget = result.length > 0 ? result[0].totalBudget : 0;
+  
+  await mongoose.model('Project').findByIdAndUpdate(projectId, { totalBudget });
+};
+
+MilestoneSchema.post('save', function (doc) {
+  (this.constructor as any).recalculateProjectBudget(doc.projectId);
+});
+
+MilestoneSchema.post('findOneAndDelete', function (doc) {
+  if (doc) {
+    (doc.constructor as any).recalculateProjectBudget(doc.projectId);
+  }
+});
+
+MilestoneSchema.post('findOneAndUpdate', function (doc) {
+  if (doc) {
+    (doc.constructor as any).recalculateProjectBudget(doc.projectId);
+  }
+});
+
+const Milestone =
+  mongoose.models.Milestone || mongoose.model('Milestone', MilestoneSchema);
 
 export default Milestone;
+
