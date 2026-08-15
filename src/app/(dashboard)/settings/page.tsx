@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Save, CheckCircle, Loader2, Pencil, X } from 'lucide-react';
+import { Settings as SettingsIcon, Save, CheckCircle, Loader2, Pencil, X } from 'lucide-react';
 import { useSettings, useUpdateSettings } from '@/hooks/useSettings';
 import { AgencyProfileTab } from '@/components/modules/settings/AgencyProfileTab';
 import { CurrencyFinanceTab } from '@/components/modules/settings/CurrencyFinanceTab';
@@ -71,11 +71,16 @@ export default function SettingsPage() {
   return (
     <form onSubmit={handleSave} className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Platform & Agency Settings
-          </h1>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs">
+              <SettingsIcon className="w-4 h-4" />
+            </span>
+            <h1 className="font-heading text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
+              Platform & Agency Settings
+            </h1>
+          </div>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Manage agency branding, currency, remittance details, and invoicing parameters.
           </p>
         </div>

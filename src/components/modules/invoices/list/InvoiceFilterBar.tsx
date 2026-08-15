@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Search, Plus } from 'lucide-react';
+import { Receipt, Search, Plus } from 'lucide-react';
 import { DateRangeFilter, DatePreset } from '@/components/common/DateRangeFilter';
 
 interface InvoiceFilterBarProps {
@@ -27,11 +27,16 @@ export function InvoiceFilterBar({
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Invoices & Billing Ledger
-          </h1>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs">
+              <Receipt className="w-4 h-4" />
+            </span>
+            <h1 className="font-heading text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
+              Invoices & Billing Ledger
+            </h1>
+          </div>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
             Track phase billings, tax computations, outstanding client balances, and payment records.
           </p>
         </div>
