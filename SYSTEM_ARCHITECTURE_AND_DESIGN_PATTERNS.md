@@ -1,5 +1,5 @@
 # SYSTEM ARCHITECTURE & DESIGN PATTERNS SPECIFICATION
-## Full-Stack Architecture Guide for SoloOps Management Hub
+## Full-Stack Architecture Guide for Trace Desk Management Hub
 
 ---
 

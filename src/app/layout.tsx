@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SoloOps Hub - Freelancer & Agency Operating System",
-  description: "Client CRM, Project & Financial Management Platform",
+  title: "Trace Desk - Agency & Freelancer Operating System",
+  description: "Modern Client CRM, Project Milestones, Kanban Tasks & Financial Hub",
 };
 
 export default function RootLayout({

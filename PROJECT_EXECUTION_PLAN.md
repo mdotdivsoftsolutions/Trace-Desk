@@ -1,5 +1,5 @@
 # PROJECT EXECUTION PLAN (PEP)
-## Custom Client, Project & Financial Management Platform (SoloOps Hub)
+## Custom Client, Project & Financial Management Platform (Trace Desk)
 
 ---
 
