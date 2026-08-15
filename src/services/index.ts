@@ -12,3 +12,5 @@ export * from './invoice.service';
 
 export { default as DashboardService } from './dashboard.service';
 export * from './dashboard.service';
+
+export * from './settings.service';

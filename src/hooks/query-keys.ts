@@ -40,4 +40,8 @@ export const queryKeys = {
   dashboard: {
     metrics: ['dashboard', 'metrics'] as const,
   },
+  settings: {
+    all: ['settings'] as const,
+    current: () => [...queryKeys.settings.all, 'current'] as const,
+  },
 };

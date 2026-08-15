@@ -4,3 +4,4 @@ export * from './milestone.schema';
 export * from './task.schema';
 export * from './invoice.schema';
 export * from './payment.schema';
+export * from './settings.schema';
