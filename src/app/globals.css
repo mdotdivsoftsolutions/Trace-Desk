@@ -1,21 +1,70 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: var(--font-heading), 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --color-brand-light: #4F46E5;
+  --color-brand-dark: #6366F1;
+  --color-brand: #4F46E5;
+
+  --color-bg-light: #F8FAFC;
+  --color-bg-dark: #0B0F19;
+
+  --color-surface-light: #FFFFFF;
+  --color-surface-dark: #131A2A;
+
+  --color-border-light: #E2E8F0;
+  --color-border-dark: #232B3D;
+
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+
+  /* Restrict maximum border radius to 8px (rounded-lg) across all components */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem; /* 6px */
+  --radius-lg: 0.5rem;   /* 8px */
+  --radius-xl: 0.5rem;   /* Clamped to 8px max */
+  --radius-2xl: 0.5rem;  /* Clamped to 8px max */
+  --radius-3xl: 0.5rem;  /* Clamped to 8px max */
+}
+
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 23 23 23;
+    --background: #F8FAFC;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+    --foreground: #0F172A;
+    --brand: #4F46E5;
   }
 
   .dark {
-    --background: 10 10 10;
-    --foreground: 250 250 250;
+    --background: #0B0F19;
+    --surface: #131A2A;
+    --border: #232B3D;
+    --foreground: #F8FAFC;
+    --brand: #6366F1;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: 'tnum' on, 'cv05' on, 'cv11' on;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }
 
-/* Custom modern scrollbar */
+/* Custom minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -24,7 +73,7 @@
 
 ::-webkit-scrollbar-thumb {
   background: rgba(150, 150, 150, 0.25);
-  border-radius: 9999px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
