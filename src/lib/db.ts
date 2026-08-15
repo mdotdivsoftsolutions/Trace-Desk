@@ -27,7 +27,7 @@ declare global {
   var mongoose: MongooseCache | undefined;
 }
 
-let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
+const cached: MongooseCache = global.mongoose || { conn: null, promise: null };
 
 if (!global.mongoose) {
   global.mongoose = cached;
@@ -47,10 +47,11 @@ async function dbConnect(retries = 3, delay = 1000): Promise<typeof mongoose> {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
+      family: 4, // Force IPv4, prevents ECONNREFUSED on Windows
     };
 
     cached.promise = (async () => {
-      let lastError: any;
+      let lastError: unknown;
       for (let attempt = 1; attempt <= retries; attempt++) {
         try {
           const m = await mongoose.connect(MONGODB_URI!, opts);
