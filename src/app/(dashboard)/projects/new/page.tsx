@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -25,14 +25,17 @@ import { useCreateProject, useClients } from '@/hooks';
 import { CreateProjectInput, ProjectLinkInput, ProjectCredentialInput } from '@/lib/validations';
 import { RichTextEditor } from '@/components/common/RichTextEditor';
 
-export default function NewProjectPage() {
+function NewProjectForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const prefilledClientId = searchParams.get('clientId') || '';
+
   const createProjectMutation = useCreateProject();
   const { data: clientsData, isLoading: isClientsLoading } = useClients({ status: 'active', limit: 100 });
   const clients = clientsData?.items || [];
 
   const [formData, setFormData] = useState<CreateProjectInput>({
-    clientId: '',
+    clientId: prefilledClientId,
     title: '',
     description: '',
     status: 'discovery',
@@ -49,6 +52,12 @@ export default function NewProjectPage() {
     startDate: undefined,
     targetDeadline: undefined,
   });
+
+  useEffect(() => {
+    if (prefilledClientId && !formData.clientId) {
+      setFormData((prev) => ({ ...prev, clientId: prefilledClientId }));
+    }
+  }, [prefilledClientId]);
 
   const [techInput, setTechInput] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -770,5 +779,20 @@ export default function NewProjectPage() {
         </div>
       </form>
     </div>
+  );
+}
+
+export default function NewProjectPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full space-y-6 animate-pulse">
+          <div className="h-12 rounded-lg bg-neutral-200 dark:bg-neutral-800" />
+          <div className="h-64 rounded-lg bg-neutral-200 dark:bg-neutral-800" />
+        </div>
+      }
+    >
+      <NewProjectForm />
+    </Suspense>
   );
 }
