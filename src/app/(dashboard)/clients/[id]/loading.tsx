@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProjectWorkspaceSkeleton } from '@/components/common/skeletons/ProjectWorkspaceSkeleton';
+import { ClientDetailSkeleton } from '@/components/common/skeletons/ClientDetailSkeleton';
 
 export default function Loading() {
-  return <ProjectWorkspaceSkeleton />;
+  return <ClientDetailSkeleton />;
 }

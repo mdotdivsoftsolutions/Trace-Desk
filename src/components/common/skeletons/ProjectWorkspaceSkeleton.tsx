@@ -2,71 +2,146 @@ import React from 'react';
 
 /**
  * Animated exact-geometry skeleton for the Project Workspace.
- * Keeps lines under 80 by combining simple blocks.
+ * Accurately mirrors ProjectHeader, ProjectClientSnapshot, TabBar, and Milestones Tab.
  */
 export function ProjectWorkspaceSkeleton() {
-  const shimmer = "animate-pulse bg-slate-200/70 dark:bg-slate-800/60 rounded";
+  const shimmer = 'animate-pulse bg-slate-200/70 dark:bg-slate-800/60 rounded';
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12 w-full">
-      {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div className="space-y-2 flex-1">
-          <div className="flex items-center gap-3">
-            <div className={`${shimmer} h-8 w-64`} />
-            <div className={`${shimmer} h-6 w-20 rounded-full`} />
+    <div className="space-y-6 w-full pb-12">
+      {/* 1. Back Navigation Link */}
+      <div className="flex items-center gap-2">
+        <div className={`${shimmer} h-3.5 w-3.5 rounded`} />
+        <div className={`${shimmer} h-3.5 w-44`} />
+      </div>
+
+      {/* 2. ProjectHeader Card */}
+      <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-4">
+        {/* Top bar: Title, status, budget, deadline, actions */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Project Title */}
+              <div className={`${shimmer} h-7 w-64 sm:w-80`} />
+              {/* Status Badge */}
+              <div className={`${shimmer} h-5 w-20 rounded`} />
+              {/* Budget Badge */}
+              <div className={`${shimmer} h-5 w-24 rounded`} />
+              {/* Deadline Badge */}
+              <div className={`${shimmer} h-5 w-32 rounded`} />
+            </div>
+
+            {/* Tech Stack Pills */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              <div className={`${shimmer} h-4 w-12`} />
+              <div className={`${shimmer} h-5 w-16 rounded`} />
+              <div className={`${shimmer} h-5 w-20 rounded`} />
+              <div className={`${shimmer} h-5 w-14 rounded`} />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className={`${shimmer} h-4 w-40`} />
-            <div className={`${shimmer} h-4 w-32`} />
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className={`${shimmer} h-8 w-28 rounded-md`} />
+            <div className={`${shimmer} h-8 w-24 rounded-md`} />
+            <div className={`${shimmer} h-8 w-32 rounded-md`} />
+            <div className={`${shimmer} h-8 w-28 rounded-md`} />
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className={`${shimmer} h-9 w-24 rounded-md`} />
-          <div className={`${shimmer} h-9 w-28 rounded-md`} />
+
+        {/* Project Description Skeleton */}
+        <div className="pt-3 border-t border-neutral-100 dark:border-[#334155]/60 max-w-4xl space-y-2">
+          <div className={`${shimmer} h-3.5 w-full`} />
+          <div className={`${shimmer} h-3.5 w-4/5`} />
+        </div>
+
+        {/* Milestone Progression Bar */}
+        <div className="space-y-1.5 pt-2 border-t border-neutral-200 dark:border-[#334155]">
+          <div className="flex items-center justify-between">
+            <div className={`${shimmer} h-3.5 w-48`} />
+            <div className={`${shimmer} h-3.5 w-24`} />
+          </div>
+          <div className="w-full bg-neutral-100 dark:bg-[#0F172A] h-2.5 rounded-full overflow-hidden p-0.5 border border-neutral-200 dark:border-[#334155]">
+            <div className={`${shimmer} h-full w-2/5 rounded-full`} />
+          </div>
         </div>
       </div>
 
-      {/* Grid Layout: Main content (Tabs) + Sidebar (Client) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <div className="lg:col-span-2 space-y-6">
-          {/* Tab Navigation Row */}
-          <div className="flex items-center gap-1 border-b border-neutral-200 dark:border-neutral-800 pb-px">
-            <div className={`${shimmer} h-10 w-24 rounded-t-md rounded-b-none mr-2`} />
-            <div className={`${shimmer} h-10 w-24 rounded-t-md rounded-b-none mr-2`} />
-            <div className={`${shimmer} h-10 w-24 rounded-t-md rounded-b-none`} />
-          </div>
-          
-          {/* Tab Panel Content Placeholder */}
-          <div className="bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] rounded-xl shadow-sm min-h-[400px] p-6 space-y-6">
-            <div className="space-y-3">
-              <div className={`${shimmer} h-5 w-1/3`} />
-              <div className={`${shimmer} h-4 w-full`} />
-              <div className={`${shimmer} h-4 w-5/6`} />
-              <div className={`${shimmer} h-4 w-4/6`} />
-            </div>
-            <div className="grid grid-cols-2 gap-4 mt-8">
-               <div className={`${shimmer} h-24 w-full rounded-lg`} />
-               <div className={`${shimmer} h-24 w-full rounded-lg`} />
+      {/* 3. ProjectClientSnapshot Card (Full Width Banner) */}
+      <div className="p-4 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className={`${shimmer} w-10 h-10 rounded-md flex-shrink-0`} />
+          <div className="space-y-1.5">
+            <div className={`${shimmer} h-2.5 w-20`} />
+            <div className={`${shimmer} h-4 w-44`} />
+            <div className="flex items-center gap-3">
+              <div className={`${shimmer} h-3 w-32`} />
+              <div className={`${shimmer} h-3 w-24`} />
             </div>
           </div>
         </div>
+        <div className={`${shimmer} h-8 w-36 rounded-md flex-shrink-0`} />
+      </div>
 
-        {/* Sidebar Client Card Placeholder */}
-        <div className="bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] rounded-xl shadow-sm p-6 space-y-5">
-          <div className="flex items-center gap-4">
-             <div className={`${shimmer} w-12 h-12 rounded-full`} />
-             <div className="space-y-2 flex-1">
-               <div className={`${shimmer} h-4 w-3/4`} />
-               <div className={`${shimmer} h-3 w-1/2`} />
-             </div>
-          </div>
-          <div className={`${shimmer} h-px w-full`} />
-          <div className="space-y-3">
-             <div className={`${shimmer} h-3 w-full`} />
-             <div className={`${shimmer} h-3 w-5/6`} />
-          </div>
-          <div className={`${shimmer} h-9 w-full rounded-md mt-4`} />
+      {/* 4. Tab Bar Navigation */}
+      <div className="h-11 flex items-end gap-1 border-b border-neutral-200 dark:border-[#334155] select-none">
+        {/* Active Tab (Milestones) */}
+        <div className="relative h-full px-4 flex items-center gap-1.5 pb-[1px]">
+          <div className={`${shimmer} h-4 w-18`} />
+          <div className={`${shimmer} h-4 w-5 rounded`} />
+          <span className="absolute bottom-0 inset-x-0 h-0.5 rounded-t bg-neutral-300 dark:bg-neutral-600" />
+        </div>
+        {/* Inactive Tabs */}
+        <div className="h-full px-4 flex items-center gap-1.5 pb-[1px]">
+          <div className={`${shimmer} h-4 w-12`} />
+          <div className={`${shimmer} h-4 w-5 rounded`} />
+        </div>
+        <div className="h-full px-4 flex items-center gap-1.5 pb-[1px]">
+          <div className={`${shimmer} h-4 w-16`} />
+        </div>
+        <div className="h-full px-4 flex items-center gap-1.5 pb-[1px]">
+          <div className={`${shimmer} h-4 w-18`} />
+        </div>
+        <div className="h-full px-4 flex items-center gap-1.5 pb-[1px]">
+          <div className={`${shimmer} h-4 w-24`} />
+        </div>
+      </div>
+
+      {/* 5. Milestones Tab Deliverables Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className={`${shimmer} h-3.5 w-48`} />
+          <div className={`${shimmer} h-7 w-32 rounded-md`} />
+        </div>
+
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="p-4 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4"
+            >
+              <div className="space-y-2 flex-1">
+                <div className="flex items-center gap-2.5">
+                  <div className={`${shimmer} h-3.5 w-6`} />
+                  <div className={`${shimmer} h-4.5 w-48`} />
+                  <div className={`${shimmer} h-4.5 w-20 rounded`} />
+                </div>
+                <div className={`${shimmer} h-3 w-4/5`} />
+                <div className={`${shimmer} h-3 w-32`} />
+              </div>
+              <div className="flex items-center gap-4 self-start md:self-auto flex-shrink-0">
+                <div className="space-y-1 text-right">
+                  <div className={`${shimmer} h-2.5 w-24 ml-auto`} />
+                  <div className={`${shimmer} h-5 w-20 ml-auto`} />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className={`${shimmer} h-7 w-24 rounded-md`} />
+                  <div className={`${shimmer} h-7 w-7 rounded`} />
+                  <div className={`${shimmer} h-7 w-7 rounded`} />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
