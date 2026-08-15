@@ -1,5 +1,19 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
+export interface IProjectLink {
+  title: string;
+  url: string;
+  category?: 'production' | 'staging' | 'development' | 'repository' | 'design' | 'api' | 'other';
+}
+
+export interface IProjectCredential {
+  serviceName: string;
+  accountId?: string;
+  accessKeyOrUrl?: string;
+  environment?: string;
+  notes?: string;
+}
+
 export interface IProject extends Document {
   clientId: mongoose.Types.ObjectId;
   title: string;
@@ -10,6 +24,9 @@ export interface IProject extends Document {
   currency: string;
   repoUrl?: string;
   liveUrl?: string;
+  links?: IProjectLink[];
+  credentials?: IProjectCredential[];
+  integrationNotes?: string;
   techStack?: string[];
   progressPercentage: number;
   startDate?: Date;
@@ -42,6 +59,27 @@ const ProjectSchema: Schema = new Schema(
     currency: { type: String, required: true, default: 'INR' },
     repoUrl: { type: String },
     liveUrl: { type: String },
+    links: [
+      {
+        title: { type: String, required: true },
+        url: { type: String, required: true },
+        category: {
+          type: String,
+          enum: ['production', 'staging', 'development', 'repository', 'design', 'api', 'other'],
+          default: 'production',
+        },
+      },
+    ],
+    credentials: [
+      {
+        serviceName: { type: String, required: true },
+        accountId: { type: String },
+        accessKeyOrUrl: { type: String },
+        environment: { type: String },
+        notes: { type: String },
+      },
+    ],
+    integrationNotes: { type: String },
     techStack: [{ type: String }],
     progressPercentage: { type: Number, default: 0, min: 0, max: 100 },
     startDate: { type: Date },

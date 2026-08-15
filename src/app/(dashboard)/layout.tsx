@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header Bar */}
-        <header className="sticky top-0 z-30 h-16 border-b border-neutral-200 dark:border-[#232B3D] bg-white/95 dark:bg-[#131A2A]/95 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-30 h-16 border-b border-neutral-200 dark:border-[#232B3D] bg-white/95 dark:bg-[#131A2A]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileOpen(true)}
@@ -72,7 +72,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   />
                   <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white dark:bg-[#131A2A] border border-neutral-200 dark:border-[#232B3D] shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <Link
-                      href="/projects"
+                      href="/projects/new"
                       onClick={() => setIsQuickAddOpen(false)}
                       className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                     >

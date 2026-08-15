@@ -13,9 +13,9 @@ import {
   Layers,
   ChevronRight,
   TrendingUp,
+  Edit2,
 } from 'lucide-react';
 import { useProjects, useClients } from '@/hooks';
-import { ProjectFormDrawer } from '@/components/modules/projects/ProjectFormDrawer';
 import { Pagination } from '@/components/common/pagination';
 import { formatCurrency, formatDate, cn } from '@/lib/utils';
 import { ProjectType } from '@/types';
@@ -25,9 +25,6 @@ export default function ProjectsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [clientFilter, setClientFilter] = useState<string>('all');
   const [page, setPage] = useState(1);
-
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [editingProject, setEditingProject] = useState<ProjectType | null>(null);
 
   const { data: clientsData } = useClients({ limit: 100 });
   const clients = clientsData?.items || [];
@@ -41,11 +38,6 @@ export default function ProjectsPage() {
   });
 
   const projects = projectsData?.items || [];
-
-  const handleOpenCreate = () => {
-    setEditingProject(null);
-    setIsFormModalOpen(true);
-  };
 
   const statusColors: Record<string, string> = {
     discovery: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
@@ -69,13 +61,13 @@ export default function ProjectsPage() {
           </p>
         </div>
 
-        <button
-          onClick={handleOpenCreate}
+        <Link
+          href="/projects/new"
           className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>New Project</span>
-        </button>
+        </Link>
       </div>
 
       {/* Filter and Search Bar */}
@@ -158,13 +150,13 @@ export default function ProjectsPage() {
                 : 'Get started by creating your first agency client workspace.'}
             </p>
           </div>
-          <button
-            onClick={handleOpenCreate}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-xs font-bold shadow-md shadow-indigo-600/30"
+          <Link
+            href="/projects/new"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition-all"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Project</span>
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="space-y-4">
@@ -295,13 +287,22 @@ export default function ProjectsPage() {
                       )}
                     </div>
 
-                    <Link
-                      href={`/projects/${project._id}`}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-xs font-semibold transition-colors"
-                    >
-                      <span>Open Workspace</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </Link>
+                    <div className="flex items-center gap-1.5">
+                      <Link
+                        href={`/projects/${project._id}/edit`}
+                        className="p-1.5 rounded-md text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                        title="Edit Project"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Link>
+                      <Link
+                        href={`/projects/${project._id}`}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-xs font-semibold transition-colors"
+                      >
+                        <span>Open Workspace</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               );
@@ -317,13 +318,6 @@ export default function ProjectsPage() {
           </div>
         </div>
       )}
-
-      {/* Create / Edit Project Drawer */}
-      <ProjectFormDrawer
-        isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        project={editingProject}
-      />
     </div>
   );
 }

@@ -28,6 +28,22 @@ export interface ClientType {
   updatedAt: string;
 }
 
+export interface ProjectLink {
+  _id?: string;
+  title: string;
+  url: string;
+  category?: 'production' | 'staging' | 'development' | 'repository' | 'design' | 'api' | 'other';
+}
+
+export interface ProjectCredential {
+  _id?: string;
+  serviceName: string;
+  accountId?: string;
+  accessKeyOrUrl?: string;
+  environment?: string;
+  notes?: string;
+}
+
 export interface ProjectType {
   _id: string;
   clientId: string | ClientType;
@@ -39,6 +55,9 @@ export interface ProjectType {
   currency: string;
   repoUrl?: string;
   liveUrl?: string;
+  links?: ProjectLink[];
+  credentials?: ProjectCredential[];
+  integrationNotes?: string;
   techStack?: string[];
   progressPercentage: number;
   startDate?: string;

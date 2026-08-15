@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X, UserPlus, Edit2, Check, Loader2 } from 'lucide-react';
 import { useCreateClient, useUpdateClient } from '@/hooks';
 import { CreateClientInput } from '@/lib/validations';
+import { RichTextEditor } from '@/components/common/RichTextEditor';
 import { ClientType } from '@/types';
 
 interface ClientFormDrawerProps {
@@ -235,17 +236,16 @@ export function ClientFormDrawer({ isOpen, onClose, client }: ClientFormDrawerPr
               </select>
             </div>
 
-            {/* Notes */}
+            {/* Internal Account Notes (Rich Text) */}
             <div>
               <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
                 Internal Account Notes
               </label>
-              <textarea
-                rows={3}
+              <RichTextEditor
                 value={formData.notes || ''}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="Key stakeholders, preferred communication channels, billing terms..."
-                className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0B0F19] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(html) => setFormData({ ...formData, notes: html })}
+                placeholder="Key stakeholders, communication preferences, VAT numbers, payment terms..."
+                minHeight="120px"
               />
             </div>
           </form>
