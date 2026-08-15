@@ -11,7 +11,7 @@ export function SafeHTML({ html, className = '' }: SafeHTMLProps) {
 
   return (
     <div
-      className={`prose prose-sm dark:prose-invert max-w-none text-xs ${className}`}
+      className={`rich-text-content prose prose-sm dark:prose-invert max-w-none text-xs ${className}`}
       dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
     />
   );

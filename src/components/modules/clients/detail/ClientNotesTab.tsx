@@ -16,7 +16,7 @@ export function ClientNotesTab({ client }: ClientNotesTabProps) {
           <span>Billing & Entity Information</span>
         </h3>
         <div className="space-y-2 text-xs text-neutral-600 dark:text-neutral-300">
-          <div><span className="text-neutral-400 font-medium">Legal Name:</span> <span className="font-semibold text-neutral-900 dark:text-white ml-2">{client.company || client.name}</span></div>
+          <div><span className="text-neutral-400 font-medium">Company / Legal Name:</span> <span className="font-semibold text-neutral-900 dark:text-white ml-2">{client.companyName || client.company || client.name}</span></div>
           {client.taxId && <div><span className="text-neutral-400 font-medium">Tax / GSTIN ID:</span> <span className="font-mono font-bold text-neutral-900 dark:text-white ml-2">{client.taxId}</span></div>}
           {client.address && <div><span className="text-neutral-400 font-medium">Billing Address:</span> <span className="text-neutral-700 dark:text-neutral-300 ml-2">{client.address}</span></div>}
           <div><span className="text-neutral-400 font-medium">Country / Region:</span> <span className="text-neutral-700 dark:text-neutral-300 ml-2">{client.country || 'Global / Unspecified'}</span></div>

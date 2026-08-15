@@ -17,8 +17,28 @@ export class SettingsService {
         invoicePrefix: 'MDIV-',
         defaultTaxRate: 18,
         bankDetails: {},
+        bankAccounts: [],
       });
     }
+
+    // Auto-migrate single bankDetails to bankAccounts if bankAccounts is empty
+    if ((!settings.bankAccounts || settings.bankAccounts.length === 0) && settings.bankDetails && (settings.bankDetails.bankName || settings.bankDetails.accountNumber || settings.bankDetails.upiId)) {
+      settings.bankAccounts = [
+        {
+          id: 'bank-1',
+          accountLabel: 'Primary Remittance Account',
+          bankName: settings.bankDetails.bankName,
+          accountName: settings.bankDetails.accountName,
+          accountNumber: settings.bankDetails.accountNumber,
+          ifscCode: settings.bankDetails.ifscCode,
+          upiId: settings.bankDetails.upiId,
+          swiftCode: settings.bankDetails.swiftCode,
+          isPrimary: true,
+        },
+      ];
+      await settings.save();
+    }
+
     return settings;
   }
 
@@ -27,6 +47,23 @@ export class SettingsService {
    */
   static async updateSettings(data: UpdateSettingsInput): Promise<ISettings> {
     await connectToDatabase();
+
+    // If bankAccounts is provided, sync the primary/first one to bankDetails
+    if (data.bankAccounts && data.bankAccounts.length > 0) {
+      const primaryAccount = data.bankAccounts.find((b) => b.isPrimary) || data.bankAccounts[0];
+      data.bankDetails = {
+        id: primaryAccount.id,
+        accountLabel: primaryAccount.accountLabel,
+        bankName: primaryAccount.bankName,
+        accountName: primaryAccount.accountName,
+        accountNumber: primaryAccount.accountNumber,
+        ifscCode: primaryAccount.ifscCode,
+        upiId: primaryAccount.upiId,
+        swiftCode: primaryAccount.swiftCode,
+        isPrimary: true,
+      };
+    }
+
     const validatedData = updateSettingsSchema.parse(data);
 
     let settings = await Settings.findOne();

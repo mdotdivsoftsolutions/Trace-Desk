@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, CheckCircle, Loader2 } from 'lucide-react';
+import { Save, CheckCircle, Loader2, Pencil, X } from 'lucide-react';
 import { useSettings, useUpdateSettings } from '@/hooks/useSettings';
 import { AgencyProfileTab } from '@/components/modules/settings/AgencyProfileTab';
 import { CurrencyFinanceTab } from '@/components/modules/settings/CurrencyFinanceTab';
@@ -22,24 +22,41 @@ const SETTINGS_TABS = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
   const [formData, setFormData] = useState<Partial<SettingsType>>({});
+  const [isEditing, setIsEditing] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const { data: settings, isLoading } = useSettings();
   const updateSettingsMutation = useUpdateSettings();
 
   useEffect(() => {
-    if (settings) setFormData(settings);
+    if (settings) {
+      setFormData(settings);
+    }
   }, [settings]);
 
   const handleChange = (field: keyof SettingsType, value: any) => {
     setFormData((prev: Partial<SettingsType>) => ({ ...prev, [field]: value }));
   };
 
+  const handleCancel = () => {
+    if (settings) {
+      setFormData(settings);
+    }
+    setIsEditing(false);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateSettingsMutation.mutateAsync(formData as any);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    if (!isEditing) return;
+
+    try {
+      await updateSettingsMutation.mutateAsync(formData as any);
+      setIsEditing(false);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error('Failed to save settings:', err);
+    }
   };
 
   if (isLoading) {
@@ -64,19 +81,47 @@ export default function SettingsPage() {
         </div>
         <div className="flex items-center gap-3">
           {savedSuccess && (
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-neutral-800 dark:text-neutral-200 animate-in fade-in">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 animate-in fade-in">
               <CheckCircle className="w-4 h-4 text-emerald-500" />
-              <span>Saved</span>
+              <span>Saved Successfully</span>
             </span>
           )}
-          <button
-            type="submit"
-            disabled={updateSettingsMutation.isPending}
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50"
-          >
-            {updateSettingsMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            <span>{updateSettingsMutation.isPending ? 'Saving...' : 'Save Changes'}</span>
-          </button>
+
+          {!isEditing ? (
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 text-xs font-bold shadow-sm transition"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              <span>Edit Settings</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleCancel}
+                disabled={updateSettingsMutation.isPending}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-xs font-semibold border border-neutral-300 dark:border-neutral-700 transition"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span>Cancel</span>
+              </button>
+
+              <button
+                type="submit"
+                disabled={updateSettingsMutation.isPending}
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 text-xs font-bold shadow-sm disabled:opacity-50 transition"
+              >
+                {updateSettingsMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                <span>{updateSettingsMutation.isPending ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -89,16 +134,16 @@ export default function SettingsPage() {
 
       {/* CLS-safe panels */}
       <TabPanel tabKey="profile" activeTab={activeTab} minHeight={320}>
-        <AgencyProfileTab formData={formData} onChange={handleChange} />
+        <AgencyProfileTab formData={formData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
       <TabPanel tabKey="currency" activeTab={activeTab} minHeight={320}>
-        <CurrencyFinanceTab formData={formData} onChange={handleChange} />
+        <CurrencyFinanceTab formData={formData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
       <TabPanel tabKey="bank" activeTab={activeTab} minHeight={320}>
-        <BankUpiTab formData={formData} onChange={handleChange} />
+        <BankUpiTab formData={formData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
       <TabPanel tabKey="invoice" activeTab={activeTab} minHeight={320}>
-        <InvoiceConfigTab formData={formData} onChange={handleChange} />
+        <InvoiceConfigTab formData={formData} onChange={handleChange} isEditing={isEditing} />
       </TabPanel>
     </form>
   );

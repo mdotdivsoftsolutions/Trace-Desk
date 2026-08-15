@@ -1,11 +1,16 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface IBankDetails {
+  id?: string;
+  accountLabel?: string;
   bankName?: string;
+  accountName?: string;
   accountNumber?: string;
   ifscCode?: string;
   upiId?: string;
   swiftCode?: string;
+  accountType?: string;
+  isPrimary?: boolean;
 }
 
 export interface ISettings extends Document {
@@ -14,22 +19,33 @@ export interface ISettings extends Document {
   agencyPhone?: string;
   agencyAddress?: string;
   gstinOrTaxId?: string;
+  taxNumber?: string;
   defaultCurrency: 'INR' | 'USD' | 'EUR' | 'AED' | 'GBP';
   currencySymbol: string;
-  bankDetails?: IBankDetails;
+  hourlyRate?: number;
+  paymentTermsDays?: number;
   invoicePrefix: string;
+  nextInvoiceNumber?: number;
+  invoiceNotes?: string;
   defaultTaxRate: number;
+  bankDetails?: IBankDetails;
+  bankAccounts?: IBankDetails[];
   createdAt: Date;
   updatedAt: Date;
 }
 
 const BankDetailsSchema = new Schema<IBankDetails>(
   {
+    id: { type: String },
+    accountLabel: { type: String },
     bankName: { type: String },
+    accountName: { type: String },
     accountNumber: { type: String },
     ifscCode: { type: String },
     upiId: { type: String },
     swiftCode: { type: String },
+    accountType: { type: String },
+    isPrimary: { type: Boolean, default: false },
   },
   { _id: false }
 );
@@ -45,6 +61,7 @@ const SettingsSchema: Schema = new Schema(
     agencyPhone: { type: String },
     agencyAddress: { type: String },
     gstinOrTaxId: { type: String },
+    taxNumber: { type: String },
     defaultCurrency: {
       type: String,
       enum: ['INR', 'USD', 'EUR', 'AED', 'GBP'],
@@ -56,9 +73,15 @@ const SettingsSchema: Schema = new Schema(
       default: '₹',
       required: true,
     },
+    hourlyRate: { type: Number, default: 0 },
+    paymentTermsDays: { type: Number, default: 14 },
     bankDetails: {
       type: BankDetailsSchema,
       default: () => ({}),
+    },
+    bankAccounts: {
+      type: [BankDetailsSchema],
+      default: () => [],
     },
     invoicePrefix: {
       type: String,

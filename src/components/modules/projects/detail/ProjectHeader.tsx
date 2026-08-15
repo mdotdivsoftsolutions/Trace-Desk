@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -12,9 +12,12 @@ import {
   Banknote,
   Clock,
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { ProjectWithClient, Milestone } from '@/types';
 import { cn, formatCurrency } from '@/lib/utils';
+import SafeHTML from '@/components/common/SafeHTML';
 
 interface ProjectHeaderProps {
   project: ProjectWithClient;
@@ -40,6 +43,8 @@ export function ProjectHeader({
   onAddTask,
   onAddMilestone,
 }: ProjectHeaderProps) {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
   const formattedDeadline = project.targetDeadline
     ? new Date(project.targetDeadline).toLocaleDateString('en-US', {
         month: 'short',
@@ -169,8 +174,41 @@ export function ProjectHeader({
 
         {/* Project Description (if present) */}
         {project.description && (
-          <div className="pt-2 border-t border-neutral-100 dark:border-[#334155]/60 text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-4xl">
-            {project.description}
+          <div className="pt-3 border-t border-neutral-100 dark:border-[#334155]/60 max-w-4xl space-y-2">
+            <div className="relative">
+              <div
+                className={cn(
+                  'transition-all duration-300 ease-in-out overflow-hidden',
+                  !isDescriptionExpanded ? 'max-h-36' : 'max-h-none'
+                )}
+              >
+                <SafeHTML
+                  html={project.description}
+                  className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed"
+                />
+              </div>
+
+              {/* Gradient fade overlay when collapsed */}
+              {!isDescriptionExpanded && (
+                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white dark:from-[#1E293B] to-transparent pointer-events-none" />
+              )}
+            </div>
+
+            {/* Show More / Show Less Button */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold text-neutral-700 dark:text-neutral-300 bg-neutral-100/90 dark:bg-neutral-800/90 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 transition-colors shadow-2xs"
+              >
+                <span>{isDescriptionExpanded ? 'Show Less' : 'Show More'}</span>
+                {isDescriptionExpanded ? (
+                  <ChevronUp className="w-3 h-3 text-neutral-500" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 text-neutral-500" />
+                )}
+              </button>
+            </div>
           </div>
         )}
 

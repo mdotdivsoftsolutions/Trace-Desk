@@ -30,12 +30,12 @@ export function ClientHeaderBanner({
       <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
           <div className="w-14 h-14 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center font-bold text-lg uppercase flex-shrink-0 shadow-sm">
-            {client.name.substring(0, 2)}
+            {(client.companyName || client.company || client.name || 'CL').substring(0, 2)}
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               <h1 className="font-heading text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
-                {client.name}
+                {client.companyName || client.company || client.name}
               </h1>
               <span
                 className={cn(
@@ -48,8 +48,10 @@ export function ClientHeaderBanner({
                 {client.status}
               </span>
             </div>
-            {client.company && (
-              <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{client.company}</p>
+            {(client.companyName || client.company) && client.name && (client.companyName || client.company) !== client.name && (
+              <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                Contact: {client.name}
+              </p>
             )}
             <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-600 dark:text-neutral-300 pt-1">
               <div className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-neutral-400" /><span>{client.email}</span></div>

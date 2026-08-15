@@ -12,7 +12,7 @@ interface InvoiceDocumentPreviewProps {
 export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPreviewProps) {
   const client = invoice.clientId as any;
   const project = invoice.projectId as any;
-  const bank = settings?.bankDetails;
+  const bank = settings?.bankDetails || settings?.bankAccounts?.find((a) => a.isPrimary) || settings?.bankAccounts?.[0];
 
   return (
     <div className="p-8 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-8 print:border-none print:shadow-none print:p-0">
@@ -43,8 +43,12 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
         <div>
           <span className="text-[10px] uppercase font-bold text-neutral-400 block mb-1">Billed To:</span>
-          <div className="font-bold text-sm text-neutral-900 dark:text-white">{client?.name}</div>
-          {client?.company && <div className="text-neutral-500">{client.company}</div>}
+          <div className="font-bold text-sm text-neutral-900 dark:text-white">
+            {client?.companyName || client?.company || client?.name || 'Client'}
+          </div>
+          {(client?.companyName || client?.company) && client?.name && (client?.companyName || client?.company) !== client?.name && (
+            <div className="text-neutral-500">Attn: {client.name}</div>
+          )}
           {client?.address && <div className="text-neutral-500 mt-0.5">{client.address}</div>}
           {client?.taxId && <div className="text-neutral-500 mt-0.5">Tax ID: <span className="font-mono">{client.taxId}</span></div>}
         </div>

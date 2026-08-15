@@ -46,7 +46,7 @@ export function KanbanCard({ task, index, onEdit, onDelete }: KanbanCardProps) {
 
           {task.description && (
             <p className="text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-2 leading-relaxed">
-              {task.description}
+              {task.description.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim()}
             </p>
           )}
 

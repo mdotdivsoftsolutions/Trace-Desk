@@ -7,13 +7,14 @@ export interface InvoiceItemDraft {
   quantity: number;
   rate: number;
   amount: number;
+  milestoneId?: string;
 }
 
 interface InvoiceLineItemsEditorProps {
   items: InvoiceItemDraft[];
   onAddItem: () => void;
   onRemoveItem: (idx: number) => void;
-  onUpdateItem: (idx: number, field: 'description' | 'quantity' | 'rate', value: any) => void;
+  onUpdateItem: (idx: number, field: 'description' | 'quantity' | 'rate', value: string | number) => void;
 }
 
 export function InvoiceLineItemsEditor({

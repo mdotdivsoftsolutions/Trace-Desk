@@ -20,13 +20,16 @@ export function ProjectClientSnapshot({ project }: ProjectClientSnapshotProps) {
       {/* Client Profile Details */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-md bg-neutral-100 dark:bg-[#0F172A] border border-neutral-200 dark:border-[#334155] text-neutral-800 dark:text-neutral-200 flex items-center justify-center font-bold text-xs uppercase flex-shrink-0">
-          {client?.name ? client.name.substring(0, 2) : client?.companyName ? client.companyName.substring(0, 2) : 'CL'}
+          {(client?.companyName || client?.company || client?.name || 'CL').substring(0, 2)}
         </div>
         <div>
           <div className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider">Client Account</div>
           <div className="font-heading font-bold text-sm text-neutral-900 dark:text-white">
-            {client?.name || client?.companyName || 'Unknown Client'}
+            {client?.companyName || client?.company || client?.name || 'Unknown Client'}
           </div>
+          {(client?.companyName || client?.company) && client?.name && (client?.companyName || client?.company) !== client?.name && (
+            <div className="text-[11px] text-neutral-500 font-medium">Contact: {client.name}</div>
+          )}
           {client && (
             <div className="flex flex-wrap items-center gap-3 text-[11px] text-neutral-500 mt-0.5">
               {client.email && (

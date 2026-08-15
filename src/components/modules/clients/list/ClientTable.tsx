@@ -66,13 +66,15 @@ export function ClientTable({
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-md bg-neutral-100 dark:bg-[#334155] text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] flex items-center justify-center font-bold text-xs uppercase flex-shrink-0">
-                      {client.name.substring(0, 2)}
+                      {(client.companyName || client.company || client.name || 'CL').substring(0, 2)}
                     </div>
                     <div>
                       <Link href={`/clients/${client._id}`} className="font-bold text-neutral-900 dark:text-white hover:underline block">
-                        {client.name}
+                        {client.companyName || client.company || client.name}
                       </Link>
-                      {client.company && <div className="text-[11px] text-neutral-500">{client.company}</div>}
+                      {(client.companyName || client.company) && client.name && (client.companyName || client.company) !== client.name && (
+                        <div className="text-[11px] text-neutral-500">{client.name}</div>
+                      )}
                     </div>
                   </div>
                 </td>

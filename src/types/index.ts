@@ -155,12 +155,16 @@ export interface PaymentType {
 }
 
 export interface BankDetailsType {
+  id?: string;
+  accountLabel?: string;
   bankName?: string;
   accountName?: string;
   accountNumber?: string;
   ifscCode?: string;
   upiId?: string;
   swiftCode?: string;
+  accountType?: string;
+  isPrimary?: boolean;
 }
 
 export interface SettingsType {
@@ -180,6 +184,7 @@ export interface SettingsType {
   nextInvoiceNumber?: number;
   invoiceNotes?: string;
   bankDetails?: BankDetailsType;
+  bankAccounts?: BankDetailsType[];
   createdAt?: string;
   updatedAt?: string;
 }

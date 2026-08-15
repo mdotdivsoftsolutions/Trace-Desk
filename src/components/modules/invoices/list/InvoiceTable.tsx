@@ -74,7 +74,9 @@ export function InvoiceTable({ invoices, isLoading, onRecordPayment }: InvoiceTa
                     </Link>
                   </td>
                   <td className="px-5 py-4">
-                    <div className="font-bold text-neutral-900 dark:text-white">{client?.name || 'Client'}</div>
+                    <div className="font-bold text-neutral-900 dark:text-white">
+                      {client?.companyName || client?.company || client?.name || 'Client'}
+                    </div>
                     <div className="text-[11px] text-neutral-400 truncate">{project?.title || 'Project'}</div>
                   </td>
                   <td className="px-5 py-4 text-neutral-500">

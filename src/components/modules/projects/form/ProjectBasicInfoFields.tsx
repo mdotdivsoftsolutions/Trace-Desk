@@ -52,11 +52,14 @@ export function ProjectBasicInfoFields({
             className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400"
           >
             <option value="">Select a client...</option>
-            {clients.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.name} {c.company ? `(${c.company})` : ''}
-              </option>
-            ))}
+            {clients.map((c) => {
+              const company = c.companyName || c.company;
+              return (
+                <option key={c._id} value={c._id}>
+                  {company ? `${company} (${c.name})` : c.name}
+                </option>
+              );
+            })}
           </select>
         </div>
 

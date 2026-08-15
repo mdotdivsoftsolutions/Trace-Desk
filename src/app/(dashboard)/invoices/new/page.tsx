@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, FileText, Loader2 } from 'lucide-react';
@@ -12,50 +12,38 @@ import { useMilestones } from '@/hooks/useMilestones';
 import { InvoiceLineItemsEditor, InvoiceItemDraft } from '@/components/modules/invoices/form/InvoiceLineItemsEditor';
 import { InvoiceSummaryCard } from '@/components/modules/invoices/form/InvoiceSummaryCard';
 import { RichTextEditor } from '@/components/common/RichTextEditor';
-import { ClientType, ProjectType } from '@/types';
+import { ClientType, MilestoneType, ProjectType } from '@/types';
 
-function InvoiceFormContent() {
+interface InvoiceFormProps {
+  clients: ClientType[];
+  projects: ProjectType[];
+  initialClientId: string;
+  initialProjectId: string;
+  initialTaxRate: number;
+  initialNotes: string;
+  initialItems: InvoiceItemDraft[];
+}
+
+function InvoiceForm({
+  clients,
+  projects,
+  initialClientId,
+  initialProjectId,
+  initialTaxRate,
+  initialNotes,
+  initialItems,
+}: InvoiceFormProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const preselectedProjectId = searchParams.get('projectId') || '';
-  const preselectedClientId = searchParams.get('clientId') || '';
-  const preselectedMilestoneId = searchParams.get('milestoneId') || '';
-
-  const { data: clientsData } = useClients({ limit: 100 });
-  const { data: projectsData } = useProjects({ limit: 100 });
-  const { data: settings } = useSettings();
   const createInvoiceMutation = useCreateInvoice();
 
-  const [clientId, setClientId] = useState(preselectedClientId);
-  const [projectId, setProjectId] = useState(preselectedProjectId);
-  const { data: milestonesData } = useMilestones(projectId);
-
+  const [clientId, setClientId] = useState(initialClientId);
+  const [projectId, setProjectId] = useState(initialProjectId);
   const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0]);
   const [dueDate, setDueDate] = useState('');
-  const [taxRate, setTaxRate] = useState(18);
+  const [taxRate, setTaxRate] = useState(initialTaxRate);
   const [discount, setDiscount] = useState(0);
-  const [notes, setNotes] = useState('');
-  const [items, setItems] = useState<any[]>([{ description: '', quantity: 1, rate: 0, amount: 0, milestoneId: '' }]);
-
-  useEffect(() => {
-    if (settings?.defaultTaxRate !== undefined) setTaxRate(settings.defaultTaxRate);
-    if (settings?.invoiceNotes) setNotes(settings.invoiceNotes);
-  }, [settings]);
-
-  useEffect(() => {
-    if (preselectedMilestoneId && milestonesData) {
-      const milestone = milestonesData.find((m: any) => m._id === preselectedMilestoneId);
-      if (milestone && items.length === 1 && items[0].description === '' && items[0].rate === 0) {
-        setItems([{
-          description: 'Milestone: ' + milestone.title,
-          quantity: 1,
-          rate: milestone.allocatedAmount || 0,
-          amount: milestone.allocatedAmount || 0,
-          milestoneId: milestone._id,
-        }]);
-      }
-    }
-  }, [preselectedMilestoneId, milestonesData]);
+  const [notes, setNotes] = useState(initialNotes);
+  const [items, setItems] = useState<InvoiceItemDraft[]>(initialItems);
 
   const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
   const taxAmount = (subtotal * taxRate) / 100;
@@ -84,7 +72,7 @@ function InvoiceFormContent() {
       dueDate: dueDate ? new Date(dueDate) : new Date(Date.now() + 14 * 86400000),
       notes: notes || undefined,
     });
-    router.push(/invoices/ + created._id);
+    router.push('/invoices/' + created._id);
   };
 
   return (
@@ -109,14 +97,21 @@ function InvoiceFormContent() {
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">Client *</label>
             <select required value={clientId} onChange={(e) => setClientId(e.target.value)} className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400">
               <option value="">Select client...</option>
-              {(clientsData?.items || []).map((c: ClientType) => <option key={c._id} value={c._id}>{c.name}{c.companyName ? ` — ${c.companyName}` : ''}</option>)}
+              {clients.map((c: ClientType) => {
+                const company = c.companyName || c.company;
+                return (
+                  <option key={c._id} value={c._id}>
+                    {company ? `${company} (${c.name})` : c.name}
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">Project <span className="font-normal text-neutral-400">(optional)</span></label>
             <select value={projectId} onChange={(e) => setProjectId(e.target.value)} className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400">
               <option value="">No linked project...</option>
-              {(projectsData?.items || []).filter((p: ProjectType) => !clientId || (typeof p.clientId === 'object' ? (p.clientId as any)?._id === clientId : p.clientId === clientId)).map((p: ProjectType) => <option key={p._id} value={p._id}>{p.title}</option>)}
+              {projects.filter((p: ProjectType) => !clientId || (typeof p.clientId === 'object' ? (p.clientId as ClientType)?._id === clientId : p.clientId === clientId)).map((p: ProjectType) => <option key={p._id} value={p._id}>{p.title}</option>)}
             </select>
           </div>
           <div className="space-y-1.5">
@@ -164,6 +159,50 @@ function InvoiceFormContent() {
         </div>
       </div>
     </form>
+  );
+}
+
+function InvoiceFormContent() {
+  const searchParams = useSearchParams();
+  const preselectedProjectId = searchParams.get('projectId') || '';
+  const preselectedClientId = searchParams.get('clientId') || '';
+  const preselectedMilestoneId = searchParams.get('milestoneId') || '';
+
+  const { data: clientsData } = useClients({ limit: 100 });
+  const { data: projectsData } = useProjects({ limit: 100 });
+  const { data: settings } = useSettings();
+  const { data: milestonesData } = useMilestones(preselectedProjectId);
+
+  const preselectedMilestone = preselectedMilestoneId && milestonesData
+    ? milestonesData.find((m: MilestoneType) => m._id === preselectedMilestoneId)
+    : undefined;
+
+  const initialItems: InvoiceItemDraft[] = preselectedMilestone
+    ? [{
+        description: 'Milestone: ' + preselectedMilestone.title,
+        quantity: 1,
+        rate: preselectedMilestone.allocatedAmount || 0,
+        amount: preselectedMilestone.allocatedAmount || 0,
+        milestoneId: preselectedMilestone._id,
+      }]
+    : [{ description: '', quantity: 1, rate: 0, amount: 0, milestoneId: '' }];
+
+  const initialTaxRate = settings?.defaultTaxRate !== undefined ? settings.defaultTaxRate : 18;
+  const initialNotes = settings?.invoiceNotes || '';
+
+  const formKey = `${preselectedMilestone?._id || 'none'}-${settings?.defaultTaxRate ?? 'def'}-${settings?.invoiceNotes ? 'hasNotes' : 'noNotes'}`;
+
+  return (
+    <InvoiceForm
+      key={formKey}
+      clients={clientsData?.items || []}
+      projects={projectsData?.items || []}
+      initialClientId={preselectedClientId}
+      initialProjectId={preselectedProjectId}
+      initialTaxRate={initialTaxRate}
+      initialNotes={initialNotes}
+      initialItems={initialItems}
+    />
   );
 }
 
