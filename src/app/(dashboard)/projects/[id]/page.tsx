@@ -28,10 +28,9 @@ import {
 import {
   useProject,
   useTasks,
-  useUpdateTaskStatus,
-  useDeleteTask,
   useInvoices,
 } from '@/hooks';
+import { KanbanBoard } from '@/components/modules/tasks/KanbanBoard';
 import { TaskFormModal } from '@/components/modules/tasks/task-form-modal';
 import { MilestoneFormModal } from '@/components/modules/projects/milestone-form-modal';
 import { formatCurrency, formatDate, formatRelativeDeadline, cn } from '@/lib/utils';
@@ -58,8 +57,6 @@ export default function ProjectWorkspacePage({
   const { data: tasks, isLoading: isTasksLoading } = useTasks(projectId);
   const { data: invoices, isLoading: isInvoicesLoading } = useInvoices({ projectId });
 
-  const updateTaskStatusMutation = useUpdateTaskStatus(projectId);
-  const deleteTaskMutation = useDeleteTask(projectId);
 
   if (isProjectLoading) {
     return (
@@ -87,19 +84,10 @@ export default function ProjectWorkspacePage({
   const clientCurrency =
     typeof project.clientId === 'object' ? (project.clientId as any)?.currency : project.currency || 'USD';
 
-  const kanbanColumns: Array<{
-    id: 'todo' | 'in_progress' | 'review' | 'done';
-    title: string;
-    color: string;
-    dotColor: string;
-  }> = [
-    { id: 'todo', title: 'To Do', color: 'border-neutral-200 dark:border-neutral-800', dotColor: 'bg-neutral-400' },
-    { id: 'in_progress', title: 'In Progress', color: 'border-indigo-500/30', dotColor: 'bg-indigo-500' },
-    { id: 'review', title: 'Review / QA', color: 'border-purple-500/30', dotColor: 'bg-purple-500' },
-    { id: 'done', title: 'Done', color: 'border-emerald-500/30', dotColor: 'bg-emerald-500' },
-  ];
-
-  const handleOpenCreateTask = (status: 'todo' | 'in_progress' | 'review' | 'done' = 'todo') => {
+  const handleOpenCreateTask = (
+    status: 'todo' | 'in_progress' | 'review' | 'done' = 'todo',
+    milestoneId?: string
+  ) => {
     setEditingTask(null);
     setDefaultTaskStatus(status);
     setIsTaskModalOpen(true);
@@ -118,30 +106,6 @@ export default function ProjectWorkspacePage({
   const handleOpenEditMilestone = (milestone: MilestoneType) => {
     setEditingMilestone(milestone);
     setIsMilestoneModalOpen(true);
-  };
-
-  const handleShiftTaskStatus = (
-    taskId: string,
-    currentStatus: 'todo' | 'in_progress' | 'review' | 'done',
-    direction: 'next' | 'prev'
-  ) => {
-    const order: Array<'todo' | 'in_progress' | 'review' | 'done'> = ['todo', 'in_progress', 'review', 'done'];
-    const currentIndex = order.indexOf(currentStatus);
-    const targetIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
-
-    if (targetIndex >= 0 && targetIndex < order.length) {
-      updateTaskStatusMutation.mutate({
-        id: taskId,
-        status: order[targetIndex],
-      });
-    }
-  };
-
-  const priorityBadges: Record<string, string> = {
-    low: 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400',
-    medium: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
-    high: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
-    critical: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 font-bold',
   };
 
   return (
@@ -296,161 +260,13 @@ export default function ProjectWorkspacePage({
 
       {/* Tab 1: Task Kanban Board */}
       {activeTab === 'kanban' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-neutral-500 font-medium">
-              Drag & move tasks across delivery stages to auto-recalculate project progress.
-            </span>
-            <button
-              onClick={() => handleOpenCreateTask('todo')}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition-all"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add Task</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {kanbanColumns.map((col) => {
-              const colTasks = tasks?.filter((t) => t.status === col.id) || [];
-
-              return (
-                <div
-                  key={col.id}
-                  className={cn(
-                    'p-4 rounded-2xl bg-neutral-100/60 dark:bg-neutral-900/60 border flex flex-col justify-between min-h-[450px]',
-                    col.color
-                  )}
-                >
-                  <div className="space-y-3">
-                    {/* Column Header */}
-                    <div className="flex items-center justify-between pb-2 border-b border-neutral-200/60 dark:border-neutral-800/60">
-                      <div className="flex items-center gap-2">
-                        <span className={cn('w-2 h-2 rounded-full', col.dotColor)} />
-                        <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                          {col.title}
-                        </span>
-                        <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                          {colTasks.length}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => handleOpenCreateTask(col.id)}
-                        className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-200/50 dark:hover:bg-neutral-800"
-                        title={`Add task to ${col.title}`}
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    {/* Task Cards */}
-                    <div className="space-y-2.5">
-                      {colTasks.map((task) => {
-                        const milestoneTitle =
-                          typeof task.milestoneId === 'object'
-                            ? (task.milestoneId as any)?.title
-                            : null;
-
-                        return (
-                          <div
-                            key={task._id}
-                            className="p-3.5 rounded-xl bg-white dark:bg-neutral-800/90 border border-neutral-200/70 dark:border-neutral-700/70 shadow-sm hover:shadow-md transition-all space-y-2.5 group"
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <span
-                                className={cn(
-                                  'px-2 py-0.5 text-[10px] rounded-md uppercase tracking-wider',
-                                  priorityBadges[task.priority] || 'bg-neutral-100 text-neutral-600'
-                                )}
-                              >
-                                {task.priority}
-                              </span>
-
-                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button
-                                  onClick={() => handleOpenEditTask(task)}
-                                  className="p-1 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
-                                >
-                                  <Edit2 className="w-3 h-3" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    if (confirm('Delete task?')) deleteTaskMutation.mutate(task._id);
-                                  }}
-                                  className="p-1 text-neutral-400 hover:text-rose-500"
-                                >
-                                  <Trash2 className="w-3 h-3" />
-                                </button>
-                              </div>
-                            </div>
-
-                            <div className="space-y-1">
-                              <h4 className="text-xs font-bold text-neutral-900 dark:text-white line-clamp-2">
-                                {task.title}
-                              </h4>
-                              {task.description && (
-                                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-2">
-                                  {task.description}
-                                </p>
-                              )}
-                            </div>
-
-                            {milestoneTitle && (
-                              <div className="flex items-center gap-1 text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-md truncate">
-                                <Milestone className="w-3 h-3 flex-shrink-0" />
-                                <span className="truncate">{milestoneTitle}</span>
-                              </div>
-                            )}
-
-                            {/* Card Footer: Deadline & Status Shifter Buttons */}
-                            <div className="pt-2 border-t border-neutral-100 dark:border-neutral-700/60 flex items-center justify-between text-[10px] text-neutral-400">
-                              {task.dueDate ? (
-                                <span className="flex items-center gap-1">
-                                  <Clock className="w-3 h-3 text-amber-500" />
-                                  <span>{formatDate(task.dueDate)}</span>
-                                </span>
-                              ) : (
-                                <span>No due date</span>
-                              )}
-
-                              <div className="flex items-center gap-1">
-                                {col.id !== 'todo' && (
-                                  <button
-                                    onClick={() => handleShiftTaskStatus(task._id, task.status, 'prev')}
-                                    className="p-1 rounded bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 text-neutral-600 dark:text-neutral-300"
-                                    title="Move Backward"
-                                  >
-                                    <ArrowLeft className="w-2.5 h-2.5" />
-                                  </button>
-                                )}
-                                {col.id !== 'done' && (
-                                  <button
-                                    onClick={() => handleShiftTaskStatus(task._id, task.status, 'next')}
-                                    className="p-1 rounded bg-indigo-50 dark:bg-indigo-950/80 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400"
-                                    title="Advance Stage"
-                                  >
-                                    <ArrowRight className="w-2.5 h-2.5" />
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handleOpenCreateTask(col.id)}
-                    className="w-full py-2 mt-4 text-center rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 transition-colors"
-                  >
-                    + Add Card
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <KanbanBoard
+          projectId={projectId}
+          tasks={tasks}
+          milestones={project.milestones}
+          onOpenCreateTask={handleOpenCreateTask}
+          onOpenEditTask={handleOpenEditTask}
+        />
       )}
 
       {/* Tab 2: Milestones Breakdown */}
