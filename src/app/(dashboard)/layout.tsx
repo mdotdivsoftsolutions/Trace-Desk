@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const userRole = user?.role || 'super_admin';
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0F172A] text-neutral-900 dark:text-neutral-100 antialiased font-sans overflow-x-clip">
+    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0F172A] text-neutral-900 dark:text-neutral-100 antialiased font-sans">
       {/* Sidebar Component with User Profile Footer */}
       <Sidebar
         isCollapsed={isCollapsed}
@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       />
 
       {/* Main Content Area — flex-1 with stable min-width to prevent scroll-caused shifts */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header Bar — sticky + explicit h-16 so it never shifts */}
         <header className="sticky top-0 z-30 h-16 shrink-0 border-b border-neutral-200 dark:border-[#334155] bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
