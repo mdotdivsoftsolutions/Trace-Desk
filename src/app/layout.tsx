@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter } from 'next/font/google';
 import './globals.css';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { ConfirmDialogProvider } from '@/hooks/useConfirmDialog';
 
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-heading',
@@ -19,7 +20,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Trace Desk - Agency & Freelancer Operating System',
+  title: 'M.Div Softsolutions Hub - Agency & Freelancer Operating System',
   description: 'Single-tenant Client CRM, Project Milestones, Kanban Task Pipeline & Financial Ledger',
 };
 
@@ -44,7 +45,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <ConfirmDialogProvider>
+              {children}
+            </ConfirmDialogProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

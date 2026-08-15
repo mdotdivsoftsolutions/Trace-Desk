@@ -12,10 +12,11 @@ import {
   DollarSign,
   Eye,
   Edit2,
+  Trash2,
   Filter,
   Layers,
 } from 'lucide-react';
-import { useClients } from '@/hooks';
+import { useClients, useDeleteClient, useConfirmDialog } from '@/hooks';
 import { ClientFormModal } from '@/components/modules/clients/client-form-modal';
 import { ClientDrawer } from '@/components/modules/clients/client-drawer';
 import { Pagination } from '@/components/common/pagination';
@@ -31,6 +32,9 @@ export default function ClientsPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<ClientType | null>(null);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+
+  const { confirm } = useConfirmDialog();
+  const deleteClientMutation = useDeleteClient();
 
   const { data: clientsData, isLoading } = useClients({
     status: statusFilter === 'all' ? undefined : statusFilter,
@@ -263,6 +267,24 @@ export default function ClientsPage() {
                           title="Edit Profile"
                         >
                           <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={async () => {
+                            const confirmed = await confirm({
+                              title: `Delete Client "${client.name}"?`,
+                              description:
+                                'Are you sure you want to delete this client account? All linked project references and invoices will remain but will show as unassigned.',
+                              variant: 'danger',
+                              confirmText: 'Delete Client',
+                            });
+                            if (confirmed) {
+                              await deleteClientMutation.mutateAsync(client._id);
+                            }
+                          }}
+                          className="p-1.5 rounded-md text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                          title="Delete Client"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
