@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { FolderPlus, ArrowLeft, Loader2 } from 'lucide-react';
 import { useClients } from '@/hooks/useClients';
 import { useCreateProject } from '@/hooks/useProjects';
 import { ProjectBasicInfoFields } from '@/components/modules/projects/form/ProjectBasicInfoFields';
 import { ProjectTechStackFields } from '@/components/modules/projects/form/ProjectTechStackFields';
 import { ProjectMilestoneInputs, MilestoneDraft } from '@/components/modules/projects/form/ProjectMilestoneInputs';
 import { ProjectCredentialInputs, CredentialDraft } from '@/components/modules/projects/form/ProjectCredentialInputs';
+import { RichTextEditor } from '@/components/common/RichTextEditor';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -61,7 +62,8 @@ export default function NewProjectPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl mx-auto pb-12">
+    <form onSubmit={handleSubmit} className="space-y-6 pb-12">
+      {/* Page header */}
       <div className="flex items-center justify-between">
         <Link href="/projects" className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
           <ArrowLeft className="w-3.5 h-3.5" /><span>Back to Projects</span>
@@ -69,15 +71,17 @@ export default function NewProjectPage() {
         <button
           type="submit"
           disabled={createProjectMutation.isPending || isClientsLoading}
-          className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50 transition-all"
         >
-          {createProjectMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {createProjectMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <FolderPlus className="w-4 h-4" />}
           <span>Create Project Workspace</span>
         </button>
       </div>
 
       <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-6">
         <h2 className="font-heading text-lg font-bold text-neutral-900 dark:text-white">New Project Configuration</h2>
+
+        {/* Basic fields: title, client, status, deadline */}
         <ProjectBasicInfoFields
           title={title} onTitleChange={setTitle}
           clientId={clientId} onClientChange={setClientId}
@@ -86,6 +90,19 @@ export default function NewProjectPage() {
           targetDeadline={targetDeadline} onDeadlineChange={setTargetDeadline}
           description={description} onDescriptionChange={setDescription}
         />
+
+        {/* Rich-text description */}
+        <div className="space-y-1.5">
+          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            Project Overview &amp; Objectives
+          </label>
+          <RichTextEditor
+            value={description}
+            onChange={setDescription}
+            placeholder="Describe the deliverables, scope, and success criteria for this project..."
+          />
+        </div>
+
         <hr className="border-neutral-200 dark:border-[#334155]" />
         <ProjectTechStackFields
           techStack={techStack} techInput={techInput} onTechInputChange={setTechInput}

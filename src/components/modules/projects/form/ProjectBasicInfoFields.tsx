@@ -86,16 +86,6 @@ export function ProjectBasicInfoFields({
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">Project Overview & Objectives</label>
-        <textarea
-          rows={2}
-          placeholder="Brief description of the deliverables and scope..."
-          value={description}
-          onChange={(e) => onDescriptionChange(e.target.value)}
-          className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400"
-        />
-      </div>
     </div>
   );
 }
