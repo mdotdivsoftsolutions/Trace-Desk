@@ -1,0 +1,105 @@
+export type CurrencyCode = 'USD' | 'EUR' | 'INR' | 'AED' | 'GBP';
+
+export interface ClientType {
+  _id: string;
+  name: string;
+  companyName?: string;
+  email: string;
+  phone?: string;
+  country?: string;
+  currency: CurrencyCode;
+  notes?: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectType {
+  _id: string;
+  clientId: string | ClientType;
+  title: string;
+  description?: string;
+  status: 'discovery' | 'in_progress' | 'review' | 'completed' | 'on_hold';
+  budgetType: 'fixed' | 'hourly';
+  totalBudget?: number;
+  currency: string;
+  repoUrl?: string;
+  liveUrl?: string;
+  techStack?: string[];
+  progressPercentage: number;
+  startDate?: string;
+  targetDeadline?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MilestoneType {
+  _id: string;
+  projectId: string | ProjectType;
+  title: string;
+  description?: string;
+  allocatedAmount?: number;
+  order: number;
+  status: 'pending' | 'in_progress' | 'completed' | 'invoiced';
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TaskType {
+  _id: string;
+  projectId: string | ProjectType;
+  milestoneId?: string | MilestoneType;
+  title: string;
+  description?: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  status: 'todo' | 'in_progress' | 'review' | 'done';
+  estimatedHours?: number;
+  loggedHours: number;
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvoiceItemType {
+  description: string;
+  milestoneId?: string;
+  quantity: number;
+  unitPrice: number;
+  amount: number;
+}
+
+export interface InvoiceType {
+  _id: string;
+  invoiceNumber: string;
+  clientId: string | ClientType;
+  projectId?: string | ProjectType;
+  items: InvoiceItemType[];
+  subtotal: number;
+  taxRate?: number;
+  taxAmount?: number;
+  discountAmount?: number;
+  totalAmount: number;
+  paidAmount: number;
+  balanceDue: number;
+  currency: string;
+  status: 'draft' | 'sent' | 'partially_paid' | 'paid' | 'overdue' | 'cancelled';
+  issueDate: string;
+  dueDate: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaymentType {
+  _id: string;
+  invoiceId: string | InvoiceType;
+  clientId: string | ClientType;
+  amount: number;
+  paymentMethod: 'bank_transfer' | 'stripe' | 'upi' | 'paypal' | 'wire' | 'cash';
+  transactionReference?: string;
+  paymentDate: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
