@@ -18,7 +18,7 @@ export interface PaginatedProjectsResult {
 export class ProjectService {
   static async createProject(data: CreateProjectInput): Promise<IProject> {
     await dbConnect();
-    const projectData: any = {
+    const projectData: Record<string, unknown> = {
       ...data,
       clientId: new mongoose.Types.ObjectId(data.clientId),
     };
@@ -35,7 +35,7 @@ export class ProjectService {
     } = {}
   ): Promise<PaginatedProjectsResult> {
     await dbConnect();
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (filter.clientId && filter.clientId !== 'all') {
       query.clientId = new mongoose.Types.ObjectId(filter.clientId);
@@ -80,8 +80,9 @@ export class ProjectService {
     };
   }
 
-  static async getProjectById(id: string): Promise<any> {
+  static async getProjectById(id: string): Promise<Record<string, unknown> | null> {
     await dbConnect();
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
     const project = await Project.findById(id).populate('clientId', 'name companyName email currency');
     if (!project) return null;
 
@@ -92,8 +93,17 @@ export class ProjectService {
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter((t) => t.status === 'done').length;
 
+    const projectObj = project.toObject();
+    if (milestones.length > 0) {
+      const milestoneBudgetSum = milestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+      if (milestoneBudgetSum !== project.totalBudget) {
+        projectObj.totalBudget = milestoneBudgetSum;
+        await Project.findByIdAndUpdate(project._id, { totalBudget: milestoneBudgetSum });
+      }
+    }
+
     return {
-      ...project.toObject(),
+      ...projectObj,
       milestones,
       tasks,
       invoices,
@@ -108,7 +118,8 @@ export class ProjectService {
 
   static async updateProject(id: string, data: UpdateProjectInput): Promise<IProject | null> {
     await dbConnect();
-    const updateData: any = { ...data };
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    const updateData: Record<string, unknown> = { ...data };
     if (data.clientId) {
       updateData.clientId = new mongoose.Types.ObjectId(data.clientId);
     }
@@ -117,6 +128,7 @@ export class ProjectService {
 
   static async deleteProject(id: string): Promise<boolean> {
     await dbConnect();
+    if (!mongoose.Types.ObjectId.isValid(id)) return false;
     const res = await Project.findByIdAndDelete(id);
     if (!res) return false;
 

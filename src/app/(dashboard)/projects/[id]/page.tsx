@@ -3,8 +3,8 @@
 import React, { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useProject } from '@/hooks/useProjects';
-import { useMilestones } from '@/hooks/useMilestones';
-import { useTasks } from '@/hooks/useTasks';
+import { useMilestones, useDeleteMilestone } from '@/hooks/useMilestones';
+import { useTasks, useDeleteTask } from '@/hooks/useTasks';
 import { useInvoices } from '@/hooks/useInvoices';
 import { ProjectHeader } from '@/components/modules/projects/detail/ProjectHeader';
 import { ProjectClientSnapshot } from '@/components/modules/projects/detail/ProjectClientSnapshot';
@@ -25,7 +25,7 @@ const PROJECT_TABS = (milestoneCount: number, taskCount: number) => [
   { key: 'tasks',      label: 'Tasks',      count: taskCount },
   { key: 'financials', label: 'Financials' },
   { key: 'credentials',label: 'Credentials' },
-] as const;
+];
 
 export default function ProjectWorkspacePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -41,6 +41,8 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
   const { data: milestones = [] } = useMilestones(id);
   const { data: tasks = [] } = useTasks(id);
   const { data: invoicesData } = useInvoices({ projectId: id });
+  const deleteMilestoneMutation = useDeleteMilestone();
+  const deleteTaskMutation = useDeleteTask(id);
 
   if (isLoading) {
     return <ProjectWorkspaceSkeleton />;
@@ -68,7 +70,7 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
 
       {/* CLS-safe tab bar — fixed height, border always present */}
       <TabBar
-        tabs={tabs as any}
+        tabs={tabs}
         activeTab={activeTab}
         onTabChange={(k) => setActiveTab(k as ProjectTab)}
       />
@@ -79,7 +81,11 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
           milestones={milestones} projectId={id}
           onAddMilestone={() => { setEditingMilestone(null); setIsMilestoneDrawerOpen(true); }}
           onEditMilestone={(m) => { setEditingMilestone(m); setIsMilestoneDrawerOpen(true); }}
-          onDeleteMilestone={() => {}}
+          onDeleteMilestone={(m) => {
+            if (confirm(`Are you sure you want to delete milestone "${m.title}"?`)) {
+              deleteMilestoneMutation.mutate({ id: m._id, projectId: id });
+            }
+          }}
         />
       </TabPanel>
       <TabPanel tabKey="tasks" activeTab={activeTab} minHeight={280}>
@@ -87,7 +93,11 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
           tasks={tasks} projectId={id}
           onAddTask={() => { setEditingTask(null); setIsTaskDrawerOpen(true); }}
           onEditTask={(t) => { setEditingTask(t); setIsTaskDrawerOpen(true); }}
-          onDeleteTask={() => {}}
+          onDeleteTask={(t) => {
+            if (confirm(`Are you sure you want to delete task "${t.title}"?`)) {
+              deleteTaskMutation.mutate(t._id);
+            }
+          }}
         />
       </TabPanel>
       <TabPanel tabKey="financials" activeTab={activeTab} minHeight={280}>

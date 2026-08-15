@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
-import { Milestone } from '@/models';
+import { Milestone, recalculateProjectBudget } from '@/models';
 import { createMilestoneSchema } from '@/lib/validations';
 import { apiSuccess, handleApiError } from '@/lib/api-response';
 
@@ -32,15 +32,23 @@ export async function POST(
     const body = await req.json();
     await dbConnect();
 
+    const rawAmount = body.allocatedAmount !== undefined ? Number(body.allocatedAmount) : (body.amount !== undefined ? Number(body.amount) : 0);
+
     const validatedData = createMilestoneSchema.parse({
       ...body,
+      allocatedAmount: rawAmount,
+      amount: rawAmount,
       projectId,
     });
 
     const milestone = await Milestone.create({
       ...validatedData,
+      allocatedAmount: rawAmount,
+      amount: rawAmount,
       projectId: new mongoose.Types.ObjectId(projectId),
     });
+
+    await recalculateProjectBudget(projectId);
 
     return apiSuccess(milestone, 'Milestone created successfully', 201);
   } catch (error) {

@@ -65,8 +65,14 @@ export function TabPanel({
  * The border always occupies space whether a tab is active or not,
  * eliminating the 1–2px layout shift caused by border-bottom toggling.
  */
+export interface TabItem {
+  key: string;
+  label: string;
+  count?: number;
+}
+
 interface TabBarProps {
-  tabs: Array<{ key: string; label: string; count?: number }>;
+  tabs: readonly TabItem[] | TabItem[];
   activeTab: string;
   onTabChange: (key: string) => void;
   className?: string;

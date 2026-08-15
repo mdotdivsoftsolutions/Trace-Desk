@@ -22,7 +22,7 @@ export function useCreateMilestone() {
       apiClient.post<MilestoneType>(`/projects/${projectId}/milestones`, data),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(variables.projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });
@@ -36,7 +36,7 @@ export function useUpdateMilestone() {
       apiClient.put<MilestoneType>(`/milestones/${id}`, data),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(variables.projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });
@@ -50,7 +50,7 @@ export function useDeleteMilestone() {
       apiClient.delete<{ id: string }>(`/milestones/${id}`),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.milestones.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(variables.projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
     },
   });

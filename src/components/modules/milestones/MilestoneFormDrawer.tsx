@@ -20,7 +20,14 @@ export function MilestoneFormDrawer({ isOpen, onClose, projectId, milestone }: M
 
   useEffect(() => {
     if (milestone) {
-      setForm({ title: milestone.title, description: milestone.description || '', amount: milestone.amount, status: milestone.status, dueDate: milestone.dueDate ? new Date(milestone.dueDate).toISOString().split('T')[0] : '' });
+      const amt = milestone.allocatedAmount ?? milestone.amount ?? 0;
+      setForm({
+        title: milestone.title || '',
+        description: milestone.description || '',
+        amount: amt,
+        status: milestone.status || 'pending',
+        dueDate: milestone.dueDate ? new Date(milestone.dueDate).toISOString().split('T')[0] : '',
+      });
     } else {
       setForm({ title: '', description: '', amount: 0, status: 'pending', dueDate: '' });
     }
@@ -30,7 +37,15 @@ export function MilestoneFormDrawer({ isOpen, onClose, projectId, milestone }: M
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = { title: form.title, description: form.description || undefined, amount: form.amount, status: form.status, dueDate: form.dueDate ? new Date(form.dueDate) : undefined };
+    const numAmount = Number(form.amount) || 0;
+    const payload = {
+      title: form.title,
+      description: form.description || undefined,
+      amount: numAmount,
+      allocatedAmount: numAmount,
+      status: form.status,
+      dueDate: form.dueDate ? new Date(form.dueDate) : undefined,
+    };
     if (milestone) {
       await updateMilestoneMutation.mutateAsync({ id: milestone._id, projectId, data: payload });
     } else {
@@ -58,12 +73,23 @@ export function MilestoneFormDrawer({ isOpen, onClose, projectId, milestone }: M
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold">Amount (₹) *</label>
-                <input type="number" required min="0" value={form.amount || ''} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-mono" />
+                <input
+                  type="number"
+                  required
+                  min="0"
+                  value={form.amount === 0 ? '0' : form.amount || ''}
+                  onChange={(e) => setForm({ ...form, amount: e.target.value === '' ? ('' as any) : Number(e.target.value) })}
+                  className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-mono"
+                />
               </div>
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold">Status</label>
                 <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as MilestoneStatus })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs">
-                  <option value="pending">Pending</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option>
+                  <option value="pending">Pending</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                  <option value="invoiced">Invoiced</option>
+                  <option value="cancelled">Cancelled</option>
                 </select>
               </div>
             </div>
