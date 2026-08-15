@@ -3,7 +3,7 @@
 import React from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { Task, TaskStatus } from '@/types';
-import { useUpdateTaskStatus } from '@/hooks/useTasks';
+import { useReorderTasks } from '@/hooks/useTasks';
 import { KanbanColumn } from './KanbanColumn';
 
 interface KanbanBoardProps {
@@ -30,18 +30,46 @@ export function KanbanBoard({
   onEditTask,
   onDeleteTask,
 }: KanbanBoardProps) {
-  const updateTaskStatusMutation = useUpdateTaskStatus(projectId);
+  const reorderTasksMutation = useReorderTasks(projectId);
 
-  const handleDragEnd = async (result: DropResult) => {
+  const handleDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    const newStatus = destination.droppableId as TaskStatus;
-    await updateTaskStatusMutation.mutateAsync({
-      id: draggableId,
-      status: newStatus,
-    });
+    const sourceStatus = source.droppableId as TaskStatus;
+    const destStatus = destination.droppableId as TaskStatus;
+
+    if (sourceStatus === destStatus) {
+      // Reordering within the same column
+      const colTasks = [...tasks.filter((t) => t.status === sourceStatus)];
+      const [movedItem] = colTasks.splice(source.index, 1);
+      if (!movedItem) return;
+      colTasks.splice(destination.index, 0, movedItem);
+
+      const items = colTasks.map((t, idx) => ({
+        id: t._id,
+        order: idx,
+        status: sourceStatus,
+      }));
+
+      reorderTasksMutation.mutate({ items });
+    } else {
+      // Moving to a different column at specific index
+      const destTasks = [...tasks.filter((t) => t.status === destStatus)];
+      const movedItem = tasks.find((t) => t._id === draggableId);
+      if (!movedItem) return;
+
+      destTasks.splice(destination.index, 0, { ...movedItem, status: destStatus });
+
+      const items = destTasks.map((t, idx) => ({
+        id: t._id,
+        order: idx,
+        status: destStatus,
+      }));
+
+      reorderTasksMutation.mutate({ items });
+    }
   };
 
   return (

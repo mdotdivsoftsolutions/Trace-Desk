@@ -81,7 +81,81 @@ export function useUpdateTaskStatus(projectId?: string) {
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: TaskStatus; projectId?: string }) =>
       apiClient.patch<TaskType>(`/tasks/${id}`, { status }),
-    onSuccess: () => {
+    onMutate: async ({ id, status }) => {
+      // Cancel any outgoing refetches so they don't overwrite optimistic update
+      await queryClient.cancelQueries({ queryKey: queryKeys.tasks.all });
+
+      // Snapshot previous query data across all task queries for rollback if needed
+      const previousQueries = queryClient.getQueriesData<TaskType[]>({ queryKey: queryKeys.tasks.all });
+
+      // Optimistically update all task query lists in cache
+      queryClient.setQueriesData<TaskType[]>(
+        { queryKey: queryKeys.tasks.all },
+        (oldTasks) => {
+          if (!oldTasks || !Array.isArray(oldTasks)) return oldTasks;
+          return oldTasks.map((t) => (t._id === id ? { ...t, status } : t));
+        }
+      );
+
+      return { previousQueries };
+    },
+    onError: (_err, _vars, context) => {
+      // Rollback on error
+      if (context?.previousQueries) {
+        context.previousQueries.forEach(([key, data]) => {
+          queryClient.setQueryData(key, data);
+        });
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
+      if (projectId) queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });
+    },
+  });
+}
+
+export function useReorderTasks(projectId?: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ items }: { items: Array<{ id: string; order: number; status?: TaskStatus }> }) =>
+      apiClient.patch<{ success: boolean; count: number }>('/tasks/reorder', { items }),
+    onMutate: async ({ items }) => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.tasks.all });
+
+      const previousQueries = queryClient.getQueriesData<TaskType[]>({ queryKey: queryKeys.tasks.all });
+      const itemMap = new Map(items.map((i) => [i.id, i]));
+
+      queryClient.setQueriesData<TaskType[]>(
+        { queryKey: queryKeys.tasks.all },
+        (oldTasks) => {
+          if (!oldTasks || !Array.isArray(oldTasks)) return oldTasks;
+          const updated = oldTasks.map((t) => {
+            const reordered = itemMap.get(t._id);
+            if (reordered) {
+              return {
+                ...t,
+                order: reordered.order,
+                ...(reordered.status ? { status: reordered.status } : {}),
+              };
+            }
+            return t;
+          });
+          return updated.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        }
+      );
+
+      return { previousQueries };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousQueries) {
+        context.previousQueries.forEach(([key, data]) => {
+          queryClient.setQueryData(key, data);
+        });
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.all });
       if (projectId) queryClient.invalidateQueries({ queryKey: queryKeys.projects.detail(projectId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics });

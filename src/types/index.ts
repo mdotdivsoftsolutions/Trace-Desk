@@ -99,6 +99,7 @@ export interface TaskType {
   description?: string;
   priority: 'low' | 'medium' | 'high' | 'critical' | 'urgent';
   status: 'todo' | 'in_progress' | 'review' | 'done';
+  order?: number;
   estimatedHours?: number;
   loggedHours?: number;
   dueDate?: string | Date;

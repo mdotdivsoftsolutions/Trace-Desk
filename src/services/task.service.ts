@@ -76,7 +76,7 @@ export class TaskService {
     return Task.find(query)
       .populate('projectId', 'title isPinned status clientId')
       .populate('milestoneId', 'title status')
-      .sort({ createdAt: -1 })
+      .sort({ order: 1, createdAt: -1 })
       .lean();
   }
 
@@ -86,6 +86,39 @@ export class TaskService {
   static async getTaskById(id: string): Promise<ITask | null> {
     await dbConnect();
     return Task.findById(id).populate('milestoneId', 'title status').populate('projectId', 'title');
+  }
+
+  /**
+   * Bulk reorders tasks and optionally transitions their statuses.
+   */
+  static async reorderTasks(
+    items: Array<{ id: string; order: number; status?: 'todo' | 'in_progress' | 'review' | 'done' }>
+  ): Promise<boolean> {
+    await dbConnect();
+    if (!items || items.length === 0) return true;
+
+    const operations = items.map((item) => {
+      const updateFields: Record<string, unknown> = { order: item.order };
+      if (item.status) {
+        updateFields.status = item.status;
+      }
+      return {
+        updateOne: {
+          filter: { _id: new mongoose.Types.ObjectId(item.id) },
+          update: { $set: updateFields },
+        },
+      };
+    });
+
+    await Task.bulkWrite(operations);
+
+    // If any item changed status, trigger recalculation for affected projects
+    const affectedTask = await Task.findById(items[0].id).select('projectId');
+    if (affectedTask?.projectId) {
+      await this.calculateAndUpdateProjectProgress(affectedTask.projectId);
+    }
+
+    return true;
   }
 
   /**
