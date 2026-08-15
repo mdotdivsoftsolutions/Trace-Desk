@@ -92,14 +92,11 @@ export function ProjectHeader({
         <span>Back to Projects Workspace</span>
       </Link>
 
-      <div className={cn(
-        'p-6 rounded-lg bg-white dark:bg-[#1E293B] border shadow-sm space-y-4 transition-all',
-        project.isPinned ? 'border-amber-500/40 ring-1 ring-amber-500/20' : 'border-neutral-200 dark:border-[#334155]'
-      )}>
+      <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-4">
         {/* Top bar: Title, status, budget, deadline, actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+          <div className="space-y-2 flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2.5">
               <h1 className="font-heading text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
                 {project.title}
               </h1>
@@ -152,7 +149,7 @@ export function ProjectHeader({
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 flex-shrink-0 pt-0.5">
             <button
               type="button"
               onClick={() => togglePinMutation.mutate(project._id)}
@@ -176,22 +173,25 @@ export function ProjectHeader({
               <span>Kanban Board</span>
             </Link>
             <button
+              type="button"
               onClick={onAddTask}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] transition-colors cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>+ Add Task</span>
+              <span>Add Task</span>
             </button>
             <button
+              type="button"
               onClick={onAddMilestone}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] transition-colors cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>+ Add Milestone</span>
+              <span>Add Milestone</span>
             </button>
             <button
+              type="button"
               onClick={onEdit}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 text-xs font-bold shadow-sm transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 text-xs font-bold shadow-sm transition-all cursor-pointer"
             >
               <Edit className="w-3.5 h-3.5" />
               <span>Edit Project</span>

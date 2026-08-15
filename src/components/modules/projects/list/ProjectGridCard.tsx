@@ -33,14 +33,7 @@ export function ProjectGridCard({ project }: ProjectGridCardProps) {
   };
 
   return (
-    <div
-      className={cn(
-        'p-5 rounded-lg bg-white dark:bg-[#1E293B] border shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all flex flex-col justify-between space-y-4 group relative',
-        project.isPinned
-          ? 'border-amber-500/40 dark:border-amber-500/40 ring-1 ring-amber-500/20 dark:ring-amber-500/20'
-          : 'border-neutral-200 dark:border-[#334155]'
-      )}
-    >
+    <div className="p-5 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all flex flex-col justify-between space-y-4 group relative">
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0 pr-2">

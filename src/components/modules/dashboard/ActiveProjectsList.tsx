@@ -64,10 +64,7 @@ export function ActiveProjectsList({ projects, isLoading }: ActiveProjectsListPr
             return (
               <div
                 key={project._id}
-                className={cn(
-                  'p-4 rounded-lg bg-white dark:bg-[#1E293B] border shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group',
-                  project.isPinned ? 'border-amber-500/40 ring-1 ring-amber-500/20' : 'border-neutral-200 dark:border-[#334155]'
-                )}
+                className="p-4 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
