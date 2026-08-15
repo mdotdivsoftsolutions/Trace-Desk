@@ -23,7 +23,7 @@ const ClientSchema: Schema = new Schema(
     currency: {
       type: String,
       enum: ['USD', 'EUR', 'INR', 'AED', 'GBP'],
-      default: 'USD',
+      default: 'INR',
       required: true,
     },
     notes: { type: String },

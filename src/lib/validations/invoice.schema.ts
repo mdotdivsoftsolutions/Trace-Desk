@@ -17,7 +17,7 @@ export const createInvoiceSchema = z.object({
   items: z.array(invoiceItemSchema).min(1, 'Invoice must have at least one line item'),
   taxRate: z.number().min(0, 'Tax rate must be non-negative').max(100, 'Tax rate cannot exceed 100%').default(0),
   discountAmount: z.number().min(0, 'Discount must be non-negative').default(0),
-  currency: z.string().min(1, 'Currency is required').default('USD'),
+  currency: z.string().min(1, 'Currency is required').default('INR'),
   status: InvoiceStatusEnum.default('draft'),
   issueDate: z.coerce.date().default(() => new Date()),
   dueDate: z.coerce.date(),

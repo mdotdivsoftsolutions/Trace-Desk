@@ -108,3 +108,27 @@ export interface PaymentType {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface BankDetailsType {
+  bankName?: string;
+  accountNumber?: string;
+  ifscCode?: string;
+  upiId?: string;
+  swiftCode?: string;
+}
+
+export interface SettingsType {
+  _id?: string;
+  agencyName: string;
+  agencyEmail?: string;
+  agencyPhone?: string;
+  agencyAddress?: string;
+  gstinOrTaxId?: string;
+  defaultCurrency: CurrencyCode;
+  currencySymbol: string;
+  bankDetails?: BankDetailsType;
+  invoicePrefix: string;
+  defaultTaxRate: number;
+  createdAt?: string;
+  updatedAt?: string;
+}

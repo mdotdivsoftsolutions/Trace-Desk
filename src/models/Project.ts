@@ -39,7 +39,7 @@ const ProjectSchema: Schema = new Schema(
       required: true,
     },
     totalBudget: { type: Number },
-    currency: { type: String, required: true, default: 'USD' },
+    currency: { type: String, required: true, default: 'INR' },
     repoUrl: { type: String },
     liveUrl: { type: String },
     techStack: [{ type: String }],

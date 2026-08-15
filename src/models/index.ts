@@ -15,3 +15,6 @@ export * from './Invoice';
 
 export { default as Payment } from './Payment';
 export * from './Payment';
+
+export { default as Settings } from './Settings';
+export * from './Settings';

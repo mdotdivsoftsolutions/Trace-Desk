@@ -10,7 +10,7 @@ export const createProjectSchema = z.object({
   status: ProjectStatusEnum.default('discovery'),
   budgetType: BudgetTypeEnum.default('fixed'),
   totalBudget: z.number().min(0, 'Total budget must be non-negative').optional(),
-  currency: z.string().min(1, 'Currency is required').default('USD'),
+  currency: z.string().min(1, 'Currency is required').default('INR'),
   repoUrl: z.string().url('Invalid repository URL').optional().or(z.literal('')),
   liveUrl: z.string().url('Invalid deployment URL').optional().or(z.literal('')),
   techStack: z.array(z.string()).default([]),
