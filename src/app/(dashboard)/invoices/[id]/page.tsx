@@ -35,7 +35,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6">
       <InvoiceHeaderActions
         invoice={invoice}
         onRecordPayment={() => setIsPaymentDrawerOpen(true)}

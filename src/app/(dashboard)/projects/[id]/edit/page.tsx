@@ -9,7 +9,8 @@ import { useProject, useUpdateProject } from '@/hooks/useProjects';
 import { ProjectBasicInfoFields } from '@/components/modules/projects/form/ProjectBasicInfoFields';
 import { ProjectTechStackFields } from '@/components/modules/projects/form/ProjectTechStackFields';
 import { ProjectCredentialInputs, CredentialDraft } from '@/components/modules/projects/form/ProjectCredentialInputs';
-import { ProjectCredential } from '@/types';
+import { ProjectCredential, Project } from '@/types';
+import { RichTextEditor } from '@/components/common/RichTextEditor';
 
 export default function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -30,25 +31,26 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
   const [liveUrl, setLiveUrl] = useState('');
   const [credentials, setCredentials] = useState<CredentialDraft[]>([]);
 
-  useEffect(() => {
-    if (project) {
-      setTitle(project.title);
-      setClientId(typeof project.clientId === 'object' ? (project.clientId as any)._id : project.clientId);
-      setDescription(project.description || '');
-      setStatus(project.status);
-      setTargetDeadline(project.targetDeadline ? new Date(project.targetDeadline).toISOString().split('T')[0] : '');
-      setTechStack(project.techStack || []);
-      setGithubRepo(project.repoUrl || '');
-      setLiveUrl(project.liveUrl || '');
-      setCredentials((project.credentials || []).map((c: ProjectCredential) => ({
-        title: c.serviceName || c.title || 'Credential',
-        username: c.accountId || c.username,
-        password: c.accessKeyOrUrl || c.password,
-        url: c.notes || c.url,
-        environment: (c.environment as any) || 'development',
-      })));
-    }
-  }, [project]);
+  const [prevProject, setPrevProject] = useState<Project | null>(null);
+
+  if (project && project !== prevProject) {
+    setPrevProject(project);
+    setTitle(project.title);
+    setClientId(typeof project.clientId === 'object' && project.clientId !== null && '_id' in project.clientId ? (project.clientId as { _id: string })._id : typeof project.clientId === 'string' ? project.clientId : '');
+    setDescription(project.description || '');
+    setStatus(project.status);
+    setTargetDeadline(project.targetDeadline ? new Date(project.targetDeadline).toISOString().split('T')[0] : '');
+    setTechStack(project.techStack || []);
+    setGithubRepo(project.repoUrl || '');
+    setLiveUrl(project.liveUrl || '');
+    setCredentials((project.credentials || []).map((c: ProjectCredential): CredentialDraft => ({
+      title: c.serviceName || c.title || 'Credential',
+      username: c.accountId || c.username,
+      password: c.accessKeyOrUrl || c.password,
+      url: c.notes || c.url,
+      environment: (c.environment as "production" | "staging" | "development") || 'development',
+    })));
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +68,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         title,
         clientId,
         description: description || undefined,
-        status: status as any,
+        status: status as Project['status'],
         targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined,
         techStack,
         repoUrl: githubRepo || undefined,
@@ -87,7 +89,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl mx-auto pb-12">
+    <form onSubmit={handleSubmit} className="space-y-6 pb-12">
       <div className="flex items-center justify-between">
         <Link href={`/projects/${id}`} className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
           <ArrowLeft className="w-3.5 h-3.5" /><span>Back to Workspace</span>
@@ -95,7 +97,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         <button
           type="submit"
           disabled={updateProjectMutation.isPending}
-          className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold shadow-sm disabled:opacity-50 transition-all"
         >
           {updateProjectMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           <span>Save Changes</span>
@@ -104,6 +106,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
 
       <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-6">
         <h2 className="font-heading text-lg font-bold text-neutral-900 dark:text-white">Edit Project Workspace</h2>
+        
         <ProjectBasicInfoFields
           title={title} onTitleChange={setTitle}
           clientId={clientId} onClientChange={setClientId}
@@ -112,6 +115,18 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
           targetDeadline={targetDeadline} onDeadlineChange={setTargetDeadline}
           description={description} onDescriptionChange={setDescription}
         />
+
+        <div className="space-y-1.5">
+          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            Project Overview &amp; Objectives
+          </label>
+          <RichTextEditor
+            value={description}
+            onChange={setDescription}
+            placeholder="Describe the deliverables, scope, and success criteria for this project..."
+          />
+        </div>
+
         <hr className="border-neutral-200 dark:border-[#334155]" />
         <ProjectTechStackFields
           techStack={techStack} techInput={techInput} onTechInputChange={setTechInput}

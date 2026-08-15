@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
 import { Milestone, MilestoneStatus } from '@/types';
 import { useCreateMilestone, useUpdateMilestone } from '@/hooks';
+import { RichTextEditor } from '@/components/common/RichTextEditor';
 
 interface MilestoneFormDrawerProps {
   isOpen: boolean;
@@ -72,7 +73,7 @@ export function MilestoneFormDrawer({ isOpen, onClose, projectId, milestone }: M
             </div>
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold">Scope of Deliverable</label>
-              <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-3 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs" />
+              <RichTextEditor value={form.description} onChange={(v) => setForm({ ...form, description: v })} placeholder="Describe the phase deliverables..." />
             </div>
             <div className="pt-4 border-t border-neutral-200 dark:border-[#334155] flex justify-end gap-2">
               <button type="button" onClick={onClose} className="px-3.5 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-xs font-semibold">Cancel</button>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const ProjectStatusEnum = z.enum(['discovery', 'in_progress', 'review', 'completed', 'on_hold']);
+export const ProjectStatusEnum = z.enum(['discovery', 'in_progress', 'review', 'completed', 'on_hold', 'cancelled']);
 export const BudgetTypeEnum = z.enum(['fixed', 'hourly']);
 export const LinkCategoryEnum = z.enum(['production', 'staging', 'development', 'repository', 'design', 'api', 'other']);
 
