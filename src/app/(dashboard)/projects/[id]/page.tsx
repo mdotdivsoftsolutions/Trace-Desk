@@ -12,19 +12,26 @@ import { ProjectMilestonesTab } from '@/components/modules/projects/detail/Proje
 import { ProjectTasksTab } from '@/components/modules/projects/detail/ProjectTasksTab';
 import { ProjectFinancialsTab } from '@/components/modules/projects/detail/ProjectFinancialsTab';
 import { ProjectCredentialsTab } from '@/components/modules/projects/detail/ProjectCredentialsTab';
+import { ProjectLinksTab } from '@/components/modules/projects/detail/ProjectLinksTab';
 import { TaskFormDrawer } from '@/components/modules/tasks/TaskFormDrawer';
 import { MilestoneFormDrawer } from '@/components/modules/milestones/MilestoneFormDrawer';
 import { TabBar, TabPanel } from '@/components/common/TabPanel';
 import { Milestone, Task } from '@/types';
 import { ProjectWorkspaceSkeleton } from '@/components/common/skeletons/ProjectWorkspaceSkeleton';
 
-type ProjectTab = 'milestones' | 'tasks' | 'financials' | 'credentials';
+type ProjectTab = 'milestones' | 'tasks' | 'financials' | 'credentials' | 'links';
 
-const PROJECT_TABS = (milestoneCount: number, taskCount: number) => [
-  { key: 'milestones', label: 'Milestones', count: milestoneCount },
-  { key: 'tasks',      label: 'Tasks',      count: taskCount },
-  { key: 'financials', label: 'Financials' },
-  { key: 'credentials',label: 'Credentials' },
+const PROJECT_TABS = (
+  milestoneCount: number,
+  taskCount: number,
+  credCount: number,
+  linkCount: number
+) => [
+  { key: 'milestones',  label: 'Milestones',         count: milestoneCount },
+  { key: 'tasks',       label: 'Tasks',              count: taskCount },
+  { key: 'financials',  label: 'Financials' },
+  { key: 'credentials', label: 'Credentials',        count: credCount > 0 ? credCount : undefined },
+  { key: 'links',       label: 'Links & Resources',  count: linkCount > 0 ? linkCount : undefined },
 ];
 
 export default function ProjectWorkspacePage({ params }: { params: Promise<{ id: string }> }) {
@@ -56,12 +63,19 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
     );
   }
 
-  const tabs = PROJECT_TABS(milestones.length, tasks.length);
+  // Count total links including repoUrl and liveUrl
+  const directLinkCount = (project.links || []).length;
+  const extraLinks = (project.repoUrl || project.githubRepo ? 1 : 0) + (project.liveUrl ? 1 : 0);
+  const totalLinkCount = directLinkCount + extraLinks;
+  const totalCredCount = (project.credentials || []).length;
+
+  const tabs = PROJECT_TABS(milestones.length, tasks.length, totalCredCount, totalLinkCount);
 
   return (
     <div className="space-y-6">
       <ProjectHeader
         project={project}
+        milestones={milestones}
         onEdit={() => router.push(`/projects/${id}/edit`)}
         onAddTask={() => { setEditingTask(null); setIsTaskDrawerOpen(true); }}
         onAddMilestone={() => { setEditingMilestone(null); setIsMilestoneDrawerOpen(true); }}
@@ -78,7 +92,8 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
       {/* CLS-safe panels — opacity fade, stable min-height floor */}
       <TabPanel tabKey="milestones" activeTab={activeTab} minHeight={280}>
         <ProjectMilestonesTab
-          milestones={milestones} projectId={id}
+          milestones={milestones}
+          projectId={id}
           onAddMilestone={() => { setEditingMilestone(null); setIsMilestoneDrawerOpen(true); }}
           onEditMilestone={(m) => { setEditingMilestone(m); setIsMilestoneDrawerOpen(true); }}
           onDeleteMilestone={(m) => {
@@ -88,9 +103,11 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
           }}
         />
       </TabPanel>
+
       <TabPanel tabKey="tasks" activeTab={activeTab} minHeight={280}>
         <ProjectTasksTab
-          tasks={tasks} projectId={id}
+          tasks={tasks}
+          projectId={id}
           onAddTask={() => { setEditingTask(null); setIsTaskDrawerOpen(true); }}
           onEditTask={(t) => { setEditingTask(t); setIsTaskDrawerOpen(true); }}
           onDeleteTask={(t) => {
@@ -100,15 +117,35 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
           }}
         />
       </TabPanel>
+
       <TabPanel tabKey="financials" activeTab={activeTab} minHeight={280}>
-        <ProjectFinancialsTab invoices={invoicesData?.items || []} projectId={id} totalBudget={project.totalBudget || 0} />
+        <ProjectFinancialsTab
+          invoices={invoicesData?.items || []}
+          projectId={id}
+          totalBudget={project.totalBudget || 0}
+        />
       </TabPanel>
+
       <TabPanel tabKey="credentials" activeTab={activeTab} minHeight={200}>
         <ProjectCredentialsTab project={project} />
       </TabPanel>
 
-      <TaskFormDrawer isOpen={isTaskDrawerOpen} onClose={() => { setIsTaskDrawerOpen(false); setEditingTask(null); }} projectId={id} task={editingTask} />
-      <MilestoneFormDrawer isOpen={isMilestoneDrawerOpen} onClose={() => { setIsMilestoneDrawerOpen(false); setEditingMilestone(null); }} projectId={id} milestone={editingMilestone} />
+      <TabPanel tabKey="links" activeTab={activeTab} minHeight={200}>
+        <ProjectLinksTab project={project} />
+      </TabPanel>
+
+      <TaskFormDrawer
+        isOpen={isTaskDrawerOpen}
+        onClose={() => { setIsTaskDrawerOpen(false); setEditingTask(null); }}
+        projectId={id}
+        task={editingTask}
+      />
+      <MilestoneFormDrawer
+        isOpen={isMilestoneDrawerOpen}
+        onClose={() => { setIsMilestoneDrawerOpen(false); setEditingMilestone(null); }}
+        projectId={id}
+        milestone={editingMilestone}
+      />
     </div>
   );
 }

@@ -1,18 +1,25 @@
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
-import { Task, Project, ITask } from '@/models';
-import { CreateTaskInput, UpdateTaskInput, TaskStatusEnum } from '@/lib/validations/task.schema';
+import { Task, Project, Milestone, recalculateProjectBudget, ITask } from '@/models';
+import { CreateTaskInput, UpdateTaskInput } from '@/lib/validations/task.schema';
 
 export class TaskService {
   /**
    * Recalculates and updates the project's progressPercentage
-   * based on the ratio of completed tasks to total tasks.
+   * based on milestones or the ratio of completed tasks to total tasks.
    */
   static async calculateAndUpdateProjectProgress(
     projectId: string | mongoose.Types.ObjectId
   ): Promise<number> {
     await dbConnect();
     const pid = typeof projectId === 'string' ? new mongoose.Types.ObjectId(projectId) : projectId;
+
+    const milestoneCount = await Milestone.countDocuments({ projectId: pid, status: { $ne: 'cancelled' } });
+    if (milestoneCount > 0) {
+      await recalculateProjectBudget(pid);
+      const proj = await Project.findById(pid);
+      return proj?.progressPercentage || 0;
+    }
 
     const totalTasks = await Task.countDocuments({ projectId: pid });
     if (totalTasks === 0) {
@@ -37,7 +44,7 @@ export class TaskService {
   static async createTask(data: CreateTaskInput): Promise<ITask> {
     await dbConnect();
 
-    const taskData: any = {
+    const taskData: Record<string, unknown> = {
       ...data,
       projectId: new mongoose.Types.ObjectId(data.projectId),
       milestoneId: data.milestoneId ? new mongoose.Types.ObjectId(data.milestoneId) : undefined,
@@ -58,7 +65,7 @@ export class TaskService {
     priority?: string;
   }): Promise<ITask[]> {
     await dbConnect();
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (filter.projectId) query.projectId = new mongoose.Types.ObjectId(filter.projectId);
     if (filter.milestoneId) query.milestoneId = new mongoose.Types.ObjectId(filter.milestoneId);
@@ -84,7 +91,7 @@ export class TaskService {
     const existing = await Task.findById(id);
     if (!existing) return null;
 
-    const updateData: any = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.projectId) updateData.projectId = new mongoose.Types.ObjectId(data.projectId);
     if (data.milestoneId !== undefined) {
       updateData.milestoneId = data.milestoneId ? new mongoose.Types.ObjectId(data.milestoneId) : undefined;

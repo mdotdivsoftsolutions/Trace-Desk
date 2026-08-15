@@ -7,9 +7,13 @@ export interface IProjectLink {
 }
 
 export interface IProjectCredential {
-  serviceName: string;
+  serviceName?: string;
+  title?: string;
   accountId?: string;
+  username?: string;
   accessKeyOrUrl?: string;
+  password?: string;
+  url?: string;
   environment?: string;
   notes?: string;
 }
@@ -18,7 +22,7 @@ export interface IProject extends Document {
   clientId: mongoose.Types.ObjectId;
   title: string;
   description?: string;
-  status: 'discovery' | 'in_progress' | 'review' | 'completed' | 'on_hold';
+  status: 'discovery' | 'in_progress' | 'review' | 'completed' | 'on_hold' | 'cancelled';
   budgetType: 'fixed' | 'hourly';
   totalBudget?: number;
   currency: string;
@@ -46,13 +50,14 @@ const ProjectSchema: Schema = new Schema(
     description: { type: String },
     status: {
       type: String,
-      enum: ['discovery', 'in_progress', 'review', 'completed', 'on_hold'],
+      enum: ['discovery', 'in_progress', 'review', 'completed', 'on_hold', 'cancelled'],
       default: 'discovery',
       required: true,
     },
     budgetType: {
       type: String,
       enum: ['fixed', 'hourly'],
+      default: 'fixed',
       required: true,
     },
     totalBudget: { type: Number },
@@ -72,10 +77,14 @@ const ProjectSchema: Schema = new Schema(
     ],
     credentials: [
       {
-        serviceName: { type: String, required: true },
+        serviceName: { type: String },
+        title: { type: String },
         accountId: { type: String },
+        username: { type: String },
         accessKeyOrUrl: { type: String },
-        environment: { type: String },
+        password: { type: String },
+        url: { type: String },
+        environment: { type: String, default: 'development' },
         notes: { type: String },
       },
     ],

@@ -56,7 +56,7 @@ export class ProjectService {
     const limit = Math.max(1, Math.min(100, Number(filter.limit) || 12));
     const skip = (page - 1) * limit;
 
-    const [total, items] = await Promise.all([
+    const [total, rawProjects] = await Promise.all([
       Project.countDocuments(query),
       Project.find(query)
         .populate('clientId', 'name companyName email currency')
@@ -65,10 +65,51 @@ export class ProjectService {
         .limit(limit),
     ]);
 
+    const projectIds = rawProjects.map((p) => p._id);
+    const milestones = await Milestone.find({
+      projectId: { $in: projectIds },
+      status: { $ne: 'cancelled' },
+    });
+
+    const milestonesByProject = new Map<string, typeof milestones>();
+    for (const m of milestones) {
+      const pid = m.projectId.toString();
+      if (!milestonesByProject.has(pid)) {
+        milestonesByProject.set(pid, []);
+      }
+      milestonesByProject.get(pid)!.push(m);
+    }
+
+    const items = rawProjects.map((project) => {
+      const pObj = project.toObject();
+      const pMilestones = milestonesByProject.get(project._id.toString()) || [];
+
+      if (pMilestones.length > 0) {
+        const totalAmount = pMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+        const completedMilestones = pMilestones.filter((m) => m.status === 'completed' || m.status === 'invoiced');
+        const completedAmount = completedMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+
+        const totalBudget = totalAmount > 0 ? totalAmount : (project.totalBudget || 0);
+        const progressPercentage =
+          totalAmount > 0
+            ? Math.min(100, Math.max(0, Math.round((completedAmount / totalAmount) * 100)))
+            : Math.min(100, Math.max(0, Math.round((completedMilestones.length / pMilestones.length) * 100)));
+
+        pObj.totalBudget = totalBudget;
+        pObj.progressPercentage = progressPercentage;
+
+        if (project.progressPercentage !== progressPercentage || project.totalBudget !== totalBudget) {
+          Project.findByIdAndUpdate(project._id, { totalBudget, progressPercentage }).catch(() => {});
+        }
+      }
+
+      return pObj;
+    });
+
     const totalPages = Math.ceil(total / limit) || 1;
 
     return {
-      items,
+      items: items as unknown as IProject[],
       pagination: {
         total,
         page,
@@ -94,13 +135,37 @@ export class ProjectService {
     const completedTasks = tasks.filter((t) => t.status === 'done').length;
 
     const projectObj = project.toObject();
-    if (milestones.length > 0) {
-      const milestoneBudgetSum = milestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
-      if (milestoneBudgetSum !== project.totalBudget) {
-        projectObj.totalBudget = milestoneBudgetSum;
-        await Project.findByIdAndUpdate(project._id, { totalBudget: milestoneBudgetSum });
+
+    let totalBudget = project.totalBudget ?? 0;
+    let progressPercentage = project.progressPercentage ?? 0;
+
+    const validMilestones = milestones.filter((m) => m.status !== 'cancelled');
+    if (validMilestones.length > 0) {
+      const milestoneBudgetSum = validMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+      const completedMilestones = validMilestones.filter((m) => m.status === 'completed' || m.status === 'invoiced');
+      const completedBudgetSum = completedMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+
+      totalBudget = milestoneBudgetSum;
+      progressPercentage =
+        milestoneBudgetSum > 0
+          ? Math.min(100, Math.max(0, Math.round((completedBudgetSum / milestoneBudgetSum) * 100)))
+          : Math.min(100, Math.max(0, Math.round((completedMilestones.length / validMilestones.length) * 100)));
+
+      if (totalBudget !== project.totalBudget || progressPercentage !== project.progressPercentage) {
+        projectObj.totalBudget = totalBudget;
+        projectObj.progressPercentage = progressPercentage;
+        await Project.findByIdAndUpdate(project._id, { totalBudget, progressPercentage });
+      }
+    } else if (totalTasks > 0) {
+      progressPercentage = Math.min(100, Math.max(0, Math.round((completedTasks / totalTasks) * 100)));
+      if (progressPercentage !== project.progressPercentage) {
+        projectObj.progressPercentage = progressPercentage;
+        await Project.findByIdAndUpdate(project._id, { progressPercentage });
       }
     }
+
+    projectObj.progressPercentage = progressPercentage;
+    projectObj.totalBudget = totalBudget;
 
     return {
       ...projectObj,
@@ -110,8 +175,7 @@ export class ProjectService {
       stats: {
         totalTasks,
         completedTasks,
-        completionPercentage:
-          totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : project.progressPercentage,
+        completionPercentage: progressPercentage,
       },
     };
   }

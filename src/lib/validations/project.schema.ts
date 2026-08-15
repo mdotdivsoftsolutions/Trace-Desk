@@ -6,15 +6,19 @@ export const LinkCategoryEnum = z.enum(['production', 'staging', 'development', 
 
 export const projectLinkSchema = z.object({
   title: z.string().min(1, 'Link title is required'),
-  url: z.string().url('Invalid URL format'),
+  url: z.string().min(1, 'URL is required'),
   category: LinkCategoryEnum.optional().default('production'),
 });
 
 export const projectCredentialSchema = z.object({
-  serviceName: z.string().min(1, 'Service name is required'),
+  serviceName: z.string().optional(),
+  title: z.string().optional(),
   accountId: z.string().optional(),
+  username: z.string().optional(),
   accessKeyOrUrl: z.string().optional(),
-  environment: z.string().optional(),
+  password: z.string().optional(),
+  url: z.string().optional(),
+  environment: z.string().optional().default('development'),
   notes: z.string().optional(),
 });
 
@@ -26,8 +30,8 @@ export const createProjectSchema = z.object({
   budgetType: BudgetTypeEnum.default('fixed'),
   totalBudget: z.number().min(0, 'Total budget must be non-negative').optional(),
   currency: z.string().min(1, 'Currency is required').default('INR'),
-  repoUrl: z.string().url('Invalid repository URL').optional().or(z.literal('')),
-  liveUrl: z.string().url('Invalid deployment URL').optional().or(z.literal('')),
+  repoUrl: z.string().optional().or(z.literal('')),
+  liveUrl: z.string().optional().or(z.literal('')),
   links: z.array(projectLinkSchema).optional().default([]),
   credentials: z.array(projectCredentialSchema).optional().default([]),
   integrationNotes: z.string().optional(),

@@ -54,23 +54,36 @@ MilestoneSchema.index({ status: 1 });
 export async function recalculateProjectBudget(projectId: mongoose.Types.ObjectId | string): Promise<number> {
   if (!projectId) return 0;
   const targetId = typeof projectId === 'string' ? new mongoose.Types.ObjectId(projectId) : projectId;
-  const result = await Milestone.aggregate([
-    { $match: { projectId: targetId } },
-    {
-      $group: {
-        _id: '$projectId',
-        totalBudget: {
-          $sum: {
-            $ifNull: ['$allocatedAmount', { $ifNull: ['$amount', 0] }]
-          }
-        }
+
+  const allMilestones = await Milestone.find({ projectId: targetId, status: { $ne: 'cancelled' } });
+
+  let totalBudget = 0;
+  let progressPercentage = 0;
+
+  if (allMilestones.length > 0) {
+    const totalAmount = allMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+    const completedMilestones = allMilestones.filter((m) => m.status === 'completed' || m.status === 'invoiced');
+    const completedAmount = completedMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+
+    totalBudget = totalAmount;
+    if (totalAmount > 0) {
+      progressPercentage = Math.min(100, Math.max(0, Math.round((completedAmount / totalAmount) * 100)));
+    } else {
+      progressPercentage = Math.min(100, Math.max(0, Math.round((completedMilestones.length / allMilestones.length) * 100)));
+    }
+  } else {
+    // If no milestones exist for this project, check tasks
+    const TaskModel = mongoose.models.Task;
+    if (TaskModel) {
+      const totalTasks = await TaskModel.countDocuments({ projectId: targetId });
+      if (totalTasks > 0) {
+        const doneTasks = await TaskModel.countDocuments({ projectId: targetId, status: 'done' });
+        progressPercentage = Math.min(100, Math.max(0, Math.round((doneTasks / totalTasks) * 100)));
       }
     }
-  ]);
-  
-  const totalBudget = result.length > 0 ? (result[0].totalBudget || 0) : 0;
-  
-  await mongoose.model('Project').findByIdAndUpdate(targetId, { totalBudget });
+  }
+
+  await mongoose.model('Project').findByIdAndUpdate(targetId, { totalBudget, progressPercentage });
   return totalBudget;
 }
 
@@ -104,4 +117,3 @@ if (!Milestone.recalculateProjectBudget) {
 }
 
 export default Milestone;
-

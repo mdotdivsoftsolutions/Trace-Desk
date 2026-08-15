@@ -7,6 +7,7 @@ import { FolderPlus, ArrowLeft, Loader2 } from 'lucide-react';
 import { useClients } from '@/hooks/useClients';
 import { useCreateProject } from '@/hooks/useProjects';
 import { useCreateMilestone } from '@/hooks/useMilestones';
+import { ProjectType } from '@/types';
 import { ProjectBasicInfoFields } from '@/components/modules/projects/form/ProjectBasicInfoFields';
 import { ProjectTechStackFields } from '@/components/modules/projects/form/ProjectTechStackFields';
 import { ProjectLinksInputs, LinkDraft } from '@/components/modules/projects/form/ProjectLinksInputs';
@@ -23,7 +24,7 @@ export default function NewProjectPage() {
   const [title, setTitle] = useState('');
   const [clientId, setClientId] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('in_progress');
+  const [status, setStatus] = useState<ProjectType['status']>('in_progress');
   const [targetDeadline, setTargetDeadline] = useState('');
   const [techStack, setTechStack] = useState<string[]>(['Next.js', 'TypeScript', 'Tailwind']);
   const [techInput, setTechInput] = useState('');
@@ -36,24 +37,28 @@ export default function NewProjectPage() {
     const totalBudget = milestones.reduce((sum, m) => sum + (Number(m.amount) || 0), 0);
 
     const formattedCredentials = credentials.map((c) => ({
-      serviceName: c.title,
-      accountId: c.username,
-      accessKeyOrUrl: c.password || c.url,
-      environment: c.environment,
-      notes: c.url,
+      serviceName: c.title || 'Credential',
+      title: c.title || 'Credential',
+      accountId: c.username || '',
+      username: c.username || '',
+      accessKeyOrUrl: c.password || c.url || '',
+      password: c.password || '',
+      url: c.url || '',
+      environment: c.environment || 'development',
+      notes: c.notes || '',
     }));
 
-    const repoUrl = links.find(l => l.category === 'repository')?.url;
-    const liveUrl = links.find(l => l.category === 'production' || l.category === 'staging')?.url;
+    const repoUrl = links.find((l) => l.category === 'repository')?.url;
+    const liveUrl = links.find((l) => l.category === 'production' || l.category === 'staging')?.url;
 
     const newProj = await createProjectMutation.mutateAsync({
       title,
       clientId,
       description: description || undefined,
-      status: status as any,
+      status,
       budgetType: 'fixed' as const,
       currency: 'INR',
-      links: links as any,
+      links,
       progressPercentage: 0,
       targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined,
       techStack,
@@ -77,15 +82,19 @@ export default function NewProjectPage() {
       );
     }
 
-    router.push(/projects/ + newProj._id);
+    router.push(`/projects/${newProj._id}`);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 pb-12">
       {/* Page header */}
       <div className="flex items-center justify-between">
-        <Link href="/projects" className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
-          <ArrowLeft className="w-3.5 h-3.5" /><span>Back to Projects</span>
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Projects</span>
         </Link>
         <button
           type="submit"
@@ -102,12 +111,17 @@ export default function NewProjectPage() {
 
         {/* Basic fields: title, client, status, deadline */}
         <ProjectBasicInfoFields
-          title={title} onTitleChange={setTitle}
-          clientId={clientId} onClientChange={setClientId}
+          title={title}
+          onTitleChange={setTitle}
+          clientId={clientId}
+          onClientChange={setClientId}
           clients={clientsData?.items || []}
-          status={status} onStatusChange={setStatus}
-          targetDeadline={targetDeadline} onDeadlineChange={setTargetDeadline}
-          description={description} onDescriptionChange={setDescription}
+          status={status}
+          onStatusChange={(val) => setStatus(val as ProjectType['status'])}
+          targetDeadline={targetDeadline}
+          onDeadlineChange={setTargetDeadline}
+          description={description}
+          onDescriptionChange={setDescription}
         />
 
         {/* Rich-text description */}
@@ -123,43 +137,53 @@ export default function NewProjectPage() {
         </div>
 
         <hr className="border-neutral-200 dark:border-[#334155]" />
-        
+
         <ProjectTechStackFields
-          techStack={techStack} 
-          techInput={techInput} 
+          techStack={techStack}
+          techInput={techInput}
           onTechInputChange={setTechInput}
-          onAddTech={() => { if (techInput.trim() && !techStack.includes(techInput.trim())) { setTechStack([...techStack, techInput.trim()]); setTechInput(''); } }}
+          onAddTech={() => {
+            if (techInput.trim() && !techStack.includes(techInput.trim())) {
+              setTechStack([...techStack, techInput.trim()]);
+              setTechInput('');
+            }
+          }}
           onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))}
         />
-        
+
         <hr className="border-neutral-200 dark:border-[#334155]" />
-        
+
         <ProjectLinksInputs
           links={links}
           onAddLink={() => setLinks([...links, { title: '', url: '', category: 'repository' }])}
           onRemoveLink={(i) => setLinks(links.filter((_, idx) => idx !== i))}
-          onUpdateLink={(i, f, v) => setLinks(links.map((l, idx) => idx === i ? { ...l, [f]: v as any } : l))}
+          onUpdateLink={(i, f, v) =>
+            setLinks(links.map((l, idx) => (idx === i ? { ...l, [f]: v } : l)))
+          }
         />
 
         <hr className="border-neutral-200 dark:border-[#334155]" />
-        
+
         <ProjectMilestoneInputs
           milestones={milestones}
           onAddMilestone={() => setMilestones([...milestones, { title: '', amount: 0 }])}
           onRemoveMilestone={(i) => setMilestones(milestones.filter((_, idx) => idx !== i))}
-          onUpdateMilestone={(i, f, v) => setMilestones(milestones.map((m, idx) => idx === i ? { ...m, [f]: v } : m))}
+          onUpdateMilestone={(i, f, v) =>
+            setMilestones(milestones.map((m, idx) => (idx === i ? { ...m, [f]: v } : m)))
+          }
         />
-        
+
         <hr className="border-neutral-200 dark:border-[#334155]" />
-        
+
         <ProjectCredentialInputs
           credentials={credentials}
           onAddCredential={() => setCredentials([...credentials, { title: '', environment: 'development' }])}
           onRemoveCredential={(i) => setCredentials(credentials.filter((_, idx) => idx !== i))}
-          onUpdateCredential={(i, f, v) => setCredentials(credentials.map((c, idx) => idx === i ? { ...c, [f]: v } : c))}
+          onUpdateCredential={(i, f, v) =>
+            setCredentials(credentials.map((c, idx) => (idx === i ? { ...c, [f]: v } : c)))
+          }
         />
       </div>
     </form>
   );
 }
-

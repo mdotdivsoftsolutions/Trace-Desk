@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
@@ -36,37 +36,65 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
   if (project && project !== prevProject) {
     setPrevProject(project);
     setTitle(project.title);
-    setClientId(typeof project.clientId === 'object' && project.clientId !== null && '_id' in project.clientId ? (project.clientId as { _id: string })._id : typeof project.clientId === 'string' ? project.clientId : '');
+    setClientId(
+      typeof project.clientId === 'object' && project.clientId !== null && '_id' in project.clientId
+        ? (project.clientId as { _id: string })._id
+        : typeof project.clientId === 'string'
+        ? project.clientId
+        : ''
+    );
     setDescription(project.description || '');
     setStatus(project.status);
     setTargetDeadline(project.targetDeadline ? new Date(project.targetDeadline).toISOString().split('T')[0] : '');
     setTechStack(project.techStack || []);
-    setLinks((project.links || []).map((l: any) => ({
+
+    const initialLinks: LinkDraft[] = (project.links || []).map((l) => ({
       title: l.title || '',
       url: l.url || '',
-      category: l.category || 'other',
-    })));
-    setCredentials((project.credentials || []).map((c: ProjectCredential): CredentialDraft => ({
-      title: c.serviceName || c.title || 'Credential',
-      username: c.accountId || c.username,
-      password: c.accessKeyOrUrl || c.password,
-      url: c.notes || c.url,
-      environment: (c.environment as "production" | "staging" | "development") || 'development',
-    })));
+      category: (l.category as LinkDraft['category']) || 'other',
+    }));
+
+    // Ensure repo and liveUrl are included in links if not already present
+    const repo = project.repoUrl || project.githubRepo;
+    if (repo && !initialLinks.some((l) => l.url === repo)) {
+      initialLinks.unshift({ title: 'Repository', url: repo, category: 'repository' });
+    }
+    if (project.liveUrl && !initialLinks.some((l) => l.url === project.liveUrl)) {
+      initialLinks.unshift({ title: 'Live Production', url: project.liveUrl, category: 'production' });
+    }
+    setLinks(initialLinks);
+
+    setCredentials(
+      (project.credentials || []).map((c: ProjectCredential): CredentialDraft => {
+        const isSecretAUrl = (c.accessKeyOrUrl || '').startsWith('http://') || (c.accessKeyOrUrl || '').startsWith('https://');
+        return {
+          title: c.title || c.serviceName || 'Credential',
+          username: c.username || c.accountId || '',
+          password: c.password || (!isSecretAUrl ? c.accessKeyOrUrl : '') || '',
+          url: c.url || (isSecretAUrl ? c.accessKeyOrUrl : '') || (c.notes?.startsWith('http') ? c.notes : '') || '',
+          notes: c.notes && c.notes !== c.url && !c.notes.startsWith('http') ? c.notes : '',
+          environment: (c.environment as 'production' | 'staging' | 'development') || 'development',
+        };
+      })
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formattedCredentials = credentials.map((c) => ({
-      serviceName: c.title,
-      accountId: c.username,
-      accessKeyOrUrl: c.password || c.url,
-      environment: c.environment,
-      notes: c.url,
+      serviceName: c.title || 'Credential',
+      title: c.title || 'Credential',
+      accountId: c.username || '',
+      username: c.username || '',
+      accessKeyOrUrl: c.password || c.url || '',
+      password: c.password || '',
+      url: c.url || '',
+      environment: c.environment || 'development',
+      notes: c.notes || '',
     }));
 
-    const repoUrl = links.find(l => l.category === 'repository')?.url;
-    const liveUrl = links.find(l => l.category === 'production' || l.category === 'staging')?.url;
+    const repoUrl = links.find((l) => l.category === 'repository')?.url || project?.repoUrl;
+    const liveUrl = links.find((l) => l.category === 'production' || l.category === 'staging')?.url || project?.liveUrl;
 
     await updateProjectMutation.mutateAsync({
       id,
@@ -77,7 +105,7 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         status: status as Project['status'],
         targetDeadline: targetDeadline ? new Date(targetDeadline) : undefined,
         techStack,
-        links: links as any,
+        links,
         repoUrl: repoUrl || undefined,
         liveUrl: liveUrl || undefined,
         credentials: formattedCredentials,
@@ -98,8 +126,12 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
   return (
     <form onSubmit={handleSubmit} className="space-y-6 pb-12">
       <div className="flex items-center justify-between">
-        <Link href={`/projects/${id}`} className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
-          <ArrowLeft className="w-3.5 h-3.5" /><span>Back to Workspace</span>
+        <Link
+          href={`/projects/${id}`}
+          className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Workspace</span>
         </Link>
         <button
           type="submit"
@@ -113,14 +145,19 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
 
       <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-6">
         <h2 className="font-heading text-lg font-bold text-neutral-900 dark:text-white">Edit Project Workspace</h2>
-        
+
         <ProjectBasicInfoFields
-          title={title} onTitleChange={setTitle}
-          clientId={clientId} onClientChange={setClientId}
+          title={title}
+          onTitleChange={setTitle}
+          clientId={clientId}
+          onClientChange={setClientId}
           clients={clientsData?.items || []}
-          status={status} onStatusChange={setStatus}
-          targetDeadline={targetDeadline} onDeadlineChange={setTargetDeadline}
-          description={description} onDescriptionChange={setDescription}
+          status={status}
+          onStatusChange={setStatus}
+          targetDeadline={targetDeadline}
+          onDeadlineChange={setTargetDeadline}
+          description={description}
+          onDescriptionChange={setDescription}
         />
 
         <div className="space-y-1.5">
@@ -135,31 +172,40 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
         </div>
 
         <hr className="border-neutral-200 dark:border-[#334155]" />
-        
+
         <ProjectTechStackFields
-          techStack={techStack} 
-          techInput={techInput} 
+          techStack={techStack}
+          techInput={techInput}
           onTechInputChange={setTechInput}
-          onAddTech={() => { if (techInput.trim() && !techStack.includes(techInput.trim())) { setTechStack([...techStack, techInput.trim()]); setTechInput(''); } }}
+          onAddTech={() => {
+            if (techInput.trim() && !techStack.includes(techInput.trim())) {
+              setTechStack([...techStack, techInput.trim()]);
+              setTechInput('');
+            }
+          }}
           onRemoveTech={(t) => setTechStack(techStack.filter((x) => x !== t))}
         />
-        
+
         <hr className="border-neutral-200 dark:border-[#334155]" />
-        
+
         <ProjectLinksInputs
           links={links}
           onAddLink={() => setLinks([...links, { title: '', url: '', category: 'repository' }])}
           onRemoveLink={(i) => setLinks(links.filter((_, idx) => idx !== i))}
-          onUpdateLink={(i, f, v) => setLinks(links.map((l, idx) => idx === i ? { ...l, [f]: v as any } : l))}
+          onUpdateLink={(i, f, v) =>
+            setLinks(links.map((l, idx) => (idx === i ? { ...l, [f]: v } : l)))
+          }
         />
 
         <hr className="border-neutral-200 dark:border-[#334155]" />
-        
+
         <ProjectCredentialInputs
           credentials={credentials}
           onAddCredential={() => setCredentials([...credentials, { title: '', environment: 'development' }])}
           onRemoveCredential={(i) => setCredentials(credentials.filter((_, idx) => idx !== i))}
-          onUpdateCredential={(i, f, v) => setCredentials(credentials.map((c, idx) => idx === i ? { ...c, [f]: v } : c))}
+          onUpdateCredential={(i, f, v) =>
+            setCredentials(credentials.map((c, idx) => (idx === i ? { ...c, [f]: v } : c)))
+          }
         />
       </div>
     </form>

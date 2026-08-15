@@ -1,5 +1,5 @@
 import dbConnect from '@/lib/db';
-import { Project, Task, Invoice, Payment, Milestone, Client } from '@/models';
+import { Project, Task, Invoice, Payment, Milestone } from '@/models';
 
 export interface DashboardMetrics {
   financials: {
@@ -31,7 +31,7 @@ export interface DashboardMetrics {
 
 export class DashboardService {
   /**
-   * Aggregates all high-level metrics for the executive dashboard.
+   * Aggregates all high-level metrics for the executive dashboard with dynamic live milestone progress.
    */
   static async getExecutiveMetrics(): Promise<DashboardMetrics> {
     await dbConnect();
@@ -40,7 +40,7 @@ export class DashboardService {
     const in48Hours = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
     // 1. Financial Aggregations
-    const [financialTotals] = await Invoice.aggregate([
+    const [financialTotals] = (await Invoice.aggregate([
       {
         $match: {
           status: { $ne: 'cancelled' },
@@ -53,9 +53,9 @@ export class DashboardService {
           pendingReceivables: { $sum: '$balanceDue' },
         },
       },
-    ]) || [{ totalRevenue: 0, pendingReceivables: 0 }];
+    ])) || [{ totalRevenue: 0, pendingReceivables: 0 }];
 
-    const [overdueTotals] = await Invoice.aggregate([
+    const [overdueTotals] = (await Invoice.aggregate([
       {
         $match: {
           status: { $in: ['sent', 'partially_paid', 'overdue'] },
@@ -68,10 +68,54 @@ export class DashboardService {
           overdueReceivables: { $sum: '$balanceDue' },
         },
       },
-    ]) || [{ overdueReceivables: 0 }];
+    ])) || [{ overdueReceivables: 0 }];
 
-    // 2. Project Statistics
-    const allProjects = await Project.find({}).lean();
+    // 2. Project Statistics with Live Dynamic Milestone Progress Calculation
+    const allRawProjects = await Project.find({}).lean();
+    const projectIds = allRawProjects.map((p) => p._id);
+
+    const allMilestones = await Milestone.find({
+      projectId: { $in: projectIds },
+      status: { $ne: 'cancelled' },
+    }).lean();
+
+    const milestonesByProject = new Map<string, typeof allMilestones>();
+    for (const m of allMilestones) {
+      const pid = m.projectId.toString();
+      if (!milestonesByProject.has(pid)) {
+        milestonesByProject.set(pid, []);
+      }
+      milestonesByProject.get(pid)!.push(m);
+    }
+
+    const allProjects = allRawProjects.map((p) => {
+      const pMilestones = milestonesByProject.get(p._id.toString()) || [];
+      let progressPercentage = p.progressPercentage || 0;
+      let totalBudget = p.totalBudget || 0;
+
+      if (pMilestones.length > 0) {
+        const totalAmount = pMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+        const completedMilestones = pMilestones.filter((m) => m.status === 'completed' || m.status === 'invoiced');
+        const completedAmount = completedMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+
+        totalBudget = totalAmount > 0 ? totalAmount : totalBudget;
+        progressPercentage =
+          totalAmount > 0
+            ? Math.min(100, Math.max(0, Math.round((completedAmount / totalAmount) * 100)))
+            : Math.min(100, Math.max(0, Math.round((completedMilestones.length / pMilestones.length) * 100)));
+
+        if (p.progressPercentage !== progressPercentage || p.totalBudget !== totalBudget) {
+          Project.findByIdAndUpdate(p._id, { totalBudget, progressPercentage }).catch(() => {});
+        }
+      }
+
+      return {
+        ...p,
+        progressPercentage,
+        totalBudget,
+      };
+    });
+
     const activeProjects = allProjects.filter((p) =>
       ['discovery', 'in_progress', 'review'].includes(p.status)
     );
@@ -134,18 +178,42 @@ export class DashboardService {
       .limit(5)
       .lean();
 
-    const recentProjects = await Project.find({})
+    const rawRecentProjects = await Project.find({})
       .populate('clientId', 'name companyName')
       .sort({ updatedAt: -1 })
       .limit(5)
       .lean();
+
+    const recentProjects = rawRecentProjects.map((p) => {
+      const pMilestones = milestonesByProject.get(p._id.toString()) || [];
+      let progressPercentage = p.progressPercentage || 0;
+      let totalBudget = p.totalBudget || 0;
+
+      if (pMilestones.length > 0) {
+        const totalAmount = pMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+        const completedMilestones = pMilestones.filter((m) => m.status === 'completed' || m.status === 'invoiced');
+        const completedAmount = completedMilestones.reduce((sum, m) => sum + (m.allocatedAmount ?? m.amount ?? 0), 0);
+
+        totalBudget = totalAmount > 0 ? totalAmount : totalBudget;
+        progressPercentage =
+          totalAmount > 0
+            ? Math.min(100, Math.max(0, Math.round((completedAmount / totalAmount) * 100)))
+            : Math.min(100, Math.max(0, Math.round((completedMilestones.length / pMilestones.length) * 100)));
+      }
+
+      return {
+        ...p,
+        progressPercentage,
+        totalBudget,
+      };
+    });
 
     return {
       financials: {
         totalRevenue: Number((financialTotals?.totalRevenue || 0).toFixed(2)),
         pendingReceivables: Number((financialTotals?.pendingReceivables || 0).toFixed(2)),
         overdueReceivables: Number((overdueTotals?.overdueReceivables || 0).toFixed(2)),
-        currency: 'USD',
+        currency: 'INR',
       },
       projects: {
         activeCount,
