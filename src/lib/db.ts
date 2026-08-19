@@ -4,7 +4,10 @@ import mongoose from 'mongoose';
 // Fix for Windows / local environment DNS lookup issues with mongodb+srv SRV records
 try {
   dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
-} catch (e) {
+  if (typeof dns.setDefaultResultOrder === 'function') {
+    dns.setDefaultResultOrder('ipv4first');
+  }
+} catch {
   // Ignore in restricted environments
 }
 

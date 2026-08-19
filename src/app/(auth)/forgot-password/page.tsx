@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, ArrowLeft, Send, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import apiClient from '@/lib/api-client';
 
@@ -49,8 +50,15 @@ export default function ForgotPasswordPage() {
             Welcome to
           </h1>
           
-          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center text-black font-bold text-5xl mb-6 shadow-lg">
-            M
+          <div className="w-24 h-24 bg-white rounded-2xl p-2.5 flex items-center justify-center mb-6 shadow-xl overflow-hidden border border-neutral-200/20">
+            <Image
+              src="/logo.png"
+              alt="M.Div Softsolutions Logo"
+              width={80}
+              height={80}
+              className="w-full h-full object-contain"
+              priority
+            />
           </div>
           
           <h2 className="text-3xl lg:text-4xl font-bold text-white mb-8 tracking-tight">

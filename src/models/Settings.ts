@@ -18,6 +18,7 @@ export interface ISettings extends Document {
   agencyEmail?: string;
   agencyPhone?: string;
   agencyAddress?: string;
+  logoUrl?: string;
   gstinOrTaxId?: string;
   taxNumber?: string;
   defaultCurrency: 'INR' | 'USD' | 'EUR' | 'AED' | 'GBP';
@@ -60,6 +61,7 @@ const SettingsSchema: Schema = new Schema(
     agencyEmail: { type: String },
     agencyPhone: { type: String },
     agencyAddress: { type: String },
+    logoUrl: { type: String },
     gstinOrTaxId: { type: String },
     taxNumber: { type: String },
     defaultCurrency: {
@@ -109,7 +111,7 @@ const SettingsSchema: Schema = new Schema(
 
 // Ensure model schema updates take effect during development HMR
 if (process.env.NODE_ENV !== 'production' && mongoose.models.Settings) {
-  delete (mongoose.models as any).Settings;
+  delete (mongoose.models as Record<string, unknown>).Settings;
 }
 
 const Settings: Model<ISettings> =

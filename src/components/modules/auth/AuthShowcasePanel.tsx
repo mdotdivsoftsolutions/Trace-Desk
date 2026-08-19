@@ -1,13 +1,20 @@
 import React from 'react';
-import { Layers, ShieldCheck, CheckCircle2, TrendingUp, Zap } from 'lucide-react';
+import Image from 'next/image';
+import { ShieldCheck, CheckCircle2, TrendingUp, Zap } from 'lucide-react';
 
 export function AuthShowcasePanel() {
   return (
     <div className="hidden lg:flex flex-col justify-between p-10 rounded-2xl bg-neutral-900 dark:bg-[#1E293B] text-white border border-neutral-800 dark:border-[#334155] shadow-2xl relative overflow-hidden">
       <div className="space-y-6 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white text-neutral-900 flex items-center justify-center font-bold shadow-md">
-            <Layers className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center font-bold shadow-md overflow-hidden">
+            <Image
+              src="/logo.png"
+              alt="M.Div Softsolutions"
+              width={36}
+              height={36}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <span className="font-heading font-extrabold text-base tracking-tight block">M.Div Softsolutions</span>

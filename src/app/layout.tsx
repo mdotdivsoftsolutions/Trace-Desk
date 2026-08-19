@@ -20,8 +20,24 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'M.Div Softsolutions Hub - Agency & Freelancer Operating System',
-  description: 'Single-tenant Client CRM, Project Milestones, Kanban Task Pipeline & Financial Ledger',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000'),
+  title: {
+    default: 'M.Div Softsolutions - Agency & Freelancer Operating System',
+    template: '%s | M.Div Softsolutions',
+  },
+  description: 'Single-tenant Client CRM, Project Milestones, Kanban Task Pipeline & Financial Ledger by M.Div Softsolutions',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
+  manifest: '/favicon/site.webmanifest',
+  openGraph: {
+    title: 'M.Div Softsolutions',
+    description: 'Agency & Freelancer Operating System',
+    images: [{ url: '/logo.png' }],
+    siteName: 'M.Div Softsolutions',
+  },
 };
 
 export default function RootLayout({

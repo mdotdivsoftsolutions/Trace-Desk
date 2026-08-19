@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Layers, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import Image from 'next/image';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SidebarHeaderProps {
@@ -28,8 +29,15 @@ export function SidebarHeader({
       {isCollapsed ? (
         <div className="flex items-center justify-center gap-1 w-full">
           <Link href="/" className="group flex-shrink-0" title={`${agencyName} - Control Desk`}>
-            <div className="w-8 h-8 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
-              <Layers className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-md bg-white p-1 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt={agencyName}
+                width={32}
+                height={32}
+                className="w-full h-full object-contain"
+                priority
+              />
             </div>
           </Link>
           <button
@@ -43,8 +51,15 @@ export function SidebarHeader({
       ) : (
         <>
           <Link href="/" className="flex items-center gap-3 overflow-hidden group">
-            <div className="w-9 h-9 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform flex-shrink-0">
-              <Layers className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-lg bg-white p-1 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform flex-shrink-0 overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt={agencyName}
+                width={36}
+                height={36}
+                className="w-full h-full object-contain"
+                priority
+              />
             </div>
             <div className="flex flex-col min-w-0">
               <span className="font-heading font-bold text-sm tracking-tight text-neutral-900 dark:text-white truncate">

@@ -20,6 +20,7 @@ export const updateSettingsSchema = z.object({
   agencyEmail: z.string().email('Invalid email').nullish().or(z.literal('')),
   agencyPhone: z.string().max(30).nullish().or(z.literal('')),
   agencyAddress: z.string().max(500).nullish().or(z.literal('')),
+  logoUrl: z.string().max(1000).nullish().or(z.literal('')),
   gstinOrTaxId: z.string().max(50).nullish().or(z.literal('')),
   taxNumber: z.string().max(50).nullish().or(z.literal('')),
   defaultCurrency: SettingsCurrencyEnum.default('INR'),

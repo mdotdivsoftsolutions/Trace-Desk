@@ -175,6 +175,7 @@ export interface SettingsType {
   agencyEmail?: string;
   agencyPhone?: string;
   agencyAddress?: string;
+  logoUrl?: string;
   taxNumber?: string;
   gstinOrTaxId?: string;
   defaultCurrency: CurrencyCode;

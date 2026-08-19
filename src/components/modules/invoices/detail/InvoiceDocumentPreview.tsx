@@ -1,6 +1,6 @@
 import React from 'react';
-import { Layers, Building, CreditCard } from 'lucide-react';
-import { Invoice, Settings } from '@/types';
+import Image from 'next/image';
+import { Invoice, Settings, Client, Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import SafeHTML from '@/components/common/SafeHTML';
 
@@ -10,17 +10,24 @@ interface InvoiceDocumentPreviewProps {
 }
 
 export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPreviewProps) {
-  const client = invoice.clientId as any;
-  const project = invoice.projectId as any;
+  const client = typeof invoice.clientId === 'object' ? (invoice.clientId as Client) : null;
+  const project = typeof invoice.projectId === 'object' ? (invoice.projectId as Project) : null;
   const bank = settings?.bankDetails || settings?.bankAccounts?.find((a) => a.isPrimary) || settings?.bankAccounts?.[0];
+  const logoSrc = settings?.logoUrl || '/logo.png';
 
   return (
     <div className="p-8 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-8 print:border-none print:shadow-none print:p-0">
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-neutral-200 dark:border-[#334155] pb-6">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center font-bold">
-              <Layers className="w-4 h-4" />
+            <div className="w-8 h-8 rounded bg-white p-0.5 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center font-bold shadow-sm overflow-hidden">
+              <Image
+                src={logoSrc}
+                alt={settings?.agencyName || 'M.Div Softsolutions'}
+                width={30}
+                height={30}
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="font-heading text-lg font-extrabold text-neutral-900 dark:text-white">
               {settings?.agencyName || 'M.Div Softsolutions'}
