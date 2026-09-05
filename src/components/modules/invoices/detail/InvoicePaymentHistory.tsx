@@ -11,7 +11,7 @@ export function InvoicePaymentHistory({ payments }: InvoicePaymentHistoryProps) 
   if (payments.length === 0) return null;
 
   return (
-    <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-4">
+    <div className="p-6 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-4 print:hidden">
       <h3 className="font-heading text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
         <CheckCircle2 className="w-4 h-4 text-emerald-500" />
         <span>Payment Settlement Ledger ({payments.length})</span>

@@ -249,3 +249,55 @@
   text-decoration: underline;
 }
 
+/* ── Print / Save-as-PDF Stylesheet ─────────────────────────────────── */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  /* Reset body and force crisp light theme for printing */
+  html, body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 12pt;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide app chrome, sidebars, headers, action buttons, drawers */
+  nav,
+  aside,
+  header,
+  footer,
+  .no-print,
+  [data-no-print="true"] {
+    display: none !important;
+  }
+
+  /* Reset invoice container for clean printing */
+  #invoice-document-preview,
+  .printable-invoice {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  /* Prevent page breaks inside critical sections */
+  tr,
+  table,
+  .avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+

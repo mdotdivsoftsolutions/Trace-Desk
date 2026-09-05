@@ -14,13 +14,17 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
   const project = typeof invoice.projectId === 'object' ? (invoice.projectId as Project) : null;
   const bank = settings?.bankDetails || settings?.bankAccounts?.find((a) => a.isPrimary) || settings?.bankAccounts?.[0];
   const logoSrc = settings?.logoUrl || '/logo.png';
+  const currency = invoice.currency || settings?.defaultCurrency || 'INR';
 
   return (
-    <div className="p-8 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-8 print:border-none print:shadow-none print:p-0">
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-neutral-200 dark:border-[#334155] pb-6">
+    <div
+      id="invoice-document-preview"
+      className="p-8 rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm space-y-8 print:border-none print:shadow-none print:p-0 print:bg-white print:text-neutral-900 print:max-w-full"
+    >
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-neutral-200 dark:border-[#334155] print:border-neutral-300 pb-6">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded bg-white p-0.5 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center font-bold shadow-sm overflow-hidden">
+            <div className="w-8 h-8 rounded bg-white p-0.5 border border-neutral-200 dark:border-neutral-700 print:border-neutral-300 flex items-center justify-center font-bold shadow-sm overflow-hidden">
               <Image
                 src={logoSrc}
                 alt={settings?.agencyName || 'M.Div Softsolutions'}
@@ -29,45 +33,52 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="font-heading text-lg font-extrabold text-neutral-900 dark:text-white">
+            <span className="font-heading text-lg font-extrabold text-neutral-900 dark:text-white print:text-neutral-900">
               {settings?.agencyName || 'M.Div Softsolutions'}
             </span>
           </div>
-          <div className="text-xs text-neutral-500 mt-2 space-y-0.5">
-            {settings?.taxNumber && <div>GSTIN: <span className="font-mono">{settings.taxNumber}</span></div>}
+          <div className="text-xs text-neutral-500 print:text-neutral-600 mt-2 space-y-0.5">
+            {settings?.agencyAddress && <div>{settings.agencyAddress}</div>}
+            {(settings?.taxNumber || settings?.gstinOrTaxId) && (
+              <div>GSTIN / Tax ID: <span className="font-mono">{settings.taxNumber || settings.gstinOrTaxId}</span></div>
+            )}
             {settings?.agencyEmail && <div>{settings.agencyEmail}</div>}
             {settings?.agencyPhone && <div>{settings.agencyPhone}</div>}
           </div>
         </div>
 
         <div className="text-left sm:text-right space-y-1">
-          <span className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{invoice.invoiceNumber}</span>
-          <div className="text-xs text-neutral-500">Issued: <span className="font-medium text-neutral-800 dark:text-neutral-200">{formatDate(invoice.issueDate)}</span></div>
-          <div className="text-xs text-neutral-500">Due: <span className="font-medium text-neutral-800 dark:text-neutral-200">{formatDate(invoice.dueDate)}</span></div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 print:text-neutral-600">Tax Invoice</div>
+          <span className="text-2xl font-bold font-mono text-neutral-900 dark:text-white print:text-neutral-900">{invoice.invoiceNumber}</span>
+          <div className="text-xs text-neutral-500 print:text-neutral-600">Issued: <span className="font-medium text-neutral-800 dark:text-neutral-200 print:text-neutral-900">{formatDate(invoice.issueDate)}</span></div>
+          <div className="text-xs text-neutral-500 print:text-neutral-600">Due: <span className="font-medium text-neutral-800 dark:text-neutral-200 print:text-neutral-900">{formatDate(invoice.dueDate)}</span></div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-        <div>
-          <span className="text-[10px] uppercase font-bold text-neutral-400 block mb-1">Billed To:</span>
-          <div className="font-bold text-sm text-neutral-900 dark:text-white">
+        <div className="p-3.5 rounded-md bg-neutral-50 dark:bg-[#0F172A] print:bg-neutral-50 border border-neutral-200 dark:border-[#334155] print:border-neutral-200">
+          <span className="text-[10px] uppercase font-bold text-neutral-400 print:text-neutral-500 block mb-1">Billed To:</span>
+          <div className="font-bold text-sm text-neutral-900 dark:text-white print:text-neutral-900">
             {client?.companyName || client?.company || client?.name || 'Client'}
           </div>
           {(client?.companyName || client?.company) && client?.name && (client?.companyName || client?.company) !== client?.name && (
-            <div className="text-neutral-500">Attn: {client.name}</div>
+            <div className="text-neutral-500 print:text-neutral-600">Attn: {client.name}</div>
           )}
-          {client?.address && <div className="text-neutral-500 mt-0.5">{client.address}</div>}
-          {client?.taxId && <div className="text-neutral-500 mt-0.5">Tax ID: <span className="font-mono">{client.taxId}</span></div>}
+          {client?.address && <div className="text-neutral-500 print:text-neutral-600 mt-0.5">{client.address}</div>}
+          {client?.email && <div className="text-neutral-500 print:text-neutral-600 mt-0.5">{client.email}</div>}
+          {client?.taxId && <div className="text-neutral-500 print:text-neutral-600 mt-0.5">Tax ID: <span className="font-mono">{client.taxId}</span></div>}
         </div>
-        <div>
-          <span className="text-[10px] uppercase font-bold text-neutral-400 block mb-1">Project Workspace:</span>
-          <div className="font-bold text-neutral-900 dark:text-white">{project?.title || 'Project'}</div>
+        <div className="p-3.5 rounded-md bg-neutral-50 dark:bg-[#0F172A] print:bg-neutral-50 border border-neutral-200 dark:border-[#334155] print:border-neutral-200">
+          <span className="text-[10px] uppercase font-bold text-neutral-400 print:text-neutral-500 block mb-1">Project & Terms:</span>
+          <div className="font-bold text-neutral-900 dark:text-white print:text-neutral-900">{project?.title || 'General Services'}</div>
+          <div className="text-neutral-500 print:text-neutral-600 mt-1">Currency: <span className="font-semibold text-neutral-800 dark:text-neutral-200 print:text-neutral-900">{currency}</span></div>
+          {invoice.paymentTerms && <div className="text-neutral-500 print:text-neutral-600 mt-0.5">Terms: {invoice.paymentTerms}</div>}
         </div>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-neutral-50 dark:bg-[#0F172A] border-y border-neutral-200 dark:border-[#334155] text-neutral-500">
+          <thead className="bg-neutral-50 dark:bg-[#0F172A] print:bg-neutral-100 border-y border-neutral-200 dark:border-[#334155] print:border-neutral-300 text-neutral-500 print:text-neutral-700">
             <tr>
               <th className="px-4 py-2.5 font-bold uppercase">Item Description</th>
               <th className="px-4 py-2.5 font-bold uppercase text-center">Qty</th>
@@ -75,39 +86,60 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
               <th className="px-4 py-2.5 font-bold uppercase text-right">Amount</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-200 dark:divide-[#334155]">
+          <tbody className="divide-y divide-neutral-200 dark:divide-[#334155] print:divide-neutral-200">
             {invoice.items.map((it, idx) => (
               <tr key={idx}>
-                <td className="px-4 py-3 font-semibold text-neutral-900 dark:text-white">{it.description}</td>
-                <td className="px-4 py-3 text-center text-neutral-500">{it.quantity}</td>
-                <td className="px-4 py-3 text-right font-mono text-neutral-500">{formatCurrency(it.rate)}</td>
-                <td className="px-4 py-3 text-right font-mono font-bold text-neutral-900 dark:text-white">{formatCurrency(it.amount)}</td>
+                <td className="px-4 py-3 font-semibold text-neutral-900 dark:text-white print:text-neutral-900">{it.description}</td>
+                <td className="px-4 py-3 text-center text-neutral-500 print:text-neutral-600">{it.quantity}</td>
+                <td className="px-4 py-3 text-right font-mono text-neutral-500 print:text-neutral-600">{formatCurrency(it.rate, currency)}</td>
+                <td className="px-4 py-3 text-right font-mono font-bold text-neutral-900 dark:text-white print:text-neutral-900">{formatCurrency(it.amount, currency)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-6 pt-4 border-t border-neutral-200 dark:border-[#334155]">
+      <div className="flex flex-col sm:flex-row justify-between gap-6 pt-4 border-t border-neutral-200 dark:border-[#334155] print:border-neutral-300">
         <div className="space-y-3 text-xs max-w-sm">
           {bank?.accountNumber && (
-            <div className="p-3 rounded bg-neutral-50 dark:bg-[#0F172A] border border-neutral-200 dark:border-[#334155] space-y-1">
-              <span className="text-[10px] font-bold uppercase text-neutral-400 block">Bank Remittance:</span>
-              <div>A/C Name: <span className="font-semibold text-neutral-900 dark:text-white">{bank.accountName}</span></div>
-              <div>A/C Number: <span className="font-mono font-bold text-neutral-900 dark:text-white">{bank.accountNumber}</span></div>
-              <div>IFSC: <span className="font-mono text-neutral-900 dark:text-white">{bank.ifscCode}</span> ({bank.bankName})</div>
-              {bank.upiId && <div>UPI ID: <span className="font-mono text-neutral-900 dark:text-white">{bank.upiId}</span></div>}
+            <div className="p-3 rounded bg-neutral-50 dark:bg-[#0F172A] print:bg-neutral-50 border border-neutral-200 dark:border-[#334155] print:border-neutral-200 space-y-1">
+              <span className="text-[10px] font-bold uppercase text-neutral-400 print:text-neutral-500 block">Bank Remittance:</span>
+              <div>A/C Name: <span className="font-semibold text-neutral-900 dark:text-white print:text-neutral-900">{bank.accountName}</span></div>
+              <div>A/C Number: <span className="font-mono font-bold text-neutral-900 dark:text-white print:text-neutral-900">{bank.accountNumber}</span></div>
+              <div>IFSC: <span className="font-mono text-neutral-900 dark:text-white print:text-neutral-900">{bank.ifscCode}</span> ({bank.bankName})</div>
+              {bank.upiId && <div>UPI ID: <span className="font-mono text-neutral-900 dark:text-white print:text-neutral-900">{bank.upiId}</span></div>}
             </div>
           )}
-          {invoice.notes && <SafeHTML html={invoice.notes} className="text-neutral-500 italic" />}
+          {invoice.notes && <SafeHTML html={invoice.notes} className="text-neutral-500 print:text-neutral-600 italic" />}
         </div>
 
         <div className="space-y-2 text-xs w-full sm:w-64">
-          <div className="flex justify-between text-neutral-500"><span>Subtotal:</span><span className="font-mono">{formatCurrency(invoice.subtotal)}</span></div>
-          {invoice.taxAmount > 0 && <div className="flex justify-between text-neutral-500"><span>Tax ({invoice.taxRate}%):</span><span className="font-mono">{formatCurrency(invoice.taxAmount)}</span></div>}
-          {invoice.discount > 0 && <div className="flex justify-between text-neutral-500"><span>Discount:</span><span className="font-mono">-{formatCurrency(invoice.discount)}</span></div>}
-          <div className="flex justify-between font-bold text-sm text-neutral-900 dark:text-white pt-2 border-t border-neutral-200 dark:border-[#334155]"><span>Total:</span><span className="font-mono">{formatCurrency(invoice.totalAmount)}</span></div>
-          <div className="flex justify-between font-bold text-xs text-neutral-700 dark:text-neutral-300"><span>Balance Due:</span><span className="font-mono">{formatCurrency(invoice.balanceDue)}</span></div>
+          <div className="flex justify-between text-neutral-500 print:text-neutral-600"><span>Subtotal:</span><span className="font-mono">{formatCurrency(invoice.subtotal, currency)}</span></div>
+          {invoice.taxAmount > 0 && <div className="flex justify-between text-neutral-500 print:text-neutral-600"><span>Tax ({invoice.taxRate}%):</span><span className="font-mono">{formatCurrency(invoice.taxAmount, currency)}</span></div>}
+          {invoice.discount > 0 && <div className="flex justify-between text-neutral-500 print:text-neutral-600"><span>Discount:</span><span className="font-mono">-{formatCurrency(invoice.discount, currency)}</span></div>}
+          <div className="flex justify-between font-bold text-sm text-neutral-900 dark:text-white print:text-neutral-900 pt-2 border-t border-neutral-200 dark:border-[#334155] print:border-neutral-300"><span>Total:</span><span className="font-mono">{formatCurrency(invoice.totalAmount, currency)}</span></div>
+          {(invoice.paidAmount || invoice.amountPaid || 0) > 0 && (
+            <div className="flex justify-between text-emerald-600 dark:text-emerald-400 print:text-emerald-700 font-semibold">
+              <span>Paid:</span>
+              <span className="font-mono">-{formatCurrency(invoice.paidAmount || invoice.amountPaid || 0, currency)}</span>
+            </div>
+          )}
+          <div className="flex justify-between font-bold text-xs text-neutral-900 dark:text-neutral-100 print:text-neutral-900 p-2 rounded bg-neutral-100 dark:bg-neutral-800 print:bg-neutral-100">
+            <span>Balance Due:</span>
+            <span className="font-mono">{formatCurrency(invoice.balanceDue, currency)}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Authorized Signatory Section */}
+      <div className="pt-8 border-t border-neutral-200 dark:border-[#334155] print:border-neutral-300 flex justify-between items-end">
+        <div className="text-[10px] text-neutral-400 print:text-neutral-500 max-w-xs">
+          Computer generated tax invoice. Questions? Contact {settings?.agencyEmail || 'support'}.
+        </div>
+        <div className="text-center w-48">
+          <div className="h-10 border-b border-neutral-300 dark:border-neutral-600 print:border-neutral-400 mb-1" />
+          <div className="text-[11px] font-bold text-neutral-900 dark:text-white print:text-neutral-900">Authorized Signatory</div>
+          <div className="text-[10px] text-neutral-500 print:text-neutral-600">For {settings?.agencyName || 'M.Div Softsolutions'}</div>
         </div>
       </div>
     </div>

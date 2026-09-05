@@ -34,6 +34,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
     <div className="space-y-6">
       <InvoiceHeaderActions
         invoice={invoice}
+        settings={settings}
         onRecordPayment={() => setIsPaymentDrawerOpen(true)}
       />
 

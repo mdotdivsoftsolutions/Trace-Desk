@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Eye, DollarSign, Receipt, Plus } from 'lucide-react';
+import { Eye, DollarSign, Receipt, Plus, Download, Loader2 } from 'lucide-react';
 import { Invoice, Client, Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 import { InvoiceTableSkeleton } from '@/components/common/skeletons/InvoiceTableSkeleton';
+import { useSettings } from '@/hooks/useSettings';
+import { downloadInvoicePDF } from '@/lib/pdf-exporter';
 
 interface InvoiceTableProps {
   invoices: Invoice[];
@@ -22,6 +24,21 @@ const statusBadgeStyles: Record<string, string> = {
 };
 
 export function InvoiceTable({ invoices, isLoading, onRecordPayment }: InvoiceTableProps) {
+  const { data: settings } = useSettings();
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+
+  const handleDownloadPdf = async (inv: Invoice) => {
+    if (downloadingId === inv._id) return;
+    try {
+      setDownloadingId(inv._id);
+      await downloadInvoicePDF({ invoice: inv, settings });
+    } catch (err) {
+      console.error('Failed to download invoice PDF:', err);
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
   if (isLoading) {
     return <InvoiceTableSkeleton />;
   }
@@ -62,6 +79,9 @@ export function InvoiceTable({ invoices, isLoading, onRecordPayment }: InvoiceTa
             {invoices.map((inv) => {
               const client = typeof inv.clientId === 'object' ? (inv.clientId as Client) : null;
               const project = typeof inv.projectId === 'object' ? (inv.projectId as Project) : null;
+              const currency = inv.currency || settings?.defaultCurrency || 'INR';
+              const isItemDownloading = downloadingId === inv._id;
+
               return (
                 <tr key={inv._id} className="hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40 transition-colors">
                   <td className="px-5 py-4">
@@ -79,8 +99,8 @@ export function InvoiceTable({ invoices, isLoading, onRecordPayment }: InvoiceTa
                     <div>Issued: {formatDate(inv.issueDate)}</div>
                     <div>Due: {formatDate(inv.dueDate)}</div>
                   </td>
-                  <td className="px-5 py-4 font-bold font-mono text-neutral-900 dark:text-white">{formatCurrency(inv.totalAmount)}</td>
-                  <td className="px-5 py-4 font-bold font-mono text-neutral-700 dark:text-neutral-300">{formatCurrency(inv.balanceDue)}</td>
+                  <td className="px-5 py-4 font-bold font-mono text-neutral-900 dark:text-white">{formatCurrency(inv.totalAmount, currency)}</td>
+                  <td className="px-5 py-4 font-bold font-mono text-neutral-700 dark:text-neutral-300">{formatCurrency(inv.balanceDue, currency)}</td>
                   <td className="px-5 py-4">
                     <span className={cn('px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider', statusBadgeStyles[inv.status] || 'bg-neutral-500/10 text-neutral-400')}>
                       {inv.status.replace('_', ' ')}
@@ -88,12 +108,24 @@ export function InvoiceTable({ invoices, isLoading, onRecordPayment }: InvoiceTa
                   </td>
                   <td className="px-5 py-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => handleDownloadPdf(inv)}
+                        disabled={isItemDownloading}
+                        className="p-1.5 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer disabled:opacity-50"
+                        title="Download Invoice PDF"
+                      >
+                        {isItemDownloading ? (
+                          <Loader2 className="w-4 h-4 animate-spin text-indigo-600 dark:text-indigo-400" />
+                        ) : (
+                          <Download className="w-4 h-4" />
+                        )}
+                      </button>
                       {inv.balanceDue > 0 && inv.status !== 'cancelled' && (
-                        <button onClick={() => onRecordPayment(inv)} className="p-1.5 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800" title="Record Payment">
+                        <button onClick={() => onRecordPayment(inv)} className="p-1.5 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer" title="Record Payment">
                           <DollarSign className="w-4 h-4" />
                         </button>
                       )}
-                      <Link href={`/invoices/${inv._id}`} className="p-1.5 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800" title="View Invoice">
+                      <Link href={`/invoices/${inv._id}`} className="p-1.5 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors" title="View Invoice">
                         <Eye className="w-4 h-4" />
                       </Link>
                     </div>

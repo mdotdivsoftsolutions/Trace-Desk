@@ -25,19 +25,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const userRole = user?.role || 'super_admin';
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0F172A] text-neutral-900 dark:text-neutral-100 antialiased font-sans">
+    <div className="min-h-screen flex bg-[#F8FAFC] dark:bg-[#0F172A] text-neutral-900 dark:text-neutral-100 antialiased font-sans print:bg-white print:text-neutral-900">
       {/* Sidebar Component with User Profile Footer */}
-      <Sidebar
-        isCollapsed={isCollapsed}
-        setIsCollapsed={setIsCollapsed}
-        isMobileOpen={isMobileOpen}
-        setIsMobileOpen={setIsMobileOpen}
-      />
+      <div className="print:hidden">
+        <Sidebar
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+          isMobileOpen={isMobileOpen}
+          setIsMobileOpen={setIsMobileOpen}
+        />
+      </div>
 
       {/* Main Content Area — flex-1 with stable min-width to prevent scroll-caused shifts */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 print:w-full print:p-0">
         {/* Top Header Bar — sticky + explicit h-16 so it never shifts */}
-        <header className="sticky top-0 z-30 h-16 shrink-0 border-b border-neutral-200 dark:border-[#334155] bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-30 h-16 shrink-0 border-b border-neutral-200 dark:border-[#334155] bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 print:hidden">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileOpen(true)}
@@ -109,7 +111,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Dynamic Route View — min-h prevents collapse when content is short */}
-        <main className="flex-1 min-h-[calc(100vh-4rem)] p-4 sm:p-6 lg:p-8 w-full">
+        <main className="flex-1 min-h-[calc(100vh-4rem)] p-4 sm:p-6 lg:p-8 w-full print:p-0 print:m-0 print:min-h-0 print:w-full">
           {children}
         </main>
       </div>
