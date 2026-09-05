@@ -66,7 +66,7 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
         <div className="text-left sm:text-right min-w-[210px]">
           <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 print:text-neutral-500">Tax Invoice</div>
           <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white print:text-neutral-900 mb-2">{invoice.invoiceNumber}</div>
-          
+
           <table className="sm:ml-auto border-separate border-spacing-y-1 text-xs">
             <tbody>
               <tr>
