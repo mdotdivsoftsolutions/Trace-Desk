@@ -150,7 +150,16 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
           Computer generated invoice. Questions? Contact {settings?.agencyEmail || 'support'}.
         </div>
         <div className="text-center w-48">
-          <div className="h-10 border-b border-neutral-300 dark:border-neutral-600 print:border-neutral-400 mb-1" />
+          <div className="h-12 flex items-end justify-center mb-1">
+            <Image
+              src={settings?.signatureUrl || '/signature.png'}
+              alt="Authorized Signature"
+              width={140}
+              height={48}
+              className="max-h-12 w-auto object-contain mix-blend-multiply dark:invert"
+            />
+          </div>
+          <div className="border-b border-neutral-300 dark:border-neutral-600 print:border-neutral-400 mb-1" />
           <div className="text-[11px] font-bold text-neutral-900 dark:text-white print:text-neutral-900">Authorized Signatory</div>
           <div className="text-[10px] text-neutral-500 print:text-neutral-600">For {settings?.agencyName || 'M.Div Softsolutions'}</div>
         </div>

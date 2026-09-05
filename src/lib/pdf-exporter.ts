@@ -24,6 +24,7 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
   const clientAttn = client?.companyName || client?.company ? client?.name : '';
   const agencyName = settings?.agencyName || 'M.Div Softsolutions';
   const logoUrl = settings?.logoUrl || '/logo.png';
+  const signatureUrl = settings?.signatureUrl || '/signature.png';
 
   // Support both discountAmount and discount fields from MongoDB / forms
   const discount = Number(invoice.discountAmount ?? invoice.discount ?? 0);
@@ -192,7 +193,10 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
         </div>
 
         <div style="text-align: center; width: 200px;">
-          <div style="height: 48px; border-bottom: 1px solid #475569; margin-bottom: 6px;"></div>
+          <div style="height: 52px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 4px;">
+            <img src="${signatureUrl}" alt="Authorized Signature" style="max-height: 50px; max-width: 140px; object-fit: contain; mix-blend-mode: multiply;" crossorigin="anonymous" onerror="this.style.display='none'" />
+          </div>
+          <div style="border-bottom: 1px solid #475569; margin-bottom: 6px;"></div>
           <div style="font-size: 11px; font-weight: 700; color: #0F172A;">Authorized Signatory</div>
           <div style="font-size: 10px; color: #64748B;">For ${agencyName}</div>
         </div>
@@ -203,7 +207,17 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
   document.body.appendChild(container);
 
   try {
-    // Wait for fonts and any local resources to settle
+    // Wait for all images inside container to load completely
+    const images = Array.from(container.querySelectorAll('img'));
+    await Promise.all(
+      images.map((img) => {
+        if (img.complete) return Promise.resolve();
+        return new Promise((res) => {
+          img.onload = res;
+          img.onerror = res;
+        });
+      })
+    );
     await new Promise((resolve) => setTimeout(resolve, 150));
 
     // Render high-res canvas at 2x scale for crisp, print-quality text
