@@ -30,17 +30,6 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
   const taxAmount = Number(invoice.taxAmount ?? 0);
   const paidAmount = Number(invoice.paidAmount ?? invoice.amountPaid ?? 0);
 
-  // Status badge styling adhering strictly to neutral/semantic palette (no stray blues)
-  const statusStyles: Record<string, { bg: string; color: string; border: string }> = {
-    draft: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1' },
-    sent: { bg: '#F8FAFC', color: '#334155', border: '#CBD5E1' },
-    partially_paid: { bg: '#FFFBEB', color: '#92400E', border: '#FDE68A' },
-    paid: { bg: '#ECFDF5', color: '#065F46', border: '#A7F3D0' },
-    overdue: { bg: '#FEF2F2', color: '#991B1B', border: '#FECACA' },
-    cancelled: { bg: '#F1F5F9', color: '#64748B', border: '#E2E8F0' },
-  };
-  const currentStatus = statusStyles[invoice.status] || statusStyles.draft;
-
   // Create an off-screen container styled strictly for A4 print/capture (800px width @ 96dpi standard)
   const container = document.createElement('div');
   container.style.position = 'fixed';
@@ -73,31 +62,14 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
           </div>
         </div>
 
-        <!-- Right Header: Tax Invoice, Monospace ID, and cleanly aligned metadata table -->
-        <div style="text-align: right; min-width: 210px;">
-          <div style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A; text-transform: uppercase;">TAX INVOICE</div>
-          <div style="font-family: monospace; font-size: 16px; font-weight: 700; color: #0F172A; margin-top: 3px; margin-bottom: 12px;">${invoice.invoiceNumber}</div>
-          
-          <table style="margin-left: auto; border-collapse: separate; border-spacing: 0 4px; font-size: 11px;">
-            <tbody>
-              <tr>
-                <td style="padding-right: 12px; text-align: right; color: #64748B; font-weight: 500;">Issue Date:</td>
-                <td style="text-align: right; font-weight: 700; color: #0F172A; white-space: nowrap;">${formatDate(invoice.issueDate)}</td>
-              </tr>
-              <tr>
-                <td style="padding-right: 12px; text-align: right; color: #64748B; font-weight: 500;">Due Date:</td>
-                <td style="text-align: right; font-weight: 700; color: #0F172A; white-space: nowrap;">${formatDate(invoice.dueDate)}</td>
-              </tr>
-              <tr>
-                <td style="padding-right: 12px; text-align: right; color: #64748B; font-weight: 500;">Status:</td>
-                <td style="text-align: right;">
-                  <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid ${currentStatus.border}; background: ${currentStatus.bg}; color: ${currentStatus.color};">
-                    ${invoice.status.replace('_', ' ')}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Right Header: INVOICE, Monospace ID, Issue Date & Due Date -->
+        <div style="text-align: right; min-width: 200px;">
+          <div style="font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A; text-transform: uppercase;">INVOICE</div>
+          <div style="font-family: monospace; font-size: 16px; font-weight: 700; color: #0F172A; margin-top: 3px; margin-bottom: 8px;">${invoice.invoiceNumber}</div>
+          <div style="font-size: 11px; color: #64748B; line-height: 1.6;">
+            <div>Issue Date: <span style="color: #0F172A; font-weight: 700;">${formatDate(invoice.issueDate)}</span></div>
+            <div>Due Date: <span style="color: #0F172A; font-weight: 700;">${formatDate(invoice.dueDate)}</span></div>
+          </div>
         </div>
       </div>
 
@@ -216,7 +188,7 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
       <!-- Signature & Footer Section -->
       <div style="margin-top: 36px; padding-top: 20px; border-top: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: flex-end;">
         <div style="font-size: 10px; color: #94A3B8; max-width: 360px;">
-          This is a computer-generated tax invoice. If you have any inquiries regarding this document, please contact ${settings?.agencyEmail || 'support'}.
+          This is a computer-generated invoice. If you have any inquiries regarding this document, please contact ${settings?.agencyEmail || 'support'}.
         </div>
 
         <div style="text-align: center; width: 200px;">

@@ -2,22 +2,12 @@ import React from 'react';
 import Image from 'next/image';
 import { Invoice, Settings, Client, Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
-import { cn } from '@/lib/utils';
 import SafeHTML from '@/components/common/SafeHTML';
 
 interface InvoiceDocumentPreviewProps {
   invoice: Invoice;
   settings?: Settings;
 }
-
-const statusBadgeStyles: Record<string, string> = {
-  draft: 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700',
-  sent: 'bg-neutral-100 dark:bg-[#334155] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-[#334155]',
-  partially_paid: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
-  paid: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
-  overdue: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
-  cancelled: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
-};
 
 export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPreviewProps) {
   const client = typeof invoice.clientId === 'object' ? (invoice.clientId as Client) : null;
@@ -62,31 +52,14 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
           </div>
         </div>
 
-        {/* Clean right-aligned metadata table for flawless alignment */}
-        <div className="text-left sm:text-right min-w-[210px]">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 print:text-neutral-500">Tax Invoice</div>
+        {/* Clean right-aligned metadata for dates */}
+        <div className="text-left sm:text-right min-w-[200px]">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 print:text-neutral-500">Invoice</div>
           <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white print:text-neutral-900 mb-2">{invoice.invoiceNumber}</div>
-
-          <table className="sm:ml-auto border-separate border-spacing-y-1 text-xs">
-            <tbody>
-              <tr>
-                <td className="pr-3 text-right text-neutral-500 print:text-neutral-600 font-medium">Issue Date:</td>
-                <td className="text-right font-bold text-neutral-800 dark:text-neutral-200 print:text-neutral-900 whitespace-nowrap">{formatDate(invoice.issueDate)}</td>
-              </tr>
-              <tr>
-                <td className="pr-3 text-right text-neutral-500 print:text-neutral-600 font-medium">Due Date:</td>
-                <td className="text-right font-bold text-neutral-800 dark:text-neutral-200 print:text-neutral-900 whitespace-nowrap">{formatDate(invoice.dueDate)}</td>
-              </tr>
-              <tr>
-                <td className="pr-3 text-right text-neutral-500 print:text-neutral-600 font-medium">Status:</td>
-                <td className="text-right">
-                  <span className={cn('px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider inline-block', statusBadgeStyles[invoice.status] || 'bg-neutral-500/10 text-neutral-400')}>
-                    {invoice.status.replace('_', ' ')}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="space-y-0.5 text-xs text-neutral-500 print:text-neutral-600">
+            <div>Issue Date: <span className="font-semibold text-neutral-800 dark:text-neutral-200 print:text-neutral-900">{formatDate(invoice.issueDate)}</span></div>
+            <div>Due Date: <span className="font-semibold text-neutral-800 dark:text-neutral-200 print:text-neutral-900">{formatDate(invoice.dueDate)}</span></div>
+          </div>
         </div>
       </div>
 
@@ -174,7 +147,7 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
       {/* Authorized Signatory Section */}
       <div className="pt-8 border-t border-neutral-200 dark:border-[#334155] print:border-neutral-300 flex justify-between items-end">
         <div className="text-[10px] text-neutral-400 print:text-neutral-500 max-w-xs">
-          Computer generated tax invoice. Questions? Contact {settings?.agencyEmail || 'support'}.
+          Computer generated invoice. Questions? Contact {settings?.agencyEmail || 'support'}.
         </div>
         <div className="text-center w-48">
           <div className="h-10 border-b border-neutral-300 dark:border-neutral-600 print:border-neutral-400 mb-1" />
