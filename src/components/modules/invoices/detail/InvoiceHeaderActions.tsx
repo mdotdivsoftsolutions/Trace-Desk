@@ -60,10 +60,10 @@ export function InvoiceHeaderActions({ invoice, settings, onRecordPayment }: Inv
           onClick={handleDownload}
           disabled={isDownloading}
           className={cn(
-            "flex items-center gap-1.5 px-3.5 py-2 rounded-md text-xs font-semibold border transition-all shadow-sm cursor-pointer",
+            "flex items-center gap-1.5 px-3.5 py-2 rounded-md text-xs font-bold border transition-all shadow-sm cursor-pointer",
             downloadSuccess
               ? "bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-300"
-              : "bg-indigo-600 hover:bg-indigo-700 text-white border-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-600 disabled:opacity-75"
+              : "bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 border-neutral-900 dark:border-white disabled:opacity-75"
           )}
           title="Download Invoice as PDF"
         >

@@ -10,8 +10,7 @@ interface ExportInvoiceOptions {
 
 /**
  * Generates and triggers download of an official, high-resolution PDF invoice.
- * Renders an isolated, pristine white A4 template to avoid dark-mode bleeding
- * and responsive layout distortions.
+ * Renders an isolated, pristine white A4 template matching the executive monochrome design system.
  */
 export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOptions): Promise<void> {
   if (typeof window === 'undefined') return;
@@ -25,6 +24,22 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
   const clientAttn = client?.companyName || client?.company ? client?.name : '';
   const agencyName = settings?.agencyName || 'M.Div Softsolutions';
   const logoUrl = settings?.logoUrl || '/logo.png';
+
+  // Support both discountAmount and discount fields from MongoDB / forms
+  const discount = Number(invoice.discountAmount ?? invoice.discount ?? 0);
+  const taxAmount = Number(invoice.taxAmount ?? 0);
+  const paidAmount = Number(invoice.paidAmount ?? invoice.amountPaid ?? 0);
+
+  // Status badge styling adhering strictly to neutral/semantic palette (no stray blues)
+  const statusStyles: Record<string, { bg: string; color: string; border: string }> = {
+    draft: { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1' },
+    sent: { bg: '#F8FAFC', color: '#334155', border: '#CBD5E1' },
+    partially_paid: { bg: '#FFFBEB', color: '#92400E', border: '#FDE68A' },
+    paid: { bg: '#ECFDF5', color: '#065F46', border: '#A7F3D0' },
+    overdue: { bg: '#FEF2F2', color: '#991B1B', border: '#FECACA' },
+    cancelled: { bg: '#F1F5F9', color: '#64748B', border: '#E2E8F0' },
+  };
+  const currentStatus = statusStyles[invoice.status] || statusStyles.draft;
 
   // Create an off-screen container styled strictly for A4 print/capture (800px width @ 96dpi standard)
   const container = document.createElement('div');
@@ -58,23 +73,31 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
           </div>
         </div>
 
-        <div style="text-align: right;">
-          <div style="font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: #0F172A; text-transform: uppercase;">Tax Invoice</div>
-          <div style="font-family: monospace; font-size: 15px; font-weight: 700; color: #4F46E5; margin-top: 4px;">${invoice.invoiceNumber}</div>
-          <div style="margin-top: 8px; font-size: 11px; color: #64748B; line-height: 1.6;">
-            <div><strong>Issue Date:</strong> <span style="color: #0F172A;">${formatDate(invoice.issueDate)}</span></div>
-            <div><strong>Due Date:</strong> <span style="color: #0F172A;">${formatDate(invoice.dueDate)}</span></div>
-            <div style="margin-top: 6px;">
-              <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid ${
-                invoice.status === 'paid' ? '#10B981; background: #ECFDF5; color: #065F46;' :
-                invoice.status === 'partially_paid' ? '#F59E0B; background: #FFFBEB; color: #92400E;' :
-                invoice.status === 'overdue' ? '#EF4444; background: #FEF2F2; color: #991B1B;' :
-                '#94A3B8; background: #F8FAFC; color: #334155;'
-              }">
-                Status: ${invoice.status.replace('_', ' ')}
-              </span>
-            </div>
-          </div>
+        <!-- Right Header: Tax Invoice, Monospace ID, and cleanly aligned metadata table -->
+        <div style="text-align: right; min-width: 210px;">
+          <div style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A; text-transform: uppercase;">TAX INVOICE</div>
+          <div style="font-family: monospace; font-size: 16px; font-weight: 700; color: #0F172A; margin-top: 3px; margin-bottom: 12px;">${invoice.invoiceNumber}</div>
+          
+          <table style="margin-left: auto; border-collapse: separate; border-spacing: 0 4px; font-size: 11px;">
+            <tbody>
+              <tr>
+                <td style="padding-right: 12px; text-align: right; color: #64748B; font-weight: 500;">Issue Date:</td>
+                <td style="text-align: right; font-weight: 700; color: #0F172A; white-space: nowrap;">${formatDate(invoice.issueDate)}</td>
+              </tr>
+              <tr>
+                <td style="padding-right: 12px; text-align: right; color: #64748B; font-weight: 500;">Due Date:</td>
+                <td style="text-align: right; font-weight: 700; color: #0F172A; white-space: nowrap;">${formatDate(invoice.dueDate)}</td>
+              </tr>
+              <tr>
+                <td style="padding-right: 12px; text-align: right; color: #64748B; font-weight: 500;">Status:</td>
+                <td style="text-align: right;">
+                  <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid ${currentStatus.border}; background: ${currentStatus.bg}; color: ${currentStatus.color};">
+                    ${invoice.status.replace('_', ' ')}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -131,7 +154,7 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
         <div style="flex: 1; max-width: 420px;">
           ${bank?.accountNumber ? `
             <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; font-size: 11px;">
-              <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #4F46E5; margin-bottom: 6px;">Bank Remittance Details</div>
+              <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; margin-bottom: 6px;">Bank Remittance Details</div>
               <div style="color: #334155; line-height: 1.6;">
                 <div><strong>Account Name:</strong> ${bank.accountName || agencyName}</div>
                 <div><strong>Account Number:</strong> <span style="font-family: monospace; font-weight: 700; color: #0F172A;">${bank.accountNumber}</span></div>
@@ -151,23 +174,23 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
         </div>
 
         <!-- Right Column: Financial Breakdown -->
-        <div style="width: 280px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 14px 16px; font-size: 12px;">
+        <div style="width: 290px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 14px 16px; font-size: 12px;">
           <div style="display: flex; justify-content: space-between; padding-bottom: 6px; color: #475569;">
             <span>Subtotal:</span>
             <span style="font-family: monospace; font-weight: 600;">${formatCurrency(invoice.subtotal, currency)}</span>
           </div>
 
-          ${invoice.taxAmount > 0 ? `
+          ${taxAmount > 0 ? `
             <div style="display: flex; justify-content: space-between; padding-bottom: 6px; color: #475569;">
-              <span>Tax (${invoice.taxRate}%):</span>
-              <span style="font-family: monospace; font-weight: 600;">${formatCurrency(invoice.taxAmount, currency)}</span>
+              <span>Tax (${invoice.taxRate || 0}%):</span>
+              <span style="font-family: monospace; font-weight: 600;">${formatCurrency(taxAmount, currency)}</span>
             </div>
           ` : ''}
 
-          ${invoice.discount > 0 ? `
-            <div style="display: flex; justify-content: space-between; padding-bottom: 6px; color: #16A34A;">
+          ${discount > 0 ? `
+            <div style="display: flex; justify-content: space-between; padding-bottom: 6px; color: #16A34A; font-weight: 600;">
               <span>Discount:</span>
-              <span style="font-family: monospace; font-weight: 600;">-${formatCurrency(invoice.discount, currency)}</span>
+              <span style="font-family: monospace;">-${formatCurrency(discount, currency)}</span>
             </div>
           ` : ''}
 
@@ -176,14 +199,14 @@ export async function downloadInvoicePDF({ invoice, settings }: ExportInvoiceOpt
             <span style="font-family: monospace;">${formatCurrency(invoice.totalAmount, currency)}</span>
           </div>
 
-          ${(invoice.paidAmount || invoice.amountPaid || 0) > 0 ? `
+          ${paidAmount > 0 ? `
             <div style="display: flex; justify-content: space-between; padding-bottom: 6px; color: #16A34A; font-weight: 600;">
               <span>Paid to Date:</span>
-              <span style="font-family: monospace;">-${formatCurrency(invoice.paidAmount || invoice.amountPaid || 0, currency)}</span>
+              <span style="font-family: monospace;">-${formatCurrency(paidAmount, currency)}</span>
             </div>
           ` : ''}
 
-          <div style="display: flex; justify-content: space-between; padding: 8px 10px; background: #EEF2FF; border-radius: 4px; border: 1px solid #C7D2FE; margin-top: 6px; font-size: 13px; font-weight: 800; color: #3730A3;">
+          <div style="display: flex; justify-content: space-between; padding: 9px 12px; background: #0F172A; border-radius: 4px; margin-top: 8px; font-size: 13px; font-weight: 800; color: #FFFFFF;">
             <span>Balance Due:</span>
             <span style="font-family: monospace;">${formatCurrency(invoice.balanceDue, currency)}</span>
           </div>

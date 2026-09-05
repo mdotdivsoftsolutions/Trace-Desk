@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Invoice, Settings, Client, Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
+import { cn } from '@/lib/utils';
 import SafeHTML from '@/components/common/SafeHTML';
 
 interface InvoiceDocumentPreviewProps {
@@ -9,12 +10,26 @@ interface InvoiceDocumentPreviewProps {
   settings?: Settings;
 }
 
+const statusBadgeStyles: Record<string, string> = {
+  draft: 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700',
+  sent: 'bg-neutral-100 dark:bg-[#334155] text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-[#334155]',
+  partially_paid: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
+  paid: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
+  overdue: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
+  cancelled: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
+};
+
 export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPreviewProps) {
   const client = typeof invoice.clientId === 'object' ? (invoice.clientId as Client) : null;
   const project = typeof invoice.projectId === 'object' ? (invoice.projectId as Project) : null;
   const bank = settings?.bankDetails || settings?.bankAccounts?.find((a) => a.isPrimary) || settings?.bankAccounts?.[0];
   const logoSrc = settings?.logoUrl || '/logo.png';
   const currency = invoice.currency || settings?.defaultCurrency || 'INR';
+
+  // Support both discountAmount and discount fields from MongoDB
+  const discount = Number(invoice.discountAmount ?? invoice.discount ?? 0);
+  const taxAmount = Number(invoice.taxAmount ?? 0);
+  const paidAmount = Number(invoice.paidAmount ?? invoice.amountPaid ?? 0);
 
   return (
     <div
@@ -47,11 +62,31 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
           </div>
         </div>
 
-        <div className="text-left sm:text-right space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 print:text-neutral-600">Tax Invoice</div>
-          <span className="text-2xl font-bold font-mono text-neutral-900 dark:text-white print:text-neutral-900">{invoice.invoiceNumber}</span>
-          <div className="text-xs text-neutral-500 print:text-neutral-600">Issued: <span className="font-medium text-neutral-800 dark:text-neutral-200 print:text-neutral-900">{formatDate(invoice.issueDate)}</span></div>
-          <div className="text-xs text-neutral-500 print:text-neutral-600">Due: <span className="font-medium text-neutral-800 dark:text-neutral-200 print:text-neutral-900">{formatDate(invoice.dueDate)}</span></div>
+        {/* Clean right-aligned metadata table for flawless alignment */}
+        <div className="text-left sm:text-right min-w-[210px]">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 print:text-neutral-500">Tax Invoice</div>
+          <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white print:text-neutral-900 mb-2">{invoice.invoiceNumber}</div>
+          
+          <table className="sm:ml-auto border-separate border-spacing-y-1 text-xs">
+            <tbody>
+              <tr>
+                <td className="pr-3 text-right text-neutral-500 print:text-neutral-600 font-medium">Issue Date:</td>
+                <td className="text-right font-bold text-neutral-800 dark:text-neutral-200 print:text-neutral-900 whitespace-nowrap">{formatDate(invoice.issueDate)}</td>
+              </tr>
+              <tr>
+                <td className="pr-3 text-right text-neutral-500 print:text-neutral-600 font-medium">Due Date:</td>
+                <td className="text-right font-bold text-neutral-800 dark:text-neutral-200 print:text-neutral-900 whitespace-nowrap">{formatDate(invoice.dueDate)}</td>
+              </tr>
+              <tr>
+                <td className="pr-3 text-right text-neutral-500 print:text-neutral-600 font-medium">Status:</td>
+                <td className="text-right">
+                  <span className={cn('px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider inline-block', statusBadgeStyles[invoice.status] || 'bg-neutral-500/10 text-neutral-400')}>
+                    {invoice.status.replace('_', ' ')}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -115,16 +150,21 @@ export function InvoiceDocumentPreview({ invoice, settings }: InvoiceDocumentPre
 
         <div className="space-y-2 text-xs w-full sm:w-64">
           <div className="flex justify-between text-neutral-500 print:text-neutral-600"><span>Subtotal:</span><span className="font-mono">{formatCurrency(invoice.subtotal, currency)}</span></div>
-          {invoice.taxAmount > 0 && <div className="flex justify-between text-neutral-500 print:text-neutral-600"><span>Tax ({invoice.taxRate}%):</span><span className="font-mono">{formatCurrency(invoice.taxAmount, currency)}</span></div>}
-          {invoice.discount > 0 && <div className="flex justify-between text-neutral-500 print:text-neutral-600"><span>Discount:</span><span className="font-mono">-{formatCurrency(invoice.discount, currency)}</span></div>}
-          <div className="flex justify-between font-bold text-sm text-neutral-900 dark:text-white print:text-neutral-900 pt-2 border-t border-neutral-200 dark:border-[#334155] print:border-neutral-300"><span>Total:</span><span className="font-mono">{formatCurrency(invoice.totalAmount, currency)}</span></div>
-          {(invoice.paidAmount || invoice.amountPaid || 0) > 0 && (
+          {taxAmount > 0 && <div className="flex justify-between text-neutral-500 print:text-neutral-600"><span>Tax ({invoice.taxRate || 0}%):</span><span className="font-mono">{formatCurrency(taxAmount, currency)}</span></div>}
+          {discount > 0 && (
             <div className="flex justify-between text-emerald-600 dark:text-emerald-400 print:text-emerald-700 font-semibold">
-              <span>Paid:</span>
-              <span className="font-mono">-{formatCurrency(invoice.paidAmount || invoice.amountPaid || 0, currency)}</span>
+              <span>Discount:</span>
+              <span className="font-mono">-{formatCurrency(discount, currency)}</span>
             </div>
           )}
-          <div className="flex justify-between font-bold text-xs text-neutral-900 dark:text-neutral-100 print:text-neutral-900 p-2 rounded bg-neutral-100 dark:bg-neutral-800 print:bg-neutral-100">
+          <div className="flex justify-between font-bold text-sm text-neutral-900 dark:text-white print:text-neutral-900 pt-2 border-t border-neutral-200 dark:border-[#334155] print:border-neutral-300"><span>Total:</span><span className="font-mono">{formatCurrency(invoice.totalAmount, currency)}</span></div>
+          {paidAmount > 0 && (
+            <div className="flex justify-between text-emerald-600 dark:text-emerald-400 print:text-emerald-700 font-semibold">
+              <span>Paid:</span>
+              <span className="font-mono">-{formatCurrency(paidAmount, currency)}</span>
+            </div>
+          )}
+          <div className="flex justify-between font-bold text-xs text-white bg-neutral-900 dark:bg-neutral-800 print:bg-neutral-900 print:text-white p-2.5 rounded shadow-sm">
             <span>Balance Due:</span>
             <span className="font-mono">{formatCurrency(invoice.balanceDue, currency)}</span>
           </div>
