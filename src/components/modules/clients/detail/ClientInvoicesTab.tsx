@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Receipt, Eye, Plus, Download, Loader2 } from 'lucide-react';
+import { Receipt, Eye, Plus, Download, Loader2, Pencil, Trash2 } from 'lucide-react';
 import { Invoice, Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/hooks/useSettings';
+import { useDeleteInvoice } from '@/hooks/useInvoices';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import { downloadInvoicePDF } from '@/lib/pdf-exporter';
 
 interface ClientInvoicesTabProps {
@@ -23,7 +25,30 @@ const statusBadgeStyles: Record<string, string> = {
 
 export function ClientInvoicesTab({ invoices, clientId, projects = [] }: ClientInvoicesTabProps) {
   const { data: settings } = useSettings();
+  const { confirm } = useConfirmDialog();
+  const deleteInvoiceMutation = useDeleteInvoice();
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = async (inv: Invoice) => {
+    const confirmed = await confirm({
+      title: `Delete Invoice ${inv.invoiceNumber}`,
+      description: `Are you sure you want to delete invoice "${inv.invoiceNumber}"? This will permanently remove this invoice and its line items. This action cannot be undone.`,
+      confirmText: 'Delete Invoice',
+      variant: 'danger',
+    });
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(inv._id);
+      await deleteInvoiceMutation.mutateAsync(inv._id);
+    } catch (err) {
+      console.error('Failed to delete invoice:', err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const handleDownload = async (inv: Invoice) => {
     if (downloadingId === inv._id) return;
@@ -127,9 +152,28 @@ export function ClientInvoicesTab({ invoices, clientId, projects = [] }: ClientI
                         <Download className="w-4 h-4" />
                       )}
                     </button>
+                    <Link
+                      href={`/invoices/${inv._id}/edit`}
+                      className="p-1.5 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      title="Edit Invoice"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Link>
                     <Link href={`/invoices/${inv._id}`} className="p-1.5 rounded text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors" title="View Invoice">
                       <Eye className="w-4 h-4" />
                     </Link>
+                    <button
+                      onClick={() => handleDelete(inv)}
+                      disabled={deletingId === inv._id}
+                      className="p-1.5 rounded text-neutral-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer disabled:opacity-50"
+                      title="Delete Invoice"
+                    >
+                      {deletingId === inv._id ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-rose-500" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </button>
                   </div>
                 </td>
               </tr>

@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Printer, DollarSign, Download, Loader2, Check } from 'lucide-react';
+import { ArrowLeft, Printer, DollarSign, Download, Loader2, Check, Pencil, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Invoice, Settings } from '@/types';
 import { cn } from '@/lib/utils';
 import { downloadInvoicePDF } from '@/lib/pdf-exporter';
+import { useDeleteInvoice } from '@/hooks/useInvoices';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 
 interface InvoiceHeaderActionsProps {
   invoice: Invoice;
@@ -22,8 +25,32 @@ const statusBadgeStyles: Record<string, string> = {
 };
 
 export function InvoiceHeaderActions({ invoice, settings, onRecordPayment }: InvoiceHeaderActionsProps) {
+  const router = useRouter();
+  const { confirm } = useConfirmDialog();
+  const deleteInvoiceMutation = useDeleteInvoice();
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    const confirmed = await confirm({
+      title: `Delete Invoice ${invoice.invoiceNumber}`,
+      description: `Are you sure you want to delete invoice "${invoice.invoiceNumber}"? This will permanently remove this invoice and its line items. This action cannot be undone.`,
+      confirmText: 'Delete Invoice',
+      variant: 'danger',
+    });
+
+    if (!confirmed) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteInvoiceMutation.mutateAsync(invoice._id);
+      router.push('/invoices');
+    } catch (err) {
+      console.error('Failed to delete invoice:', err);
+      setIsDeleting(false);
+    }
+  };
 
   const handleDownload = async () => {
     if (isDownloading) return;
@@ -85,12 +112,34 @@ export function InvoiceHeaderActions({ invoice, settings, onRecordPayment }: Inv
           )}
         </button>
 
+        <Link
+          href={`/invoices/${invoice._id}/edit`}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] transition-colors cursor-pointer"
+          title="Edit Invoice"
+        >
+          <Pencil className="w-3.5 h-3.5" /><span>Edit</span>
+        </Link>
+
         <button
           onClick={() => window.print()}
           className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-[#334155] transition-colors cursor-pointer"
           title="Print or Save as PDF via Browser"
         >
           <Printer className="w-3.5 h-3.5" /><span>Print</span>
+        </button>
+
+        <button
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-xs font-semibold border border-rose-200 dark:border-rose-800/40 transition-colors cursor-pointer disabled:opacity-50"
+          title="Delete Invoice"
+        >
+          {isDeleting ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-500" />
+          ) : (
+            <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+          )}
+          <span>Delete</span>
         </button>
 
         {invoice.balanceDue > 0 && invoice.status !== 'cancelled' && (

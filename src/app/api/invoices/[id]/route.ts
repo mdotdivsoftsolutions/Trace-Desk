@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import dbConnect from '@/lib/db';
-import { Invoice } from '@/models';
+import { Invoice, Payment, Milestone } from '@/models';
 import { InvoiceService } from '@/services';
 import { updateInvoiceSchema } from '@/lib/validations';
 import { apiSuccess, apiError, handleApiError } from '@/lib/api-response';
@@ -55,6 +55,13 @@ export async function DELETE(
     if (!deleted) {
       return apiError('Invoice not found', 404);
     }
+
+    // Clean up associated payments and release invoiced milestones
+    await Payment.deleteMany({ invoiceId: id });
+    await Milestone.updateMany(
+      { invoiceId: id },
+      { $unset: { invoiceId: 1 }, $set: { status: 'completed' } }
+    );
 
     return apiSuccess({ id }, 'Invoice deleted successfully');
   } catch (error) {
