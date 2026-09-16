@@ -4,16 +4,19 @@ import { queryKeys } from './query-keys';
 import { CreateInvoiceInput, UpdateInvoiceInput, CreatePaymentInput } from '@/lib/validations';
 import { InvoiceType, PaymentType, PaginatedResponse } from '@/types';
 
-export function useInvoices(filters?: {
-  clientId?: string;
-  projectId?: string;
-  status?: string;
-  search?: string;
-  startDate?: string;
-  endDate?: string;
-  page?: number;
-  limit?: number;
-}) {
+export function useInvoices(
+  filters?: {
+    clientId?: string;
+    projectId?: string;
+    status?: string;
+    search?: string;
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    limit?: number;
+  },
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: queryKeys.invoices.list(filters),
     queryFn: async () => {
@@ -29,6 +32,7 @@ export function useInvoices(filters?: {
       const queryStr = params.toString() ? `?${params.toString()}` : '';
       return apiClient.get<PaginatedResponse<InvoiceType>>(`/invoices${queryStr}`);
     },
+    enabled: options?.enabled !== undefined ? options.enabled : true,
   });
 }
 

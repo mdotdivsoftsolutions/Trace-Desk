@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Mail, Phone, MapPin, Edit, Plus, Trash2, RotateCcw, UserX } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, MapPin, Edit, Plus, Trash2, RotateCcw, UserX, Receipt } from 'lucide-react';
 import { Client } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -106,6 +106,14 @@ export function ClientHeaderBanner({
               <span>Reactivate</span>
             </button>
           )}
+
+          <Link
+            href={`/invoices/new?clientId=${client._id}`}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#334155] transition-colors"
+          >
+            <Receipt className="w-3.5 h-3.5" />
+            <span>+ Create Invoice</span>
+          </Link>
 
           <button
             type="button"

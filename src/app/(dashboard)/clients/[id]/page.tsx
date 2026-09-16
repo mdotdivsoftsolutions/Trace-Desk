@@ -91,7 +91,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
         <ClientProjectsTab projects={projects} clientId={id} onAddProject={() => setIsNewProjectDrawerOpen(true)} />
       </TabPanel>
       <TabPanel tabKey="invoices" activeTab={activeTab} minHeight={260}>
-        <ClientInvoicesTab invoices={invoices} clientId={id} />
+        <ClientInvoicesTab invoices={invoices} clientId={id} projects={projects} />
       </TabPanel>
       <TabPanel tabKey="notes" activeTab={activeTab} minHeight={180}>
         <ClientNotesTab client={client} />

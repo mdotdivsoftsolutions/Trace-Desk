@@ -3,16 +3,18 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, FileText, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, FileText, Loader2, AlertCircle, Sparkles, Coins, CheckCircle2, Plus } from 'lucide-react';
 import { useClients } from '@/hooks/useClients';
 import { useProjects } from '@/hooks/useProjects';
 import { useSettings } from '@/hooks/useSettings';
-import { useCreateInvoice } from '@/hooks/useInvoices';
+import { useCreateInvoice, useInvoices } from '@/hooks/useInvoices';
 import { useMilestones } from '@/hooks/useMilestones';
 import { InvoiceLineItemsEditor, InvoiceItemDraft } from '@/components/modules/invoices/form/InvoiceLineItemsEditor';
 import { InvoiceSummaryCard } from '@/components/modules/invoices/form/InvoiceSummaryCard';
 import { RichTextEditor } from '@/components/common/RichTextEditor';
 import { ClientType, MilestoneType, ProjectType } from '@/types';
+import { formatCurrency } from '@/lib/formatters';
+import { cn } from '@/lib/utils';
 
 interface InvoiceFormProps {
   clients: ClientType[];
@@ -48,12 +50,80 @@ function InvoiceForm({
   const [items, setItems] = useState<InvoiceItemDraft[]>(initialItems);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
-  const taxAmount = (subtotal * taxRate) / 100;
-  const totalAmount = Math.max(0, subtotal + taxAmount - discount);
+  // Dynamic project queries for billing assistant
+  const { data: projectInvoicesData } = useInvoices({ projectId }, { enabled: !!projectId });
+  const { data: projectMilestonesData } = useMilestones(projectId || '');
 
   const selectedProject = projects.find((p) => p._id === projectId);
   const invoiceCurrency = selectedProject?.currency || defaultCurrency || 'INR';
+
+  const projectBudget = selectedProject ? (selectedProject.totalBudget || 0) : 0;
+  const projectInvoices = projectInvoicesData?.items || [];
+  const projectAlreadyBilled = projectInvoices.reduce((sum, inv) => sum + (inv.status !== 'cancelled' ? inv.totalAmount : 0), 0);
+  const projectUnbilledBalance = Math.max(0, projectBudget - projectAlreadyBilled);
+  const projectBilledPercentage = projectBudget > 0 ? Math.min(100, Math.round((projectAlreadyBilled / projectBudget) * 100)) : 0;
+
+  const handleAddRemainingBalance = () => {
+    if (!selectedProject) return;
+    const balanceItem: InvoiceItemDraft = {
+      description: `Final Balance / Deployment Settlement - ${selectedProject.title}`,
+      quantity: 1,
+      rate: projectUnbilledBalance > 0 ? projectUnbilledBalance : (projectBudget * 0.5),
+      amount: projectUnbilledBalance > 0 ? projectUnbilledBalance : (projectBudget * 0.5),
+    };
+    if (items.length === 1 && !items[0].description && items[0].rate === 0) {
+      setItems([balanceItem]);
+    } else {
+      setItems([...items, balanceItem]);
+    }
+  };
+
+  const handleAddPercentageMilestone = (pct: number) => {
+    if (!selectedProject) return;
+    const amount = Math.round((projectBudget * pct) / 100);
+    const pctItem: InvoiceItemDraft = {
+      description: `${pct}% Milestone Payment - ${selectedProject.title}`,
+      quantity: 1,
+      rate: amount,
+      amount: amount,
+    };
+    if (items.length === 1 && !items[0].description && items[0].rate === 0) {
+      setItems([pctItem]);
+    } else {
+      setItems([...items, pctItem]);
+    }
+  };
+
+  const handleAddMilestoneItem = (m: MilestoneType) => {
+    const mAmt = m.allocatedAmount ?? m.amount ?? 0;
+    const mItem: InvoiceItemDraft = {
+      description: `Milestone: ${m.title}`,
+      quantity: 1,
+      rate: mAmt,
+      amount: mAmt,
+      milestoneId: m._id,
+    };
+    if (items.length === 1 && !items[0].description && items[0].rate === 0) {
+      setItems([mItem]);
+    } else {
+      setItems([...items, mItem]);
+    }
+  };
+
+  const handleClientChange = (newClientId: string) => {
+    setClientId(newClientId);
+    if (projectId) {
+      const p = projects.find((proj) => proj._id === projectId);
+      const pClientId = typeof p?.clientId === 'object' ? (p.clientId as ClientType)?._id : p?.clientId;
+      if (pClientId && pClientId !== newClientId) {
+        setProjectId('');
+      }
+    }
+  };
+
+  const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
+  const taxAmount = (subtotal * taxRate) / 100;
+  const totalAmount = Math.max(0, subtotal + taxAmount - discount);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,16 +146,17 @@ function InvoiceForm({
         discount,
         discountAmount: discount,
         status: 'draft' as const,
-        currency: invoiceCurrency as any,
+        currency: invoiceCurrency,
         issueDate: new Date(issueDate),
         dueDate: dueDate ? new Date(dueDate) : new Date(Date.now() + 14 * 86400000),
         notes: notes || undefined,
       });
       router.push('/invoices/' + created._id);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } }; message?: string };
       const msg =
-        err?.response?.data?.message ||
-        err?.message ||
+        error?.response?.data?.message ||
+        error?.message ||
         'Failed to generate invoice. Please check the details and try again.';
       setErrorMessage(msg);
     }
@@ -118,7 +189,7 @@ function InvoiceForm({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">Client *</label>
-            <select required value={clientId} onChange={(e) => setClientId(e.target.value)} className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400">
+            <select required value={clientId} onChange={(e) => handleClientChange(e.target.value)} className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400">
               <option value="">Select client...</option>
               {clients.map((c: ClientType) => {
                 const company = c.companyName || c.company;
@@ -146,6 +217,106 @@ function InvoiceForm({
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="w-full px-3.5 py-2 rounded-md bg-neutral-50 dark:bg-[#0F172A] border border-neutral-300 dark:border-neutral-700 text-xs font-medium text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-400" />
           </div>
         </div>
+
+        {/* Project Billing & Balance Assistant */}
+        {selectedProject && (
+          <div className="p-4 rounded-lg bg-neutral-50 dark:bg-[#0F172A] border border-neutral-200 dark:border-[#334155] space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Coins className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span className="text-xs font-bold text-neutral-900 dark:text-white">
+                  Project Billing Assistant: <span className="text-emerald-600 dark:text-emerald-400">{selectedProject.title}</span>
+                </span>
+                <span className="px-2 py-0.5 text-[10px] font-bold rounded uppercase border bg-neutral-200/50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700">
+                  {selectedProject.status.replace('_', ' ')}
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold">
+                {projectBilledPercentage}% Invoiced
+              </span>
+            </div>
+
+            {/* Financial metric stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <div className="p-2.5 rounded bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155]">
+                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Total Budget</span>
+                <span className="font-mono font-bold text-neutral-900 dark:text-white">{formatCurrency(projectBudget, invoiceCurrency)}</span>
+              </div>
+              <div className="p-2.5 rounded bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155]">
+                <span className="text-[10px] uppercase font-bold text-neutral-400 block">Already Invoiced</span>
+                <span className="font-mono font-bold text-neutral-700 dark:text-neutral-300">{formatCurrency(projectAlreadyBilled, invoiceCurrency)}</span>
+              </div>
+              <div className="p-2.5 rounded bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40">
+                <span className="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-300 block">Unbilled Balance</span>
+                <span className="font-mono font-extrabold text-emerald-800 dark:text-emerald-300">{formatCurrency(projectUnbilledBalance, invoiceCurrency)}</span>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-emerald-500 h-full rounded-full transition-all duration-300" style={{ width: `${projectBilledPercentage}%` }} />
+            </div>
+
+            {/* 1-Click Quick Fill Actions */}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Quick Fill:</span>
+              <button
+                type="button"
+                onClick={handleAddRemainingBalance}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
+                title="Add remaining balance as line item"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Invoice Remaining Balance ({formatCurrency(projectUnbilledBalance > 0 ? projectUnbilledBalance : (projectBudget * 0.5), invoiceCurrency)})</span>
+              </button>
+
+              {projectBudget > 0 && (
+                <button
+                  type="button"
+                  onClick={() => handleAddPercentageMilestone(50)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-white dark:bg-[#1E293B] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-[#334155] text-xs font-semibold transition-all cursor-pointer"
+                  title="Add 50% milestone payment"
+                >
+                  <Plus className="w-3 h-3 text-neutral-400" />
+                  <span>50% Milestone ({formatCurrency(projectBudget * 0.5, invoiceCurrency)})</span>
+                </button>
+              )}
+            </div>
+
+            {/* Project Milestones if any */}
+            {projectMilestonesData && projectMilestonesData.length > 0 && (
+              <div className="pt-2 border-t border-neutral-200 dark:border-[#334155] space-y-1.5">
+                <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider block">Unbilled Milestones:</span>
+                <div className="flex flex-wrap gap-2">
+                  {projectMilestonesData.map((m: MilestoneType) => {
+                    const isInvoiced = m.status === 'invoiced' || Boolean(m.invoiceId);
+                    const mAmt = m.allocatedAmount ?? m.amount ?? 0;
+                    return (
+                      <button
+                        key={m._id}
+                        type="button"
+                        onClick={() => handleAddMilestoneItem(m)}
+                        disabled={isInvoiced}
+                        className={cn(
+                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs border transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                          isInvoiced
+                            ? "bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-400"
+                            : "bg-white dark:bg-[#1E293B] hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-300 dark:border-[#334155] text-neutral-800 dark:text-neutral-200"
+                        )}
+                        title={isInvoiced ? 'Milestone already invoiced' : `Add ${m.title} to invoice`}
+                      >
+                        {isInvoiced ? <CheckCircle2 className="w-3 h-3 text-neutral-400" /> : <Plus className="w-3 h-3 text-emerald-500" />}
+                        <span className="font-medium">{m.title}</span>
+                        <span className="font-mono font-bold text-neutral-500">({formatCurrency(mAmt, invoiceCurrency)})</span>
+                        {isInvoiced && <span className="text-[10px] text-neutral-400 font-bold uppercase ml-1">Invoiced</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         <hr className="border-neutral-200 dark:border-[#334155]" />
 
@@ -196,6 +367,9 @@ function InvoiceFormContent() {
   const { data: settings } = useSettings();
   const { data: milestonesData } = useMilestones(preselectedProjectId);
 
+  const matchedProject = projectsData?.items?.find((p: ProjectType) => p._id === preselectedProjectId);
+  const effectiveClientId = preselectedClientId || (matchedProject ? (typeof matchedProject.clientId === 'object' ? (matchedProject.clientId as ClientType)?._id : matchedProject.clientId) : '') || '';
+
   const preselectedMilestone = preselectedMilestoneId && milestonesData
     ? milestonesData.find((m: MilestoneType) => m._id === preselectedMilestoneId)
     : undefined;
@@ -213,14 +387,14 @@ function InvoiceFormContent() {
   const initialTaxRate = settings?.defaultTaxRate !== undefined ? settings.defaultTaxRate : 18;
   const initialNotes = settings?.invoiceNotes || '';
 
-  const formKey = `${preselectedMilestone?._id || 'none'}-${settings?.defaultTaxRate ?? 'def'}-${settings?.invoiceNotes ? 'hasNotes' : 'noNotes'}`;
+  const formKey = `${preselectedProjectId}-${effectiveClientId}-${preselectedMilestone?._id || 'none'}-${settings?.defaultTaxRate ?? 'def'}-${settings?.invoiceNotes ? 'hasNotes' : 'noNotes'}`;
 
   return (
     <InvoiceForm
       key={formKey}
       clients={clientsData?.items || []}
       projects={projectsData?.items || []}
-      initialClientId={preselectedClientId}
+      initialClientId={effectiveClientId}
       initialProjectId={preselectedProjectId}
       initialTaxRate={initialTaxRate}
       initialNotes={initialNotes}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { FolderKanban, Plus, ArrowRight, Calendar } from 'lucide-react';
+import { FolderKanban, Plus, ArrowRight, Calendar, Receipt } from 'lucide-react';
 import { Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
@@ -68,9 +68,19 @@ export function ClientProjectsTab({ projects, clientId, onAddProject }: ClientPr
               <span className="text-[10px] text-neutral-400 block uppercase font-bold">Total Budget</span>
               <span className="font-extrabold text-neutral-900 dark:text-white font-mono">{formatCurrency(project.totalBudget || 0)}</span>
             </div>
-            <Link href={`/projects/${project._id}`} className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 transition-colors">
-              <span>Workspace</span><ArrowRight className="w-3 h-3" />
-            </Link>
+            <div className="flex items-center gap-1.5">
+              <Link
+                href={`/invoices/new?clientId=${clientId}&projectId=${project._id}`}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#334155] transition-colors"
+                title="Create Invoice for this project"
+              >
+                <Receipt className="w-3 h-3" />
+                <span>Invoice</span>
+              </Link>
+              <Link href={`/projects/${project._id}`} className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors">
+                <span>Workspace</span><ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
           </div>
         </div>
       ))}

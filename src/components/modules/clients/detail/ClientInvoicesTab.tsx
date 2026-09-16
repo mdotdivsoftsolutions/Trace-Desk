@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Receipt, Eye, Plus, Download, Loader2 } from 'lucide-react';
-import { Invoice } from '@/types';
+import { Invoice, Project } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/hooks/useSettings';
@@ -10,6 +10,7 @@ import { downloadInvoicePDF } from '@/lib/pdf-exporter';
 interface ClientInvoicesTabProps {
   invoices: Invoice[];
   clientId: string;
+  projects?: Project[];
 }
 
 const statusBadgeStyles: Record<string, string> = {
@@ -20,7 +21,7 @@ const statusBadgeStyles: Record<string, string> = {
   overdue: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
 };
 
-export function ClientInvoicesTab({ invoices, clientId }: ClientInvoicesTabProps) {
+export function ClientInvoicesTab({ invoices, clientId, projects = [] }: ClientInvoicesTabProps) {
   const { data: settings } = useSettings();
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
@@ -50,7 +51,41 @@ export function ClientInvoicesTab({ invoices, clientId }: ClientInvoicesTabProps
   }
 
   return (
-    <div className="rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm overflow-hidden">
+    <div className="space-y-3">
+      {/* Header Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+            Invoices Raised ({invoices.length})
+          </h3>
+          <p className="text-[11px] text-neutral-400 dark:text-neutral-500">
+            All invoices and billing settlements for this client
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          {projects.length === 1 ? (
+            <Link
+              href={`/invoices/new?clientId=${clientId}&projectId=${projects[0]._id}`}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-[#0F172A] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-[#334155] text-xs font-semibold transition-colors"
+              title={`Invoice for ${projects[0].title}`}
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Bill {projects[0].title}</span>
+            </Link>
+          ) : null}
+
+          <Link
+            href={`/invoices/new?clientId=${clientId}`}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 text-xs font-bold shadow-sm transition-all"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Create Invoice</span>
+          </Link>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-white dark:bg-[#1E293B] border border-neutral-200 dark:border-[#334155] shadow-sm overflow-hidden">
       <table className="w-full text-left text-xs">
         <thead className="bg-neutral-50 dark:bg-[#0F172A] text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-[#334155]">
           <tr>
@@ -102,6 +137,7 @@ export function ClientInvoicesTab({ invoices, clientId }: ClientInvoicesTabProps
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
